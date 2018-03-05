@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ineedwhite.diancan.dao.dao.TestDao">
+    <select id="queryAll" resultType="com.ineedwhite.diancan.dao.domain.TestDo">
+        SELECT * FROM test_diancan;
+    </select>
+</mapper>
