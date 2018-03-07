@@ -21,6 +21,7 @@
         <mysql.version>5.1.24</mysql.version>
         <common.dbcp.version>1.4</common.dbcp.version>
         <servlet.api.version>2.5</servlet.api.version>
+        <apache.common.version>3.3.2</apache.common.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -104,6 +105,16 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
                 <version>${servlet.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.common.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
