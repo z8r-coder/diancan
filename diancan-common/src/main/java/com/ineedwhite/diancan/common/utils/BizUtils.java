@@ -58,6 +58,7 @@ public class BizUtils {
         return paraMap;
     }
 
+    public static String setRspMap(Map)
     /**
      * 将map转换为字符串
      * @param map  要转换的map

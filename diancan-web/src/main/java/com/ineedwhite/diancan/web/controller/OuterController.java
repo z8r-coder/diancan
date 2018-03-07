@@ -37,6 +37,8 @@ public class OuterController extends BaseController {
     public String version() {
         return "20180307";
     }
+
+
     @RequestMapping(value = "/userRegister", method = RequestMethod.POST)
     public void userRegister(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;

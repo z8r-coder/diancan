@@ -20,20 +20,20 @@
 
 ##### 入参：
 
-     字段名      描述          是否可空
+     字段名          描述          是否可空
      
-     user_id    用户ID(手机号)    否 
+     user_name      用户姓名          否   
      
-     user_name  用户姓名          否   
+     user_phone     用户电话          否   
      
-     user_phone 用户电话          否   
-
+     user_password  用户密码          否
 
 ##### 出参
     
     字段名       描述         
      
     rspCode     返回码
-    
         
     rspMsg      返回值
+        
+    user_id     用户id
