@@ -8,4 +8,6 @@ public interface User {
      * @param paraMap
      */
     public Map<String, String> register(Map<String, String> paraMap);
+
+    public Map<String, String> login(Map<String, String> paraMap);
 }

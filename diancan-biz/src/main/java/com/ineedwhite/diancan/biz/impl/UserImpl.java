@@ -5,8 +5,8 @@ import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.UserDo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,35 @@ public class UserImpl implements User {
             userDao.userRegister(userDo);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
         } catch (Exception ex) {
-            logger.error("op user table occur exception:" + ex);
+            logger.error("method:register op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
+    }
+
+    public Map<String, String> login(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String user_phone = paraMap.get("user_phone");
+        String user_password = paraMap.get("user_password");
+        try {
+            UserDo userDo = userDao.userLogin(user_phone);
+
+            if (!StringUtils.equals(user_password, userDo.getUser_password())) {
+                //password wrong
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00004);
+                return resp;
+            }
+            //password right
+            resp.put("user_id", userDo.getUser_id());
+            resp.put("user_name", userDo.getUser_name());
+            resp.put("user_phone", userDo.getUser_phone());
+            resp.put("accumulate_points", userDo.getAccumulate_points().toString());
+            resp.put("balance", userDo.getBalance().toString());
+            resp.put("member_level", userDo.getMember_level());
+        } catch (Exception ex) {
+            logger.error("method:login op user table occur exception:" + ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
         }
         return resp;

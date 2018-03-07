@@ -37,3 +37,34 @@
     rspMsg      返回值
         
     user_id     用户id
+
+### 2.用户登陆
+##### URL:192.168.1.196:9090//outerApi/login
+
+##### 入参：
+
+     字段名          描述          是否可空
+     
+     user_phone     用户电话          否   
+     
+     user_password  用户密码          否
+
+##### 出参
+    
+    字段名                 描述     
+        
+    user_name             姓名
+        
+    balance               余额
+        
+    user_phone            电话    
+        
+    accumulate_points     积分
+        
+    member_level          用户等级
+        
+    rspCode               返回码
+        
+    rspMsg                返回值
+        
+    user_id               用户id

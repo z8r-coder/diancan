@@ -38,6 +38,28 @@ public class OuterController extends BaseController {
         return "20180307";
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public void userLogin(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.LOGIN_MUST_PARAM);
+            retMap = user.login(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
+    }
 
     @RequestMapping(value = "/userRegister", method = RequestMethod.POST)
     public void userRegister(HttpServletRequest request, HttpServletResponse response) {
@@ -59,7 +81,6 @@ public class OuterController extends BaseController {
             BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
             returnStr = JSON.toJSONString(retMap);
         }
-
         writeResultUtf8(response, returnStr);
     }
 }

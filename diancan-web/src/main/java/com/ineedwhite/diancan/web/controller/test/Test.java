@@ -4,6 +4,7 @@ import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.dao.dao.TestDao;
 import com.ineedwhite.diancan.dao.domain.TestDo;
 import org.junit.runner.RunWith;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,5 +46,17 @@ public class Test {
         paraMap.put("user_name", "ruanxin");
         paraMap.put("user_phone", "15884812382");
         user.register(paraMap);
+    }
+
+    /**
+     * 登陆
+     */
+    @org.junit.Test
+    public void login() {
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("user_phone", "15884812382");
+        paraMap.put("user_password", "15884812382");
+        Map<String, String> map = user.login(paraMap);
+        System.out.println(map);
     }
 }
