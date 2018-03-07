@@ -1,9 +1,9 @@
 package com.ineedwhite.diancan.web.controller.test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.support.hsf.HSFJSONUtils;
-import org.omg.CORBA.MARSHAL;
 
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +15,28 @@ import java.util.Map;
 public class MainTest {
     public static void main(String[] args) {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("111", "222");
-        map.put("333", "444");
-        map.put("555", "666");
-        System.out.println(JSON.toJSONString(map));
+        TestBean testBean = new TestBean();
+        map.put("name", "ruanxin");
+        map.put("phone", "15884812382");
+        try {
+            TestBean bean = TestBean.class.newInstance();
+            BeanUtils.populate(bean, map);
+            System.out.println(bean.getId() + ":" + bean.getName() + ":" + bean.getPhone());
+
+            Map<String, String> map1 = BeanUtils.describe(bean);
+            for (String key : map1.keySet()) {
+                System.out.println(key + ":" + map1.get(key));
+            }
+            System.out.println(map1.get("class"));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
 }

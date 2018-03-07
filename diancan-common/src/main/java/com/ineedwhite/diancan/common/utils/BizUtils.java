@@ -3,6 +3,7 @@ package com.ineedwhite.diancan.common.utils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.constants.DcException;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.CollectionUtils;
@@ -102,5 +103,31 @@ public class BizUtils {
         }
 
         return result.substring(1);
+    }
+
+    /**
+     * change map to bean
+     * @param map
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T map2Bean(Map<String, String> map, Class<T> clazz) throws Exception {
+        T bean = clazz.newInstance();
+        BeanUtils.populate(bean, map);
+        return bean;
+    }
+
+    /**
+     * change bean to map
+     * @param bean
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> Map<String, String> bean2Map(T bean) throws Exception {
+        Map<String, String> retMap =  BeanUtils.describe(bean);
+        return retMap;
     }
 }
