@@ -2,6 +2,7 @@ package com.ineedwhite.diancan.biz.impl;
 
 import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author ruanxin
@@ -28,22 +30,25 @@ public class UserImpl implements User {
     public Map<String, String> register(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
 
+        String usrId = UUID.randomUUID().toString().replace("-", "");
         UserDo userDo = new UserDo();
-        userDo.setUser_id(paraMap.get("user_id"));
+
+        userDo.setUser_id(usrId);
         userDo.setUser_name(paraMap.get("user_name"));
         userDo.setUser_phone(paraMap.get("user_phone"));
+        userDo.setUser_password(paraMap.get("user_password"));
         userDo.setAccumulate_points(0);
         userDo.setBalance(0);
         userDo.setMember_level("0");
         userDo.setUser_is_del(0);
+
+        resp.put("user_id", usrId);
         try {
             userDao.userRegister(userDo);
-            resp.put("rspCode", ErrorCodeEnum.DC00000.getCode());
-            resp.put("rspMsg", ErrorCodeEnum.DC00000.getDesc());
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
         } catch (Exception ex) {
             logger.error("op user table occur exception:" + ex);
-            resp.put("rspCode", ErrorCodeEnum.DC00002.getCode());
-            resp.put("rspMsg", ErrorCodeEnum.DC00002.getDesc());
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
         }
         return resp;
     }

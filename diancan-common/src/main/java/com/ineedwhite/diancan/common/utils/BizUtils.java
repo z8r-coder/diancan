@@ -58,7 +58,27 @@ public class BizUtils {
         return paraMap;
     }
 
-    public static String setRspMap(Map)
+    /**
+     * 设置返回MAP
+     * @param retMap
+     * @param rspCode
+     * @param rspMsg
+     */
+    public static void setRspMap(Map<String, String> retMap, String rspCode, String rspMsg) {
+        retMap.put("rspCode", rspCode);
+        retMap.put("rspMsg", rspMsg);
+    }
+
+    public static void setRspMap(Map<String, String> retMap, ErrorCodeEnum errorCodeEnum) {
+        retMap.put("rspCode", errorCodeEnum.getCode());
+        retMap.put("rspMsg", errorCodeEnum.getDesc());
+    }
+
+    public static void setRspMap(Map<String, String> retMap, DcException dcEx) {
+        retMap.put("rspCode", dcEx.getErrorCode());
+        retMap.put("rspMsg", dcEx.getErrorMsg());
+    }
+
     /**
      * 将map转换为字符串
      * @param map  要转换的map

@@ -41,7 +41,7 @@ public class Test {
     @org.junit.Test
     public void register() {
         Map<String, String> paraMap = new HashMap<String, String>();
-        paraMap.put("user_id", "15884812382");
+        paraMap.put("user_password", "15884812382");
         paraMap.put("user_name", "ruanxin");
         paraMap.put("user_phone", "15884812382");
         user.register(paraMap);

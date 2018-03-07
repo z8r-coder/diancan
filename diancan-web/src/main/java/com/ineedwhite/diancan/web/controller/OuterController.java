@@ -51,13 +51,12 @@ public class OuterController extends BaseController {
         } catch (DcException ex) {
             logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
             retMap = new HashMap<String, String>();
-            retMap.put("rspCode", ex.getErrorCode());
-            retMap.put("rspMsg", ex.getErrorMsg());
+            BizUtils.setRspMap(retMap, ex);
             returnStr = JSON.toJSONString(retMap);
         } catch (Throwable t) {
             logger.error("occurs Throwable exception:", t);
-            retMap.put("rspCode", ErrorCodeEnum.DC00003.getCode());
-            retMap.put("rspMsg", ErrorCodeEnum.DC00003.getDesc());
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
             returnStr = JSON.toJSONString(retMap);
         }
 

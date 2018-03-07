@@ -6,5 +6,5 @@ package com.ineedwhite.diancan.common.constants;
  * @desc
  */
 public class MustNeedPara {
-    public static final String[] REG_MUST_PARAM = new String[]{"user_id", "user_name", "user_phone"};
+    public static final String[] REG_MUST_PARAM = new String[]{"user_password", "user_name", "user_phone"};
 }

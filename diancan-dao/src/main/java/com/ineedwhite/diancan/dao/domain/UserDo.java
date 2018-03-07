@@ -13,6 +13,7 @@ public class UserDo {
     private Integer balance;
     private String member_level;
     private Integer user_is_del;
+    private String user_password;
 
     public String getUser_id() {
         return user_id;
@@ -68,5 +69,13 @@ public class UserDo {
 
     public void setUser_is_del(Integer user_is_del) {
         this.user_is_del = user_is_del;
+    }
+
+    public String getUser_password() {
+        return user_password;
+    }
+
+    public void setUser_password(String user_password) {
+        this.user_password = user_password;
     }
 }
