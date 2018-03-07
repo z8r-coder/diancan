@@ -45,7 +45,8 @@ public class Test {
         paraMap.put("user_password", "15884812382");
         paraMap.put("user_name", "ruanxin");
         paraMap.put("user_phone", "15884812382");
-        user.register(paraMap);
+        Map<String, String> map = user.register(paraMap);
+        System.out.println(map);
     }
 
     /**

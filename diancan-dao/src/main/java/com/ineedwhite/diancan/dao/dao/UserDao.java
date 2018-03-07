@@ -5,14 +5,14 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserDao {
     /**
-     * 用户注册
+     * 插入用户信息
      * @param userDo
      */
-    void userRegister(@Param("User")UserDo userDo);
+    void insertUser(@Param("User")UserDo userDo);
 
     /**
-     * 用户登陆
+     * 通过手机号查询用户信息
      * @param user_phone
      */
-    UserDo userLogin(@Param("user_phone")String user_phone);
+    UserDo selectUserByPhone(@Param("user_phone")String user_phone);
 }

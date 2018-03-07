@@ -30,21 +30,30 @@ public class UserImpl implements User {
     public Map<String, String> register(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
 
-        String usrId = UUID.randomUUID().toString().replace("-", "");
-        UserDo userDo = new UserDo();
-
-        userDo.setUser_id(usrId);
-        userDo.setUser_name(paraMap.get("user_name"));
-        userDo.setUser_phone(paraMap.get("user_phone"));
-        userDo.setUser_password(paraMap.get("user_password"));
-        userDo.setAccumulate_points(0);
-        userDo.setBalance(0);
-        userDo.setMember_level("0");
-        userDo.setUser_is_del(0);
-
-        resp.put("user_id", usrId);
+        String phone = paraMap.get("user_phone");
         try {
-            userDao.userRegister(userDo);
+            UserDo oldUsr = userDao.selectUserByPhone(phone);
+            if (oldUsr != null) {
+                //have register
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00005);
+                return resp;
+            }
+
+            String usrId = UUID.randomUUID().toString().replace("-", "");
+            UserDo userDo = new UserDo();
+
+            userDo.setUser_id(usrId);
+            userDo.setUser_name(paraMap.get("user_name"));
+            userDo.setUser_phone(paraMap.get("user_phone"));
+            userDo.setUser_password(paraMap.get("user_password"));
+            userDo.setAccumulate_points(0);
+            userDo.setBalance(0);
+            userDo.setMember_level("0");
+            userDo.setUser_is_del(0);
+
+            resp.put("user_id", usrId);
+
+            userDao.insertUser(userDo);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
         } catch (Exception ex) {
             logger.error("method:register op user table occur exception:" + ex);
@@ -60,7 +69,7 @@ public class UserImpl implements User {
         String user_phone = paraMap.get("user_phone");
         String user_password = paraMap.get("user_password");
         try {
-            UserDo userDo = userDao.userLogin(user_phone);
+            UserDo userDo = userDao.selectUserByPhone(user_phone);
 
             if (!StringUtils.equals(user_password, userDo.getUser_password())) {
                 //password wrong
