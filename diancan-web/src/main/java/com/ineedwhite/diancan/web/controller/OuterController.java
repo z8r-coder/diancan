@@ -31,7 +31,7 @@ public class OuterController extends BaseController {
     @Autowired
     private User user;
 
-    @RequestMapping(value = "/version", method = RequestMethod.POST)
+    @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public String version() {
         return "20180307";
