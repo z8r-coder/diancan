@@ -7,7 +7,9 @@ package com.ineedwhite.diancan.common;
  */
 public enum ErrorCodeEnum {
     DC00000("DC00000", "成功"),
-    DC00001("DC00001", "缺少必要参数")
+    DC00001("DC00001", "缺少必要参数"),
+    DC00002("DC00002", "操作数据库失败"),
+    DC00003("DC00003", "系统错误")
     ;
 
     /**

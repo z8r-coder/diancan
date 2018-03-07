@@ -22,6 +22,7 @@
         <common.dbcp.version>1.4</common.dbcp.version>
         <servlet.api.version>2.5</servlet.api.version>
         <apache.common.version>3.3.2</apache.common.version>
+        <fastjson.version>1.2.41</fastjson.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -115,6 +116,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,9 +1,11 @@
 package com.ineedwhite.diancan.common.utils;
 
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.constants.DcException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,5 +56,30 @@ public class BizUtils {
         }
 
         return paraMap;
+    }
+
+    /**
+     * 将map转换为字符串
+     * @param map  要转换的map
+     * @return 转换后的字符串
+     */
+    public static String convertToString(Map<String, String> map) {
+        if (CollectionUtils.isEmpty(map)) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (String key : map.keySet()) {
+            result.append(BizOptions.AMPERSAND);
+            result.append(key);
+            result.append(BizOptions.EQUAL);
+            String value = map.get(key);
+            if(value == null) {
+                value = "";
+            }
+            result.append(value);
+        }
+
+        return result.substring(1);
     }
 }

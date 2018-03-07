@@ -6,19 +6,19 @@ package com.ineedwhite.diancan.dao.domain;
  * @desc
  */
 public class UserDo {
-    private Integer user_id;
+    private String user_id;
     private String user_name;
-    private Integer user_phone;
+    private String user_phone;
     private Integer accumulate_points;
     private Integer balance;
     private String member_level;
     private Integer user_is_del;
 
-    public Integer getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 
@@ -30,11 +30,11 @@ public class UserDo {
         this.user_name = user_name;
     }
 
-    public Integer getUser_phone() {
+    public String getUser_phone() {
         return user_phone;
     }
 
-    public void setUser_phone(Integer user_phone) {
+    public void setUser_phone(String user_phone) {
         this.user_phone = user_phone;
     }
 
