@@ -16,7 +16,7 @@
 
 ### 接口说明API
 ### 1.用户注册
-##### URL:192.168.1.196:9090//outerApi/userRegister
+##### URL:http://192.168.1.196:9090//outerApi/userRegister
 
 ##### 入参：
 
@@ -39,7 +39,7 @@
     user_id     用户id
 
 ### 2.用户登陆
-##### URL:192.168.1.196:9090//outerApi/login
+##### URL:http://192.168.1.196:9090//outerApi/login
 
 ##### 入参：
 
