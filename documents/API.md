@@ -90,4 +90,7 @@
      order_people_number        餐桌人数          否
                                 (2,4,10)    
      
-
+##### 出参:
+    字段名                 描述
+        
+    board_id_set          空余餐桌集合（数组）
