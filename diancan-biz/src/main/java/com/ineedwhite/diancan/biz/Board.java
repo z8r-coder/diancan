@@ -8,8 +8,15 @@ import java.util.Map;
  */
 public interface Board {
     /**
-     * 预定餐桌
+     * 获取可预定餐桌
      * @return
      */
     public Map<String, String> getAvailableBoard(Map<String, String> paraMap);
+
+    /**
+     * 预定餐桌
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> reserveBoard(Map<String, String> paraMap);
 }

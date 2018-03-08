@@ -7,13 +7,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.oracle.jrockit.jfr.ContentType.Timestamp;
+
 /**
  * @author ruanxin
  * @create 2018-03-07
  * @desc
  */
 public class MainTest {
+
     public static void main(String[] args) {
+        testTamp();
+    }
+
+    public static void testTamp() {
+
+    }
+    public static void testBean2Map() {
         Map<String, String> map = new HashMap<String, String>();
         TestBean testBean = new TestBean();
         map.put("name", "ruanxin");

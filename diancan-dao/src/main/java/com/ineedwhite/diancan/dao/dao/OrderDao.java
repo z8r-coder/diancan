@@ -1,5 +1,6 @@
 package com.ineedwhite.diancan.dao.dao;
 
+import com.ineedwhite.diancan.dao.domain.OrderDo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,4 +17,10 @@ public interface OrderDao {
      */
     List<Integer> selectBoardIdByTime(@Param("order_board_time")String order_board_time,
                                       @Param("order_time_interval")String order_time_interval);
+
+    /**
+     * 在订单表里面插入订单
+     * @param orderDo
+     */
+    void insertOrderInfo(@Param("Order")OrderDo orderDo);
 }

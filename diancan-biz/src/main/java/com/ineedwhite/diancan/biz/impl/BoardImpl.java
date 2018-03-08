@@ -7,14 +7,13 @@ import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
+import com.ineedwhite.diancan.dao.domain.OrderDo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * @author ruanxin
@@ -32,7 +31,6 @@ public class BoardImpl implements Board{
     @Resource
     private DianCanConfig dianCanConfig;
 
-    // TODO: 2018/3/8 需要添加悲观索
     public Map<String, String> getAvailableBoard(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp,ErrorCodeEnum.DC00000);
@@ -57,6 +55,7 @@ public class BoardImpl implements Board{
                 BoardDo boardDo = newBoardMap.get(boardId);
                 if (boardDo.getBoard_people_number() == orderNum &&
                         boardDo.getBoard_type() == boardType) {
+                    //满足人数，餐桌类型限制
                     freeBoardId.add(boardId);
                 }
             }
@@ -68,5 +67,16 @@ public class BoardImpl implements Board{
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
         }
         return resp;
+    }
+
+    // TODO: 2018/3/8 需要添加分布式锁
+    public Map<String, String> reserveBoard(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+
+        OrderDo orderDo = new OrderDo();
+        String boardId = paraMap.get("board_id");
+        String orderId = UUID.randomUUID().toString().replace("-", "");
+
+        return null;
     }
 }
