@@ -1,5 +1,6 @@
 package com.ineedwhite.diancan.web.controller.test;
 
+import com.ineedwhite.diancan.biz.Board;
 import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.dao.dao.TestDao;
 import com.ineedwhite.diancan.dao.domain.TestDo;
@@ -27,6 +28,9 @@ public class Test {
 
     @Autowired
     private User user;
+
+    @Autowired
+    private Board board;
 
     @org.junit.Test
     public void testMysql() {
@@ -58,6 +62,17 @@ public class Test {
         paraMap.put("user_phone", "15884812382");
         paraMap.put("user_password", "15884812382");
         Map<String, String> map = user.login(paraMap);
+        System.out.println(map);
+    }
+
+    @org.junit.Test
+    public void getAvailBoard() {
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("order_board_date", "20180306");
+        paraMap.put("order_board_time_interval", "0");
+        paraMap.put("board_type", "1");
+        paraMap.put("order_people_number", "2");
+        Map<String, String> map = board.getAvailableBoard(paraMap);
         System.out.println(map);
     }
 }

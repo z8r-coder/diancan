@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ineedwhite.diancan.dao.dao.OrderDao">
+    <select id="selectBoardIdByTime" resultType="java.lang.Integer">
+        SELECT board_id FROM dc_order
+        WHERE order_board_date = #{order_board_time}
+        AND order_board_time_interval = #{order_time_interval}
+    </select>
+</mapper>

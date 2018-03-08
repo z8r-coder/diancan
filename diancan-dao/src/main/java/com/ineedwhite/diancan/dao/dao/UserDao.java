@@ -3,6 +3,9 @@ package com.ineedwhite.diancan.dao.dao;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 用户表数据库操作
+ */
 public interface UserDao {
     /**
      * 插入用户信息

@@ -72,3 +72,22 @@
     rspMsg                返回值
         
     user_id               用户id
+    
+### 3.获取未被订的桌位号
+##### URL:http://192.168.1.196:9090//outerApi/getAvailableBoard
+
+##### 入参：
+     字段名                      描述          是否可空
+     
+     order_board_date           预定时间          否   
+     
+     order_board_time_interval  预定时段          否
+                               （0.上午 1.中午.2）    
+                                
+     board_type                 餐桌类型          否
+                                (1.中 2.西)
+                                
+     order_people_number        餐桌人数          否
+                                (2,4,10)    
+     
+

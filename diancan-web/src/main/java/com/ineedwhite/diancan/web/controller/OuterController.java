@@ -1,6 +1,7 @@
 package com.ineedwhite.diancan.web.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.ineedwhite.diancan.biz.Board;
 import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.DcException;
@@ -31,10 +32,36 @@ public class OuterController extends BaseController {
     @Autowired
     private User user;
 
+    @Autowired
+    private Board board;
+
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public String version() {
         return "20180307";
+    }
+
+    @RequestMapping(value = "/getAvailableBoard", method = RequestMethod.POST)
+    public void getAvailableBoard(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.GET_BOARD_PARAM);
+            retMap = board.getAvailableBoard(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)

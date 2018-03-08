@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author ruanxin
  * @create 2018-03-05
- * @desc
+ * @desc test
  */
 public interface TestDao {
     List<TestDo> queryAll();
