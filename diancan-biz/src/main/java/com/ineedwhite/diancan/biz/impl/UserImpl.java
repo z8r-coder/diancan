@@ -7,6 +7,7 @@ import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,11 @@ public class UserImpl implements User {
         String user_password = paraMap.get("user_password");
         try {
             UserDo userDo = userDao.selectUserByPhone(user_phone);
+            if (userDo == null) {
+                //have not register
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00007);
+                return resp;
+            }
 
             if (!StringUtils.equals(user_password, userDo.getUser_password())) {
                 //password wrong
