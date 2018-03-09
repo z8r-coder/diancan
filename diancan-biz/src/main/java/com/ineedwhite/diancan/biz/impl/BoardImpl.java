@@ -7,6 +7,7 @@ import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
+import com.ineedwhite.diancan.common.utils.RedLock;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
@@ -76,9 +77,15 @@ public class BoardImpl implements Board{
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
-        // TODO: 2018/3/9 用餐人数设计讨论
-        OrderDo orderDo = new OrderDo();
         String boardId = paraMap.get("board_id");
+
+        if (!RedLock.lockDefaultTime(boardId)) {  // 命中悲观锁
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00008);
+            return resp;
+        }
+
+        OrderDo orderDo = new OrderDo();
+
         BoardDo boardDo = dianCanConfig.getBoardById(Integer.parseInt(boardId));
         if (boardDo == null) {
             logger.error("board_id:" + boardId + " doesn't exist!");
