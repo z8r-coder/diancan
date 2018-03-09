@@ -1,6 +1,7 @@
 package com.ineedwhite.diancan.web.controller.test;
 
 import com.ineedwhite.diancan.biz.Board;
+import com.ineedwhite.diancan.biz.FoodType;
 import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
@@ -35,6 +36,9 @@ public class Test {
 
     @Autowired
     private OrderDao orderDao;
+
+    @Autowired
+    private FoodType foodType;
 
     @org.junit.Test
     public void testMysql() {
@@ -95,5 +99,11 @@ public class Test {
         String time = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
         orderDo.setOrder_date(time);
         orderDao.insertOrderInfo(orderDo);
+    }
+
+    @org.junit.Test
+    public void getFoodType(){
+        Map<String, String> foodMap = foodType.getAllFoodType();
+        System.out.println(foodMap);
     }
 }

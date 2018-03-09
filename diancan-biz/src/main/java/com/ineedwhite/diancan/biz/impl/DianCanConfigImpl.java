@@ -3,8 +3,10 @@ package com.ineedwhite.diancan.biz.impl;
 import com.ineedwhite.diancan.biz.DianCanConfig;
 import com.ineedwhite.diancan.dao.dao.BoardDao;
 import com.ineedwhite.diancan.dao.dao.CouponDao;
+import com.ineedwhite.diancan.dao.dao.FoodTypeDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.CouponDo;
+import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +35,14 @@ public class DianCanConfigImpl implements DianCanConfig{
     @Resource
     private CouponDao couponDao;
 
+    @Resource
+    private FoodTypeDao foodTypeDao;
+
     private static List<BoardDo> boardDoList = new ArrayList<BoardDo>();
 
     private static List<CouponDo> couponDoList = new ArrayList<CouponDo>();
+
+    private static List<FoodTypeDo> foodTypeDoList = new ArrayList<FoodTypeDo>();
 
     /**
      * 桌位缓存信息
@@ -46,6 +53,11 @@ public class DianCanConfigImpl implements DianCanConfig{
      * 卡券缓存信息
      */
     private static Map<Integer, CouponDo> couponDoCache = new ConcurrentHashMap<Integer, CouponDo>();
+
+    /**
+     * 菜系缓存信息
+     */
+    private static Map<Integer, FoodTypeDo> foodTypeDoCache = new ConcurrentHashMap<Integer, FoodTypeDo>();
 
     private static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     @PostConstruct
@@ -81,6 +93,14 @@ public class DianCanConfigImpl implements DianCanConfig{
             }
             couponDoCache = newCouponMapCache;
 
+            //菜系缓存
+            foodTypeDoList = foodTypeDao.findAllFoodType();
+            Map<Integer, FoodTypeDo> newFoodTypeMapCache = new ConcurrentHashMap<Integer, FoodTypeDo>();
+            for (FoodTypeDo foodTypeDo : foodTypeDoList) {
+                newFoodTypeMapCache.put(foodTypeDo.getFoodtype_id(), foodTypeDo);
+            }
+            foodTypeDoCache = newFoodTypeMapCache;
+
         } catch (Exception ex) {
             logger.error("refreshGateConfig exception:" + ex.getMessage(), ex);
             return false;
@@ -102,5 +122,13 @@ public class DianCanConfigImpl implements DianCanConfig{
 
     public CouponDo getCouponById(Integer couponId) {
         return couponDoCache.get(couponId);
+    }
+
+    public Map<Integer, FoodTypeDo> getAllFoodType() {
+        return foodTypeDoCache;
+    }
+
+    public FoodTypeDo getFoodTypeById(Integer foodTypeId) {
+        return foodTypeDoCache.get(foodTypeId);
     }
 }

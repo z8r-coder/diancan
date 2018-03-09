@@ -105,3 +105,13 @@ curl -d "" "192.168.1.168:8080/test/test"
     字段名                 描述
         
     board_id_set          空余餐桌集合（数组）
+    
+### 4.获取全部菜系信息
+##### URL：http://192.168.1.196:9090//outerApi/getAllFoodType
+##### 入参:
+
+##### 出参:
+
+    字段名                 描述
+            
+    foodType              菜品信息

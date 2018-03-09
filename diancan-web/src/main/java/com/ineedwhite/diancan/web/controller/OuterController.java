@@ -2,6 +2,7 @@ package com.ineedwhite.diancan.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ineedwhite.diancan.biz.Board;
+import com.ineedwhite.diancan.biz.FoodType;
 import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.DcException;
@@ -35,10 +36,34 @@ public class OuterController extends BaseController {
     @Autowired
     private Board board;
 
+    @Autowired
+    private FoodType foodType;
+
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public String version() {
         return "20180307";
+    }
+
+    @RequestMapping(value = "/getAllFoodType", method = RequestMethod.POST)
+    public void getAllFoodType(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            retMap = foodType.getAllFoodType();
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
     }
 
     @RequestMapping(value = "/reserveBoard", method = RequestMethod.POST)
