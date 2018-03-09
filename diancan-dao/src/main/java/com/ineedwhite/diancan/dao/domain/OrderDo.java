@@ -12,11 +12,11 @@ public class OrderDo {
     private String order_id;
     private Integer board_id;
     private Integer order_people_number;
-    private Timestamp order_date;
-    private Date order_board_date;
+    private String order_date;
+    private String order_board_date;
     private String order_board_time_interval;
     private Integer order_total_amount;
-    private Integer order_status;
+    private String order_status;
 
     public String getOrder_id() {
         return order_id;
@@ -42,19 +42,19 @@ public class OrderDo {
         this.order_people_number = order_people_number;
     }
 
-    public Timestamp getOrder_date() {
+    public String getOrder_date() {
         return order_date;
     }
 
-    public void setOrder_date(Timestamp order_date) {
+    public void setOrder_date(String order_date) {
         this.order_date = order_date;
     }
 
-    public Date getOrder_board_date() {
+    public String getOrder_board_date() {
         return order_board_date;
     }
 
-    public void setOrder_board_date(Date order_board_date) {
+    public void setOrder_board_date(String order_board_date) {
         this.order_board_date = order_board_date;
     }
 
@@ -74,11 +74,11 @@ public class OrderDo {
         this.order_total_amount = order_total_amount;
     }
 
-    public Integer getOrder_status() {
+    public String getOrder_status() {
         return order_status;
     }
 
-    public void setOrder_status(Integer order_status) {
+    public void setOrder_status(String order_status) {
         this.order_status = order_status;
     }
 }

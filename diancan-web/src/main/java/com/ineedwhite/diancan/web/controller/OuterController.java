@@ -41,6 +41,10 @@ public class OuterController extends BaseController {
         return "20180307";
     }
 
+    @RequestMapping(value = "/reserveBoard", method = RequestMethod.POST)
+    public void reserveBoard(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+    }
     @RequestMapping(value = "/getAvailableBoard", method = RequestMethod.POST)
     public void getAvailableBoard(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;

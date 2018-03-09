@@ -92,7 +92,15 @@ public class DianCanConfigImpl implements DianCanConfig{
         return boardDoCache;
     }
 
+    public BoardDo getBoardById(Integer boardId) {
+        return boardDoCache.get(boardId);
+    }
+
     public Map<Integer, CouponDo> getAllCouponDo() {
         return couponDoCache;
+    }
+
+    public CouponDo getCouponById(Integer couponId) {
+        return couponDoCache.get(couponId);
     }
 }

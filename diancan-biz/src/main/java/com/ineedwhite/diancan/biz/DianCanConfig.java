@@ -19,7 +19,20 @@ public interface DianCanConfig {
     Map<Integer,BoardDo> getAllBoard();
 
     /**
+     * 通过桌位号获取桌位信息
+     * @param boardId
+     * @return
+     */
+    BoardDo getBoardById(Integer boardId);
+
+    /**
      * 返回卡券缓存
      */
     Map<Integer, CouponDo> getAllCouponDo();
+
+    /**
+     * 通过卡券号获取卡券信息
+     * @return
+     */
+    CouponDo getCouponById(Integer couponId);
 }
