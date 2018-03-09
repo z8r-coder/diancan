@@ -6,7 +6,7 @@ package com.ineedwhite.diancan.common;
  * @desc 订单状态
  */
 public enum OrderStatus {
-    UK("UI","订单初始化"),
+    UK("UK","订单初始化"),
     UF("UF", "更新了菜单"),
     UD("UD", "结账，支付成功"),
     UR("UR", "退款"),

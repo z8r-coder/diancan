@@ -2,7 +2,9 @@ package com.ineedwhite.diancan.biz.impl;
 
 import com.ineedwhite.diancan.biz.DianCanConfig;
 import com.ineedwhite.diancan.dao.dao.BoardDao;
+import com.ineedwhite.diancan.dao.dao.CouponDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
+import com.ineedwhite.diancan.dao.domain.CouponDo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +30,22 @@ public class DianCanConfigImpl implements DianCanConfig{
     @Resource
     private BoardDao boardDao;
 
+    @Resource
+    private CouponDao couponDao;
+
     private static List<BoardDo> boardDoList = new ArrayList<BoardDo>();
+
+    private static List<CouponDo> couponDoList = new ArrayList<CouponDo>();
 
     /**
      * 桌位缓存信息
      */
     private static Map<Integer, BoardDo> boardDoCache = new ConcurrentHashMap<Integer, BoardDo>();
+
+    /**
+     * 卡券缓存信息
+     */
+    private static Map<Integer, CouponDo> couponDoCache = new ConcurrentHashMap<Integer, CouponDo>();
 
     private static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     @PostConstruct
@@ -52,12 +64,23 @@ public class DianCanConfigImpl implements DianCanConfig{
     public boolean refreshConfig() {
         try {
             logger.info("refresh config information start!");
+
+            //桌位缓存
             boardDoList = boardDao.findAllBoardInfo();
             Map<Integer, BoardDo> newBoardMapCache = new ConcurrentHashMap<Integer, BoardDo>();
             for (BoardDo boardDo : boardDoList) {
                 newBoardMapCache.put(boardDo.getBoard_id(), boardDo);
             }
             boardDoCache = newBoardMapCache;
+
+            //卡券缓存
+            couponDoList = couponDao.findAllCoupon();
+            Map<Integer, CouponDo> newCouponMapCache = new ConcurrentHashMap<Integer, CouponDo>();
+            for (CouponDo couponDo : couponDoList) {
+                newCouponMapCache.put(couponDo.getCoupon_id(), couponDo);
+            }
+            couponDoCache = newCouponMapCache;
+
         } catch (Exception ex) {
             logger.error("refreshGateConfig exception:" + ex.getMessage(), ex);
             return false;
@@ -67,5 +90,9 @@ public class DianCanConfigImpl implements DianCanConfig{
 
     public Map<Integer, BoardDo> getAllBoard() {
         return boardDoCache;
+    }
+
+    public Map<Integer, CouponDo> getAllCouponDo() {
+        return couponDoCache;
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ineedwhite.diancan.dao.dao.CouponDao">
+    <select id="findAllCoupon" resultType="com.ineedwhite.diancan.dao.domain.CouponDo">
+        SELECT coupon_id, consumption_amount, discount, expiry_time
+        FROM dc_coupon;
+    </select>
+</mapper>
