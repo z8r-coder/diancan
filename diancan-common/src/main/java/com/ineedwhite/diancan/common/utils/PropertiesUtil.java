@@ -23,13 +23,13 @@ public class PropertiesUtil {
 
     private static Properties properties;
     static {
-
+        loadPropertiesFromSrc();
     }
     public static void loadPropertiesFromSrc() {
         InputStream in = null;
 
         try {
-            in = PropertiesUtil.class.getClassLoader().getResourceAsStream("env.properties");
+            in = PropertiesUtil.class.getClassLoader().getResourceAsStream("environment.properties");
             if (in != null) {
                 properties = new Properties();
                 properties.load(in);
@@ -56,15 +56,45 @@ public class PropertiesUtil {
         }
         String redisPort = properties.getProperty("redis.port");
         if (!StringUtils.isBlank(redisPort)) {
-            properCache.put("redis.port", redisPort);
+            properCache.put("redis.port", redisPort.trim());
+        }
+        String testOnBorrow = properties.getProperty("cache.r.testonborrow");
+        if (!StringUtils.isBlank(testOnBorrow)) {
+            properCache.put("cache.r.testonborrow", testOnBorrow.trim());
+        }
+        String maxIdle = properties.getProperty("cache.r.maxidle");
+        if (!StringUtils.isBlank(maxIdle)) {
+            properCache.put("cache.r.maxidle", maxIdle.trim());
+        }
+        String minIdle = properties.getProperty("cache.r.minidle");
+        if (!StringUtils.isBlank(minIdle)) {
+            properCache.put("cache.r.minidle", minIdle.trim());
+        }
+        String idleTime = properties.getProperty("cache.r.softMinEvictableIdleTime");
+        if (!StringUtils.isBlank(idleTime)) {
+            properCache.put("cache.r.softMinEvictableIdleTime", idleTime.trim());
+        }
+        String maxTotal = properties.getProperty("cache.r.maxtotal");
+        if (!StringUtils.isBlank(maxTotal)) {
+            properCache.put("cache.r.maxtotal", maxTotal.trim());
+        }
+        String maxWaitMil = properties.getProperty("cache.r.maxwaitmillis");
+        if (!StringUtils.isBlank(maxWaitMil)) {
+            properCache.put("cache.r.maxwaitmillis", maxTotal.trim());
         }
     }
 
-    public static TypeCast getValue(String text){
-        return new TypeCast(text);
+    public static TypeCast getValue(String key){
+        String value = properCache.get(key);
+        return new TypeCast(value);
     }
 
-    public static String getStringValue (String text) {
-        return null;
+    public static String getStringValue (String key) {
+        return properCache.get(key);
+    }
+
+    public static void main(String[] args) {
+        String test = PropertiesUtil.getStringValue("cache.r.maxwaitmillis");
+        System.out.println(test);
     }
 }

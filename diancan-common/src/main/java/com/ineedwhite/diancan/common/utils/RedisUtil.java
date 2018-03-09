@@ -922,7 +922,6 @@ public class RedisUtil {
 
     public static void main(String... strings) throws Exception {
         set("hello1", "1");
-
-
+        System.out.println(getStr("hello1"));
     }
 }
