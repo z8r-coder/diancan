@@ -115,3 +115,22 @@ curl -d "" "192.168.1.168:8080/test/test"
     字段名                 描述
             
     foodType              菜品信息
+
+### 5.订桌
+##### URL: http://192.168.1.196:9090//outerApi/reserveBoard
+##### 入参：
+     字段名                      描述          是否可空
+     
+     order_board_date           预定时间          否   
+     
+     order_board_time_interval  预定时段          否
+                               （0.上午 1.中午.2）    
+                                
+     board_id                   餐桌号         否
+
+##### 出参:
+     字段名                 描述
+                 
+     order_id              订单号
+        
+     board_id              桌位号
