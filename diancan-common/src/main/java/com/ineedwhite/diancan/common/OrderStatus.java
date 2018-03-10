@@ -7,10 +7,11 @@ package com.ineedwhite.diancan.common;
  */
 public enum OrderStatus {
     UK("UK","订单初始化"),
-    UF("UF", "更新了菜单"),
+    UM("UM", "更新了菜单"),
     UD("UD", "结账，支付成功"),
     UR("UR", "退款"),
     UC("UC", "超时关单"),
+    UF("UF", "支付失败")
     ;
 
     /**

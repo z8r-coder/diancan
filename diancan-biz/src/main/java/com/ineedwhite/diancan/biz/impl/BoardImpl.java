@@ -5,14 +5,17 @@ import com.ineedwhite.diancan.biz.Board;
 import com.ineedwhite.diancan.biz.DianCanConfig;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.OrderStatus;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.common.utils.RedLock;
 import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
+import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
+import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,9 @@ public class BoardImpl implements Board{
 
     @Resource
     private OrderDao orderDao;
+
+    @Resource
+    private UserDao userDao;
 
     @Resource
     private DianCanConfig dianCanConfig;
@@ -99,16 +105,33 @@ public class BoardImpl implements Board{
             String orderDate = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
             String orderBoardDate = paraMap.get("order_board_date");
             String orderTimeInterval = paraMap.get("order_board_time_interval");
+            String usrId = paraMap.get("user_id");
 
+            UserDo usr = userDao.selectUserByUsrId(usrId);
+            if (usr == null) {
+                logger.error("the user:" + usrId + " have not register!");
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+                return resp;
+            }
+
+            orderDo.setUser_id(usrId);
             orderDo.setOrder_id(orderId);
             orderDo.setBoard_id(Integer.parseInt(boardId));
             orderDo.setOrder_date(orderDate);
             orderDo.setOrder_people_number(orderPeopleNum);
             orderDo.setOrder_board_date(orderBoardDate);
             orderDo.setOrder_board_time_interval(orderTimeInterval);
-            orderDo.setOrder_status("UK");
+            orderDo.setOrder_status(OrderStatus.UK.getOrderStatus());
 
             resp.put("board_id", boardId);
+
+            List<String> selectOrdByStatus = orderDao.selectOrderByTimeAndBoardIdAndStatus(orderBoardDate,
+                    orderTimeInterval,boardId, OrderStatus.UD.getOrderStatus());
+            if (selectOrdByStatus.size() != 0) {
+                //该桌号存在结账成功的订单
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00009);
+                return resp;
+            }
 
             List<String> selectOrd = orderDao.selectOrderByTimeAndBoardId(orderBoardDate,
                     orderTimeInterval, boardId);
@@ -117,7 +140,6 @@ public class BoardImpl implements Board{
                 if (OrderUtils.getCacheOrder(ordId)) {
                     //存在未过期的订单
                     logger.warn("orderId:" + orderId + "have order the board:" + boardId + "!");
-                    resp.put("board_id", boardId);
                     BizUtils.setRspMap(resp, ErrorCodeEnum.DC00009);
                     return resp;
                 }

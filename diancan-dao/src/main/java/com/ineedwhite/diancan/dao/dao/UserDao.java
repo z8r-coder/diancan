@@ -18,4 +18,11 @@ public interface UserDao {
      * @param user_phone
      */
     UserDo selectUserByPhone(@Param("user_phone")String user_phone);
+
+    /**
+     * 通过用户ID查找用户
+     * @param user_id
+     * @return
+     */
+    UserDo selectUserByUsrId(@Param("user_id")String user_id);
 }

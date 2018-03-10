@@ -126,7 +126,9 @@ curl -d "" "192.168.1.168:8080/test/test"
      order_board_time_interval  预定时段          否
                                （0.上午 1.中午.2）    
                                 
-     board_id                   餐桌号         否
+     board_id                   餐桌号            否
+     
+     user_id                    用户号            否
 
 ##### 出参:
      字段名                 描述

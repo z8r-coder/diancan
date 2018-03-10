@@ -110,6 +110,7 @@ public class Test {
     @org.junit.Test
     public void reserveBoard() {
         Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("user_id", "3dc9214c9c0b4e569b646cdf514b746d");
         paraMap.put("order_board_date", "20180310");
         paraMap.put("order_board_time_interval", "0");
         paraMap.put("board_id", "8");
