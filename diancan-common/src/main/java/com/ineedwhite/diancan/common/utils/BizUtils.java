@@ -40,7 +40,7 @@ public class BizUtils {
         }
     }
     /**
-     * 把HttpServletRequest对象的getParameterMap返回对象转换为java.util.Map对象
+     * 把HttpServletRequest对象的getParameterMap返回对象转换为java.utils.Map对象
      * @param requestPara
      * @return
      */

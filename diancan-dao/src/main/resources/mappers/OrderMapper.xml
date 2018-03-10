@@ -11,4 +11,11 @@
         INSERT INTO dc_order (order_id, board_id, order_people_number, order_date, order_board_date, order_board_time_interval, order_total_amount, order_status)
         VALUES (#{Order.order_id}, #{Order.board_id}, #{Order.order_people_number}, #{Order.order_date}, #{Order.order_board_date}, #{Order.order_board_time_interval},#{Order.order_total_amount}, #{Order.order_status})
     </insert>
+
+    <select id="selectOrderByTimeAndBoardId" resultType="java.lang.String">
+        SELECT order_id FROM dc_order
+        WHERE order_board_date = #{order_board_time}
+        AND order_board_time_interval = #{order_time_interval}
+        AND board_id = #{board_id}
+    </select>
 </mapper>

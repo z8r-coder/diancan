@@ -106,4 +106,14 @@ public class Test {
         Map<String, String> foodMap = foodType.getAllFoodType();
         System.out.println(foodMap);
     }
+
+    @org.junit.Test
+    public void reserveBoard() {
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("order_board_date", "20180310");
+        paraMap.put("order_board_time_interval", "0");
+        paraMap.put("board_id", "8");
+        Map<String, String> map = board.reserveBoard(paraMap);
+        System.out.println(map);
+    }
 }

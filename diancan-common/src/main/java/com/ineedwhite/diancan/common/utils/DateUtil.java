@@ -102,7 +102,7 @@ public class DateUtil {
 
     /**
      * 日期相加
-     * @param tu    时间单位 @see com.rrx.common.util.DateUtil.TimeUnit
+     * @param tu    时间单位 @see com.rrx.common.utils.DateUtil.TimeUnit
      * @param delta 相加的值，不能超过Integer的最大值和最小值
      */
     public static Date add(TimeUnit tu, long delta) {

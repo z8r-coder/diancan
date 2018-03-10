@@ -3,14 +3,17 @@ package com.ineedwhite.diancan.biz.impl;
 import com.alibaba.fastjson.JSON;
 import com.ineedwhite.diancan.biz.Board;
 import com.ineedwhite.diancan.biz.DianCanConfig;
+import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.common.utils.RedLock;
+import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +75,6 @@ public class BoardImpl implements Board{
         return resp;
     }
 
-    // TODO: 2018/3/8 需要添加分布式锁
     public Map<String, String> reserveBoard(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
@@ -91,22 +93,40 @@ public class BoardImpl implements Board{
             logger.error("board_id:" + boardId + " doesn't exist!");
             throw new DcException(ErrorCodeEnum.DC00005);
         }
-        String orderId = UUID.randomUUID().toString().replace("-", "");
-        Integer orderPeopleNum = boardDo.getBoard_people_number();
-        String orderDate = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
-        String orderBoardDate = paraMap.get("order_board_date");
-        String orderTimeInterval = paraMap.get("order_board_time_interval");
-
-        orderDo.setOrder_id(orderId);
-        orderDo.setBoard_id(Integer.parseInt(boardId));
-        orderDo.setOrder_date(orderDate);
-        orderDo.setOrder_people_number(orderPeopleNum);
-        orderDo.setOrder_board_date(orderBoardDate);
-        orderDo.setOrder_board_time_interval(orderTimeInterval);
-        orderDo.setOrder_status("UK");
-
         try {
+            String orderId = UUID.randomUUID().toString().replace("-", "");
+            Integer orderPeopleNum = boardDo.getBoard_people_number();
+            String orderDate = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
+            String orderBoardDate = paraMap.get("order_board_date");
+            String orderTimeInterval = paraMap.get("order_board_time_interval");
+
+            orderDo.setOrder_id(orderId);
+            orderDo.setBoard_id(Integer.parseInt(boardId));
+            orderDo.setOrder_date(orderDate);
+            orderDo.setOrder_people_number(orderPeopleNum);
+            orderDo.setOrder_board_date(orderBoardDate);
+            orderDo.setOrder_board_time_interval(orderTimeInterval);
+            orderDo.setOrder_status("UK");
+
+            resp.put("board_id", boardId);
+
+            List<String> selectOrd = orderDao.selectOrderByTimeAndBoardId(orderBoardDate,
+                    orderTimeInterval, boardId);
+
+            for (String ordId : selectOrd) {
+                if (OrderUtils.getCacheOrder(ordId)) {
+                    //存在未过期的订单
+                    logger.warn("orderId:" + orderId + "have order the board:" + boardId + "!");
+                    resp.put("board_id", boardId);
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00009);
+                    return resp;
+                }
+            }
+
             orderDao.insertOrderInfo(orderDo);
+            //cache orderId
+            OrderUtils.addCacheOrder(orderId);
+            resp.put("order_id", orderId);
         } catch (Exception ex) {
             logger.error("method:reserveBoard op order table occur exception:" + ex.getMessage(), ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);

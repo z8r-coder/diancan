@@ -15,7 +15,7 @@ public class RedLock {
     public static final int RETRY_COUNT = 3;
 
     public static boolean lockDefaultTime(String boardId) {
-        return lock(boardId, ExpireTimeConfig.DEFAULT_LOCK_SECONDS);
+        return lock(boardId, ExpireTimeConfig.SHORT_LOCK_SECONDS);
     }
 
     public static boolean lock(String boardId, int expireSeconds) {
@@ -101,7 +101,7 @@ public class RedLock {
         // 默认锁定时间
         public static final int DEFAULT_LOCK_SECONDS  = 180;
 
-        public static final int SHORT_LOCK_SECONDS = 30;
+        public static final int SHORT_LOCK_SECONDS = 5;
     }
 
 }

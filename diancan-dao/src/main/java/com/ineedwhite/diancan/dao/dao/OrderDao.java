@@ -19,6 +19,16 @@ public interface OrderDao {
                                       @Param("order_time_interval")String order_time_interval);
 
     /**
+     * 通过时间段和桌位号来查找订单
+     * @param order_board_time
+     * @param order_time_interval
+     * @param board_id
+     * @return
+     */
+    List<String> selectOrderByTimeAndBoardId(@Param("order_board_time")String order_board_time,
+                                              @Param("order_time_interval")String order_time_interval,
+                                              @Param("board_id")String board_id);
+    /**
      * 在订单表里面插入订单
      * @param orderDo
      */

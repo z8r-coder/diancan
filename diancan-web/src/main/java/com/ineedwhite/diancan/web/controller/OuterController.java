@@ -69,7 +69,26 @@ public class OuterController extends BaseController {
     @RequestMapping(value = "/reserveBoard", method = RequestMethod.POST)
     public void reserveBoard(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.RESERVE_BOARD_PARAM);
+            retMap = board.reserveBoard(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
     }
+
     @RequestMapping(value = "/getAvailableBoard", method = RequestMethod.POST)
     public void getAvailableBoard(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;
