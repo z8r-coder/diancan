@@ -77,12 +77,12 @@ public class DianCanConfigImpl implements DianCanConfig{
         logger.info("load boardConfig information start!");
         refreshConfig();
 
-        //定时刷新页面 2分钟一次
+        //定时刷新页面 5分钟一次
         executorService.scheduleAtFixedRate(new Runnable() {
             public void run() {
                refreshConfig();
             }
-        },2, 2, TimeUnit.MINUTES);
+        },5, 5, TimeUnit.MINUTES);
     }
 
     public boolean refreshConfig() {
