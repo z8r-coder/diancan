@@ -32,7 +32,7 @@ public class FoodImpl implements Food {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
-        String foodType_id = paraMap.get("foodtype_id");
+        String foodType_id = paraMap.get("food_type_id");
         Map<Integer, FoodDo> foods = dianCanConfig.getAllFood();
         List<List<FoodDo>> needFoods = new ArrayList<List<FoodDo>>();
 

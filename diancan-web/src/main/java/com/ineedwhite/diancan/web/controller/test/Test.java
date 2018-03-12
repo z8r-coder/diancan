@@ -125,7 +125,7 @@ public class Test {
     @org.junit.Test
     public void getFoodByType() {
         Map<String, String> paraMap = new HashMap<String, String>();
-        paraMap.put("foodtype_id","1");
+        paraMap.put("food_type_id","1");
         Map<String, String> map = food.getFoodByType(paraMap);
         System.out.println(map);
     }
