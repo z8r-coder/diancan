@@ -2,6 +2,7 @@ package com.ineedwhite.diancan.biz;
 
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.CouponDo;
+import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 
 import java.util.Map;
@@ -48,4 +49,17 @@ public interface DianCanConfig {
      * @return
      */
     FoodTypeDo getFoodTypeById(Integer foodTypeId);
+
+    /**
+     * 返回菜系缓存
+     * @return
+     */
+    Map<Integer, FoodDo> getAllFood();
+
+    /**
+     * 通过菜品号获取菜系信息
+     * @param foodId
+     * @return
+     */
+    FoodDo getFoodById(Integer foodId);
 }

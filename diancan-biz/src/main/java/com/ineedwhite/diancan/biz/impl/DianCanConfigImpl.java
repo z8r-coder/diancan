@@ -3,9 +3,11 @@ package com.ineedwhite.diancan.biz.impl;
 import com.ineedwhite.diancan.biz.DianCanConfig;
 import com.ineedwhite.diancan.dao.dao.BoardDao;
 import com.ineedwhite.diancan.dao.dao.CouponDao;
+import com.ineedwhite.diancan.dao.dao.FoodDao;
 import com.ineedwhite.diancan.dao.dao.FoodTypeDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.CouponDo;
+import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -38,11 +40,16 @@ public class DianCanConfigImpl implements DianCanConfig{
     @Resource
     private FoodTypeDao foodTypeDao;
 
+    @Resource
+    private FoodDao foodDao;
+
     private static List<BoardDo> boardDoList = new ArrayList<BoardDo>();
 
     private static List<CouponDo> couponDoList = new ArrayList<CouponDo>();
 
     private static List<FoodTypeDo> foodTypeDoList = new ArrayList<FoodTypeDo>();
+
+    private static List<FoodDo> foodDoList = new ArrayList<FoodDo>();
 
     /**
      * 桌位缓存信息
@@ -58,6 +65,11 @@ public class DianCanConfigImpl implements DianCanConfig{
      * 菜系缓存信息
      */
     private static Map<Integer, FoodTypeDo> foodTypeDoCache = new ConcurrentHashMap<Integer, FoodTypeDo>();
+
+    /**
+     * 菜品缓存信息
+     */
+    private static Map<Integer, FoodDo> foodDoCache = new ConcurrentHashMap<Integer, FoodDo>();
 
     private static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     @PostConstruct
@@ -101,6 +113,14 @@ public class DianCanConfigImpl implements DianCanConfig{
             }
             foodTypeDoCache = newFoodTypeMapCache;
 
+            //菜品缓存
+            foodDoList = foodDao.findAllFood();
+            Map<Integer, FoodDo> newFoodMapCache = new ConcurrentHashMap<Integer, FoodDo>();
+            for (FoodDo foodDo : foodDoList) {
+                newFoodMapCache.put(foodDo.getFood_id(), foodDo);
+            }
+            foodDoCache = newFoodMapCache;
+
         } catch (Exception ex) {
             logger.error("refreshGateConfig exception:" + ex.getMessage(), ex);
             return false;
@@ -130,5 +150,13 @@ public class DianCanConfigImpl implements DianCanConfig{
 
     public FoodTypeDo getFoodTypeById(Integer foodTypeId) {
         return foodTypeDoCache.get(foodTypeId);
+    }
+
+    public Map<Integer, FoodDo> getAllFood() {
+        return foodDoCache;
+    }
+
+    public FoodDo getFoodById(Integer foodId) {
+        return foodDoCache.get(foodId);
     }
 }

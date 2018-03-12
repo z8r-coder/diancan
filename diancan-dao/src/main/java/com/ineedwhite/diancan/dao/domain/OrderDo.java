@@ -19,6 +19,8 @@ public class OrderDo {
     private String order_status;
     private String user_id;
     private String coupon_id;
+    private String order_food;
+    private String order_food_num;
 
     public String getOrder_id() {
         return order_id;
@@ -98,5 +100,21 @@ public class OrderDo {
 
     public void setCoupon_id(String coupon_id) {
         this.coupon_id = coupon_id;
+    }
+
+    public String getOrder_food() {
+        return order_food;
+    }
+
+    public void setOrder_food(String order_food) {
+        this.order_food = order_food;
+    }
+
+    public String getOrder_food_num() {
+        return order_food_num;
+    }
+
+    public void setOrder_food_num(String order_food_num) {
+        this.order_food_num = order_food_num;
     }
 }

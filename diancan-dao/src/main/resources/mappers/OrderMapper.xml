@@ -8,8 +8,8 @@
     </select>
 
     <insert id="insertOrderInfo">
-        INSERT INTO dc_order (order_id, board_id, order_people_number, order_date, order_board_date, order_board_time_interval, order_total_amount, order_status,user_id, coupon_id)
-        VALUES (#{Order.order_id}, #{Order.board_id}, #{Order.order_people_number}, #{Order.order_date}, #{Order.order_board_date}, #{Order.order_board_time_interval},#{Order.order_total_amount}, #{Order.order_status},#{Order.user_id}, #{Order.coupon_id})
+        INSERT INTO dc_order (order_id, board_id, order_people_number, order_date, order_board_date, order_board_time_interval, order_total_amount, order_status,user_id, coupon_id, order_food, order_food_num)
+        VALUES (#{Order.order_id}, #{Order.board_id}, #{Order.order_people_number}, #{Order.order_date}, #{Order.order_board_date}, #{Order.order_board_time_interval},#{Order.order_total_amount}, #{Order.order_status},#{Order.user_id}, #{Order.coupon_id}, #{Order.order_food}, #{Order.order_food_num})
     </insert>
 
     <select id="selectOrderByTimeAndBoardId" resultType="java.lang.String">

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ineedwhite.diancan.dao.dao.FoodDao">
+    <select id="findAllFood" resultType="com.ineedwhite.diancan.dao.domain.FoodDo">
+        SELECT food_id, food_name, foodtype_id, food_price, food_remark, food_grounding, food_monthlysales, food_vip_price
+        FROM dc_food;
+    </select>
+</mapper>
