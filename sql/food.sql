@@ -1,4 +1,4 @@
-INSERT INTO dc_food (food_id, food_name, foodtype_id, food_price, food_remark, food_grounding, food_monthlysales, food_vip_price)
+INSERT INTO dc_food (food_id, food_name, food_type_id, food_price, food_remark, food_grounding, food_monthlysales, food_vip_price)
      VALUES (1,'香辣水煮鱼', 1, 30, '好吃的水煮鱼',0,0,26),
        (2,'干锅鸭',1,35,'好吃的干锅鸭',0,0, 30),
        (3,'肥肠火锅',1,35, '好吃的肥肠火锅',0,0,30),
@@ -10,7 +10,7 @@ INSERT INTO dc_food (food_id, food_name, foodtype_id, food_price, food_remark, f
        (9,'鱼香肉丝',1,22,'好吃的鱼香肉丝',0,0,18),
        (10,'干煸四季豆',1,18,'好吃的干煸四季豆',0,0,16);
 
-INSERT INTO dc_food (food_id, food_name, foodtype_id, food_price, food_remark, food_grounding, food_monthlysales, food_vip_price)
+INSERT INTO dc_food (food_id, food_name, food_type_id, food_price, food_remark, food_grounding, food_monthlysales, food_vip_price)
       VALUES (21,'胡麻油炒鸡蛋', 3, 36, '好吃的胡麻油炒鸡蛋',0,0,32),
         (22,'烤羊腰',3,16,'好吃的烤羊腰',0,0, 14),
         (23,'猪肉烩酸菜',3,66, '好吃的猪肉烩酸菜',0,0,60),

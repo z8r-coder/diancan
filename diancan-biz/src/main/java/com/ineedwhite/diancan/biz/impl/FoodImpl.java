@@ -33,12 +33,14 @@ public class FoodImpl implements Food {
 
         String foodType_id = paraMap.get("foodtype_id");
         Map<Integer, FoodDo> foods = dianCanConfig.getAllFood();
-        List<FoodDo> needFoods = new ArrayList<FoodDo>();
+        List<List<FoodDo>> needFoods = new ArrayList<List<FoodDo>>();
 
         for (Integer foodId : foods.keySet()) {
             FoodDo food = foods.get(foodId);
             if (StringUtils.equals(foodType_id, food.getFood_type_id().toString())) {
-                needFoods.add(food);
+                List<FoodDo> list = new ArrayList<FoodDo>();
+                list.add(food);
+                needFoods.add(list);
             }
         }
 

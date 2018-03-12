@@ -1,6 +1,7 @@
 package com.ineedwhite.diancan.web.controller.test;
 
 import com.ineedwhite.diancan.biz.Board;
+import com.ineedwhite.diancan.biz.Food;
 import com.ineedwhite.diancan.biz.FoodType;
 import com.ineedwhite.diancan.biz.User;
 import com.ineedwhite.diancan.common.utils.DateUtil;
@@ -39,6 +40,9 @@ public class Test {
 
     @Autowired
     private FoodType foodType;
+
+    @Autowired
+    private Food food;
 
     @org.junit.Test
     public void testMysql() {
@@ -115,6 +119,14 @@ public class Test {
         paraMap.put("order_board_time_interval", "0");
         paraMap.put("board_id", "8");
         Map<String, String> map = board.reserveBoard(paraMap);
+        System.out.println(map);
+    }
+
+    @org.junit.Test
+    public void getFoodByType() {
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("foodtype_id","1");
+        Map<String, String> map = food.getFoodByType(paraMap);
         System.out.println(map);
     }
 }
