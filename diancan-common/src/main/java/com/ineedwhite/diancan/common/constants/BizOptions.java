@@ -21,4 +21,6 @@ public class BizOptions {
      */
     public final static String INTERROGATION = "?";
 
+    public final static int FOOD_PAGING = 4;
+
 }

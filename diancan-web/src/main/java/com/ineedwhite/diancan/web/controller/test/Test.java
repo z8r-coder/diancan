@@ -1,12 +1,11 @@
 package com.ineedwhite.diancan.web.controller.test;
 
-import com.ineedwhite.diancan.biz.Board;
-import com.ineedwhite.diancan.biz.Food;
-import com.ineedwhite.diancan.biz.FoodType;
-import com.ineedwhite.diancan.biz.User;
+import com.ineedwhite.diancan.biz.*;
 import com.ineedwhite.diancan.common.utils.DateUtil;
+import com.ineedwhite.diancan.dao.dao.FoodDao;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.TestDao;
+import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
 import com.ineedwhite.diancan.dao.domain.TestDo;
 import org.junit.runner.RunWith;
@@ -43,6 +42,9 @@ public class Test {
 
     @Autowired
     private Food food;
+
+    @Autowired
+    private DianCanConfig dianCanConfig;
 
     @org.junit.Test
     public void testMysql() {
@@ -126,6 +128,7 @@ public class Test {
     public void getFoodByType() {
         Map<String, String> paraMap = new HashMap<String, String>();
         paraMap.put("food_type_id","1");
+        paraMap.put("food_page", "3");
         Map<String, String> map = food.getFoodByType(paraMap);
         System.out.println(map);
     }
@@ -137,4 +140,5 @@ public class Test {
         Map<String, String> map = user.userInfo(paraMap);
         System.out.println(map);
     }
+
 }

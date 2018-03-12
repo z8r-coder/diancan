@@ -1,6 +1,7 @@
 package com.ineedwhite.diancan.biz.impl;
 
 import com.ineedwhite.diancan.biz.DianCanConfig;
+import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.dao.dao.BoardDao;
 import com.ineedwhite.diancan.dao.dao.CouponDao;
 import com.ineedwhite.diancan.dao.dao.FoodDao;
@@ -10,13 +11,12 @@ import com.ineedwhite.diancan.dao.domain.CouponDo;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 import org.apache.log4j.Logger;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -72,6 +72,7 @@ public class DianCanConfigImpl implements DianCanConfig{
     private static Map<Integer, FoodDo> foodDoCache = new ConcurrentHashMap<Integer, FoodDo>();
 
     private static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
     @PostConstruct
     private void init() {
         logger.info("load boardConfig information start!");

@@ -17,11 +17,12 @@ import static com.oracle.jrockit.jfr.ContentType.Timestamp;
 public class MainTest {
 
     public static void main(String[] args) {
-        testTamp();
+        testMov();
     }
 
-    public static void testTamp() {
-
+    public static void testMov() {
+        int test = 2 << 2;
+        System.out.println(test);
     }
     public static void testBean2Map() {
         Map<String, String> map = new HashMap<String, String>();

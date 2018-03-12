@@ -5,6 +5,7 @@ import com.ineedwhite.diancan.dao.domain.CouponDo;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface DianCanConfig {
