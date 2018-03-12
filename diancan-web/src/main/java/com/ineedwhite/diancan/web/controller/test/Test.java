@@ -129,4 +129,12 @@ public class Test {
         Map<String, String> map = food.getFoodByType(paraMap);
         System.out.println(map);
     }
+
+    @org.junit.Test
+    public void getUsrByUsrId() {
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("user_id", "a5a2583d6d6a4c96ba8de0827abc1d87");
+        Map<String, String> map = user.userInfo(paraMap);
+        System.out.println(map);
+    }
 }

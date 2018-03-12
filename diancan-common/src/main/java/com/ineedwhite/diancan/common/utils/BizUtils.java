@@ -128,6 +128,7 @@ public class BizUtils {
      */
     public static <T> Map<String, String> bean2Map(T bean) throws Exception {
         Map<String, String> retMap =  BeanUtils.describe(bean);
+        retMap.remove("class");
         return retMap;
     }
 }

@@ -95,4 +95,20 @@ public class UserImpl implements User {
         }
         return resp;
     }
+
+    public Map<String, String> userInfo(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+
+        String usrId = paraMap.get("user_id");
+        try {
+            UserDo userDo = userDao.selectUserByUsrId(usrId);
+            resp = BizUtils.bean2Map(userDo);
+            resp.remove("user_is_del");
+            BizUtils.setRspMap(resp,ErrorCodeEnum.DC00000);
+        } catch (Exception ex) {
+            logger.error("method:usrInfo op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
+    }
 }
