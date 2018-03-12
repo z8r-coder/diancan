@@ -158,3 +158,25 @@ curl -d "" "192.168.1.168:8080/test/test"
      字段名                 描述
                  
      food_all              该菜系的所有菜品
+
+### 7.根据用户号获取用户信息
+##### URL: http://192.168.1.196:9090//outerApi/getUsrInfo
+##### 入参：
+     字段名                      描述          是否可空
+     
+     user_id                    用户号       否
+
+##### 出参:
+     字段名                 描述   
+        
+     user_name             姓名
+        
+     balance               余额
+        
+     user_phone            电话    
+        
+     accumulate_points     积分
+        
+     member_level          用户等级
+        
+     user_id               用户id                 
