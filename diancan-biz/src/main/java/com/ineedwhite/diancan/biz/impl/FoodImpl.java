@@ -5,6 +5,7 @@ import com.ineedwhite.diancan.biz.DianCanConfig;
 import com.ineedwhite.diancan.biz.Food;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
+import com.ineedwhite.diancan.common.utils.ParserUtil;
 import com.ineedwhite.diancan.dao.dao.FoodDao;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +46,7 @@ public class FoodImpl implements Food {
         }
 
         String resFood = JSON.toJSONString(needFoods);
+        resFood = ParserUtil.JsonHandler(resFood);
         resp.put("food_all", resFood);
         return resp;
     }
