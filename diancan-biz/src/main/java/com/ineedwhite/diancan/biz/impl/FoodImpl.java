@@ -54,7 +54,7 @@ public class FoodImpl implements Food {
         int foodSum = foodByTyp.size();
         int pageNum;
         if (foodSum % 4 == 0) {
-            pageNum = foodSum / BizOptions.FOOD_PAGING;
+            pageNum = (foodSum == 0 ?1:foodSum / BizOptions.FOOD_PAGING);
         } else {
             pageNum = foodSum / BizOptions.FOOD_PAGING + 1;
         }
