@@ -163,6 +163,8 @@ zk:192.168.1.199:2181
      字段名                 描述
                  
      food_all              该菜系的所有菜品
+        
+     food_page_num         菜单页数
 
 ### 7.根据用户号获取用户信息
 ##### URL: http://192.168.1.196:9090//outerApi/getUsrInfo

@@ -76,6 +76,7 @@ public class FoodServiceImpl implements FoodService {
         String resFood = JSON.toJSONString(needFoods);
         resFood = ParserUtil.JsonHandler(resFood);
         resp.put("food_all", resFood);
+        resp.put("food_page_num", String.valueOf(pageNum));
         return resp;
     }
 }
