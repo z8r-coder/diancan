@@ -24,6 +24,7 @@ public class OrderCloseJob extends AbstractElasticJob{
             logger.error("关单task结束");
         }catch (Exception ex) {
             logger.error("关单异常",ex);
+            throw ex;
         }
     }
 }

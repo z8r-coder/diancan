@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd
+                        ">
+
+    <bean id="expiredOrderCloseJob" class="com.ineedwhite.diancan.biz.task.OrderCloseJob"/>
+    <job:simple id="ExpiredOrderCloseJob" class="com.ineedwhite.diancan.biz.task.OrderCloseJob"
+                cron="0 0/10 * * * ?" description="订单补偿任务-过期作废的订单状态设置为过期状态，每10分钟执行一次"
+                registry-center-ref="registry-center-ref" sharding-total-count="1"
+                monitor-execution="false" failover="false" disabled="false" overwrite="true"/>
+</beans>

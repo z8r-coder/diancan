@@ -149,6 +149,8 @@ public class BoardServiceImpl implements BoardService{
         } catch (Exception ex) {
             logger.error("method:reserveBoard op order table occur exception:" + ex.getMessage(), ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        } finally {
+            RedLock.unLock(boardId);
         }
         return resp;
     }
