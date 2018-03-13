@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * 用户业务类
  */
-public interface User {
+public interface UserService {
     /**
      * 用户注册
      * @param paraMap

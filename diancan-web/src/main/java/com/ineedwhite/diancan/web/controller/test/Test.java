@@ -29,22 +29,22 @@ public class Test {
     private TestDao testDao;
 
     @Autowired
-    private User user;
+    private UserService user;
 
     @Autowired
-    private Board board;
+    private BoardService board;
 
     @Autowired
     private OrderDao orderDao;
 
     @Autowired
-    private FoodType foodType;
+    private FoodTypeService foodType;
 
     @Autowired
-    private Food food;
+    private FoodService food;
 
     @Autowired
-    private DianCanConfig dianCanConfig;
+    private DianCanConfigService dianCanConfig;
 
     @org.junit.Test
     public void testMysql() {

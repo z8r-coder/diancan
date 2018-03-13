@@ -1,9 +1,8 @@
 package com.ineedwhite.diancan.biz.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.ineedwhite.diancan.biz.DianCanConfig;
-import com.ineedwhite.diancan.biz.FoodType;
+import com.ineedwhite.diancan.biz.DianCanConfigService;
+import com.ineedwhite.diancan.biz.FoodTypeService;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
@@ -21,9 +20,9 @@ import java.util.Map;
  * @desc
  */
 @Service
-public class FoodTypeImpl implements FoodType{
+public class FoodTypeServieImpl implements FoodTypeService{
     @Resource
-    DianCanConfig dianCanConfig;
+    DianCanConfigService dianCanConfig;
 
     public Map<String, String> getAllFoodType() {
         Map<String, String> resp = new HashMap<String, String>();

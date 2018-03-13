@@ -1,7 +1,6 @@
 package com.ineedwhite.diancan.biz.impl;
 
-import com.ineedwhite.diancan.biz.DianCanConfig;
-import com.ineedwhite.diancan.common.constants.BizOptions;
+import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.dao.dao.BoardDao;
 import com.ineedwhite.diancan.dao.dao.CouponDao;
 import com.ineedwhite.diancan.dao.dao.FoodDao;
@@ -11,7 +10,6 @@ import com.ineedwhite.diancan.dao.domain.CouponDo;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 import org.apache.log4j.Logger;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,8 +26,8 @@ import java.util.concurrent.TimeUnit;
  * @desc
  */
 @Service
-public class DianCanConfigImpl implements DianCanConfig{
-    private Logger logger = Logger.getLogger(DianCanConfigImpl.class);
+public class DianCanConfigServiceImpl implements DianCanConfigService{
+    private Logger logger = Logger.getLogger(DianCanConfigServiceImpl.class);
 
     @Resource
     private BoardDao boardDao;

@@ -7,7 +7,7 @@ import java.util.Map;
  * @create 2018-03-10
  * @desc
  */
-public interface Food {
+public interface FoodService {
     /**
      * 通过菜系类型来查找菜品
      * @param paraMap

@@ -17,6 +17,14 @@ public abstract class AbstractElasticJob extends AbstractSimpleElasticJob {
 
     @Override
     public void process(JobExecutionMultipleShardingContext shardingContext) {
-
+        String jobName = shardingContext.getJobName();
+        logger.info("Starting Job:" + jobName);
+        try {
+            doTask();
+        } catch (Throwable ex) {
+            logger.error("JobError:" + jobName, ex);
+        } finally {
+            logger.info("Exiting Job:" + jobName);
+        }
     }
 }

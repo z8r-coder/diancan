@@ -2,7 +2,7 @@ package com.ineedwhite.diancan.biz;
 
 import java.util.Map;
 
-public interface FoodType {
+public interface FoodTypeService {
     /**
      * 获取所有菜系
      * @return

@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * 餐桌业务类
  */
-public interface Board {
+public interface BoardService {
     /**
      * 获取可预定餐桌
      * @return

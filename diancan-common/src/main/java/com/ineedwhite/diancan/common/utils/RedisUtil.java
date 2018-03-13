@@ -13,7 +13,7 @@ import redis.clients.jedis.Pipeline;
 import java.util.*;
 
 /**
- * Created by lvyb on 2016/06/15.
+ * Created by rx
  */
 
 public class RedisUtil {

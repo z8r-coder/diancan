@@ -1,13 +1,12 @@
 package com.ineedwhite.diancan.biz.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.ineedwhite.diancan.biz.DianCanConfig;
-import com.ineedwhite.diancan.biz.Food;
+import com.ineedwhite.diancan.biz.DianCanConfigService;
+import com.ineedwhite.diancan.biz.FoodService;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.ParserUtil;
-import com.ineedwhite.diancan.dao.dao.FoodDao;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,12 +21,12 @@ import java.util.*;
  * @desc
  */
 @Service
-public class FoodImpl implements Food {
+public class FoodServiceImpl implements FoodService {
 
-    private final static Logger logger = Logger.getLogger(FoodImpl.class);
+    private final static Logger logger = Logger.getLogger(FoodServiceImpl.class);
 
     @Resource
-    private DianCanConfig dianCanConfig;
+    private DianCanConfigService dianCanConfig;
 
     public Map<String, String> getFoodByType(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();

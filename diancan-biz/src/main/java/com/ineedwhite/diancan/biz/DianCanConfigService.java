@@ -8,7 +8,7 @@ import com.ineedwhite.diancan.dao.domain.FoodTypeDo;
 import java.util.List;
 import java.util.Map;
 
-public interface DianCanConfig {
+public interface DianCanConfigService {
 
     /**
      * 从数据库缓存

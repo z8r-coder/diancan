@@ -1,13 +1,12 @@
 package com.ineedwhite.diancan.biz.impl;
 
-import com.ineedwhite.diancan.biz.User;
+import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +20,9 @@ import java.util.UUID;
  * @desc
  */
 @Service
-public class UserImpl implements User {
+public class UserServiceImpl implements UserService {
 
-    private Logger logger = Logger.getLogger(UserImpl.class);
+    private Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserDao userDao;

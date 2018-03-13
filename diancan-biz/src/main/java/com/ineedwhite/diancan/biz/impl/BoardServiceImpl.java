@@ -1,8 +1,8 @@
 package com.ineedwhite.diancan.biz.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.ineedwhite.diancan.biz.Board;
-import com.ineedwhite.diancan.biz.DianCanConfig;
+import com.ineedwhite.diancan.biz.BoardService;
+import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.OrderStatus;
@@ -10,18 +10,15 @@ import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.common.utils.RedLock;
-import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -30,9 +27,9 @@ import java.util.*;
  * @desc
  */
 @Service
-public class BoardImpl implements Board{
+public class BoardServiceImpl implements BoardService{
 
-    private Logger logger = Logger.getLogger(BoardImpl.class);
+    private Logger logger = Logger.getLogger(BoardServiceImpl.class);
 
     @Resource
     private OrderDao orderDao;
@@ -41,7 +38,7 @@ public class BoardImpl implements Board{
     private UserDao userDao;
 
     @Resource
-    private DianCanConfig dianCanConfig;
+    private DianCanConfigService dianCanConfig;
 
     public Map<String, String> getAvailableBoard(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();

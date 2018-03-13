@@ -1,10 +1,10 @@
 package com.ineedwhite.diancan.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ineedwhite.diancan.biz.Board;
-import com.ineedwhite.diancan.biz.Food;
-import com.ineedwhite.diancan.biz.FoodType;
-import com.ineedwhite.diancan.biz.User;
+import com.ineedwhite.diancan.biz.BoardService;
+import com.ineedwhite.diancan.biz.FoodService;
+import com.ineedwhite.diancan.biz.FoodTypeService;
+import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.constants.MustNeedPara;
@@ -32,16 +32,16 @@ public class OuterController extends BaseController {
     private Logger logger = Logger.getLogger(OuterController.class);
 
     @Autowired
-    private User user;
+    private UserService user;
 
     @Autowired
-    private Board board;
+    private BoardService board;
 
     @Autowired
-    private FoodType foodType;
+    private FoodTypeService foodType;
 
     @Autowired
-    private Food food;
+    private FoodService food;
 
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
