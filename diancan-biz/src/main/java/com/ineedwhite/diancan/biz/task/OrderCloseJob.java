@@ -1,6 +1,9 @@
 package com.ineedwhite.diancan.biz.task;
 
+import com.ineedwhite.diancan.biz.OrderCloseService;
 import org.apache.log4j.Logger;
+
+import javax.annotation.Resource;
 
 /**
  * @author ruanxin
@@ -11,8 +14,16 @@ public class OrderCloseJob extends AbstractElasticJob{
 
     private static final Logger logger = Logger.getLogger(OrderCloseJob.class);
 
-    public void doTask() throws Exception {
-        logger.info("begin to close order!");
+    @Resource
+    private OrderCloseService orderCloseService;
 
+    public void doTask() throws Exception {
+        try {
+            logger.info("关单task开始！");
+            orderCloseService.doTask();
+            logger.error("关单task结束");
+        }catch (Exception ex) {
+            logger.error("关单异常",ex);
+        }
     }
 }

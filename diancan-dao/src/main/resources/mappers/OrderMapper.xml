@@ -26,4 +26,20 @@
         AND board_id = #{board_id}
         AND order_status = #{order_status}
     </select>
+
+    <select id="selectOrderByStatusWithoutClose" resultType="java.lang.String">
+        SELECT order_id FROM dc_order
+        WHERE order_status = 'UK' AND order_status = 'UF';
+    </select>
+
+    <update id="updateOrderStsById" parameterType="java.lang.String">
+        UPDATE dc_order SET order_status = #{ordSts}
+        where 1=1
+        <if test="jrnNoList.size()>0">
+            and JRN_NO in
+            <foreach item="item" collection="OrderIdList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
 </mapper>

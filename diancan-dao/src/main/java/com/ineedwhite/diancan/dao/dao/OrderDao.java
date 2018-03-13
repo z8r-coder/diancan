@@ -47,5 +47,12 @@ public interface OrderDao {
      */
     void insertOrderInfo(@Param("Order")OrderDo orderDo);
 
-    
+    /**
+     * 查找出所有没有关单的订单
+     * @return
+     */
+    List<String> selectOrderByStatusWithoutClose();
+
+    int updateOrderStsById(@Param("OrderIdList")List<String> orderIdList,
+                           @Param("ordSts")String ordSts);
 }
