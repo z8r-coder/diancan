@@ -39,5 +39,9 @@ public class OrderCloseService {
             return;
         }
         int affectRows = orderDao.updateOrderStsById(needCloseOrd, "UC");
+
+        if (affectRows <= 0) {
+            logger.warn("关单task 更新数据库失败!");
+        }
     }
 }
