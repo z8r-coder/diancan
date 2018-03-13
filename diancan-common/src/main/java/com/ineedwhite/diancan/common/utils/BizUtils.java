@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -130,5 +131,31 @@ public class BizUtils {
         Map<String, String> retMap =  BeanUtils.describe(bean);
         retMap.remove("class");
         return retMap;
+    }
+
+    /**
+     * 获取请求的IP
+     *
+     * @param request 请求
+     */
+    public static String getClientIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+
+        if (ip.indexOf(",") > 0) {
+            ip = ip.substring(0, ip.indexOf(","));
+        }
+
+        return ip;
     }
 }

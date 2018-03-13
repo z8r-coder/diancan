@@ -26,6 +26,14 @@
 		</property>
 	</bean>
 
+	<!-- 登录拦截器-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.ineedwhite.diancan.web.interceptor.LogginInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 	<!-- 视图解释类 -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />

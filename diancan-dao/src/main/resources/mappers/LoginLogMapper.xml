@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ineedwhite.diancan.dao.dao.LoginLogDao">
+    <insert id="insertLoginLog">
+        INSERT INTO dc_sys_login_log(ll_login_date, ll_ip, ll_req_url) VALUES
+        (#{loginLogDo.ll_login_date},#{loginLogDo.ll_ip},#{loginLogDo.ll_req_url})
+    </insert>
+</mapper>
