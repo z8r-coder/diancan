@@ -46,4 +46,6 @@ public interface OrderDao {
      * @param orderDo
      */
     void insertOrderInfo(@Param("Order")OrderDo orderDo);
+
+    
 }
