@@ -26,6 +26,7 @@
         <joda-time.version>2.6</joda-time.version>
         <jedis.version>2.7.2</jedis.version>
         <guava.version>19.0</guava.version>
+        <job.version>1.1.1</job.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -144,6 +145,17 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dangdang</groupId>
+                <artifactId>elastic-job-core</artifactId>
+                <version>${job.version}</version>
+            </dependency>
+            <!-- 使用springframework自定义命名空间时引入 -->
+            <dependency>
+                <groupId>com.dangdang</groupId>
+                <artifactId>elastic-job-spring</artifactId>
+                <version>${job.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
