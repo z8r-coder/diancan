@@ -60,7 +60,7 @@ public class FoodServiceImpl implements FoodService {
 
         if (foodPage > pageNum) {
             logger.error("传入的页数大于实际页数! paraPage:" + foodPage);
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00011);
             return resp;
         }
 
