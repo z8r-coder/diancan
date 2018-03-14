@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletResponse;
  * @create 2018-03-13
  * @desc 登陆拦截器
  */
-public class LogginInterceptor implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger = Logger.getLogger(LogginInterceptor.class);
+    private static final Logger logger = Logger.getLogger(LoginInterceptor.class);
 
     @Autowired
     private LoginLogDao loginLogDao;

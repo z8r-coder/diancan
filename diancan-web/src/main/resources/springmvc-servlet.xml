@@ -30,7 +30,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<bean class="com.ineedwhite.diancan.web.interceptor.LogginInterceptor"/>
+			<bean class="com.ineedwhite.diancan.web.interceptor.LoginInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 
