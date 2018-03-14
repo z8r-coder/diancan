@@ -188,4 +188,19 @@ zk:192.168.1.199:2181
         
      member_level          用户等级
         
-     user_id               用户id                 
+     user_id               用户id
+     
+### 8.向购物车添加菜品
+##### URL: http://192.168.1.196:9090//outerApi/addFood
+##### 入参：
+     字段名                      描述          是否可空
+     
+     order_id                   点单号           否
+     
+     food_id                    菜品号           否
+        
+     food_num                   菜品数量         否
+
+##### 出参:
+     字段名                 描述   
+                
