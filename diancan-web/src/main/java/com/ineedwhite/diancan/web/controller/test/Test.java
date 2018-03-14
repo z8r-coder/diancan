@@ -130,7 +130,7 @@ public class Test {
     }
 
     @org.junit.Test
-    public void getFoodByType() {
+    public void getFoodByType() throws Exception {
         Map<String, String> paraMap = new HashMap<String, String>();
         paraMap.put("food_type_id","1");
         paraMap.put("food_page", "3");
