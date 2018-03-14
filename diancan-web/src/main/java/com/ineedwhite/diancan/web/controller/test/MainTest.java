@@ -4,7 +4,9 @@ package com.ineedwhite.diancan.web.controller.test;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.oracle.jrockit.jfr.ContentType.Timestamp;
@@ -23,6 +25,10 @@ public class MainTest {
     public static void testMov() {
         int test = 2 << 2;
         System.out.println(test);
+    }
+    public static void testSplit() {
+        String test = "1|2|3|4";
+        List<String> list = Arrays.asList(test.split("\\|"));
     }
     public static void testBean2Map() {
         Map<String, String> map = new HashMap<String, String>();

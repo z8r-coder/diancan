@@ -75,4 +75,18 @@ public interface OrderDao {
      * @return
      */
     UserDo selectUserInfoByOrdId(@Param("OrderId") String orderId);
+
+    /**
+     * 更新订单的
+     * @param ordTotalAmt  总计金额
+     * @param ordSts       订单状态
+     * @param ordFood      订单食物
+     * @param ordFoodNum   食物数量
+     * @return
+     */
+    int updateOrderInfoByOrdId(@Param("order_total_amount")float ordTotalAmt,
+                               @Param("order_status")String ordSts,
+                               @Param("order_food")String ordFood,
+                               @Param("order_food_num")String ordFoodNum,
+                               @Param("order_id")String ordId);
 }

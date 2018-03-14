@@ -9,11 +9,13 @@ import com.ineedwhite.diancan.biz.model.ShoppingCartFood;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.LevelMappingEnum;
+import com.ineedwhite.diancan.common.OrderStatus;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.UserDao;
+import com.ineedwhite.diancan.dao.domain.CouponDo;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
@@ -23,10 +25,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Transaction;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ruanxin
@@ -44,7 +43,66 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private OrderDao orderDao;
 
-    public Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception {
+    @Resource
+    private UserDao userDao;
+
+    public Map<String, String> useCoupon(Map<String, String> paraMap) {
+        return null;
+    }
+
+    public Map<String, String> getCouponList(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String userId = paraMap.get("user_id");
+        String orderId = paraMap.get("order_id");
+        try {
+            String coupon = userDao.selectCouponByUsrId(userId);
+            if (StringUtils.isEmpty(coupon)) {
+                logger.warn("该用户没有可用优惠券! user_id:" + userId);
+                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00014);
+                return resp;
+            }
+            OrderDo orderDo = orderDao.selectOrderById(orderId);
+            String ordSts = orderDo.getOrder_status();
+            if (!StringUtils.equals(ordSts, OrderStatus.UM.getOrderStatus())) {
+                //状态不一致
+                logger.error("the order status is wrong! orderId:" + orderId);
+                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00015);
+                return resp;
+            }
+            List<String> couponList = Arrays.asList(coupon.split("\\|"));
+            if (couponList == null || couponList.size() == 0) {
+                logger.warn("该用户没有可用优惠券! user_id:" + userId);
+                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00014);
+                return resp;
+            }
+            Map<Integer, CouponDo> couponMap = dianCanConfigService.getAllCouponDo();
+            List<String> canUseCouponNameList = new ArrayList<String>();
+            float totalMoney = orderDo.getOrder_total_amount();
+
+            for (String couponId : couponList) {
+                CouponDo cp = couponMap.get(Integer.parseInt(couponId));
+                if (totalMoney > cp.getConsumption_amount()) {
+                    //可用
+                    canUseCouponNameList.add(cp.getRemark());
+                }
+            }
+            if (canUseCouponNameList.size() == 0) {
+                logger.warn("该用户没有可用优惠券! user_id:" + userId);
+                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00014);
+                return resp;
+            }
+            String couponListStr = JSON.toJSONString(canUseCouponNameList);
+            resp.put("coupon_List", couponListStr);
+        } catch (Exception e) {
+            logger.error("select coupon occurs exception", e);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
+        return resp;
+    }
+
+    public Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
         String orderId = paraMap.get("order_id");
@@ -96,7 +154,13 @@ public class OrderServiceImpl implements OrderService {
             return resp;
         }
 
+        //菜品队列
         List<String> foodIds = OrderUtils.getFoodIdList(orderId);
+        //菜品字符串
+        StringBuilder foodSb = new StringBuilder();
+        //菜品数量字符串
+        StringBuilder foodNumSb = new StringBuilder();
+
         Map<Integer, FoodDo> foodDoMap = dianCanConfigService.getAllFood();
         List<ShoppingCartFood> needToPayFood = new ArrayList<ShoppingCartFood>();
         List<Float> vipPriceList = new ArrayList<Float>();
@@ -114,6 +178,11 @@ public class OrderServiceImpl implements OrderService {
                 //数量为0不加入购物车
                 continue;
             }
+            //构建菜品字符串
+            foodSb.append(foodId + "|");
+            //构建菜品数目字符串
+            foodNumSb.append(foodNum + "|");
+
             FoodDo foodDo = foodDoMap.get(foodId);
             ShoppingCartFood cartFood = new ShoppingCartFood();
             cartFood.setFoodName(foodDo.getFood_name());
@@ -127,16 +196,24 @@ public class OrderServiceImpl implements OrderService {
             //vip price list
             vipPriceList.add(foodDo.getFood_vip_price());
         }
-
+        String foodStr = foodSb.toString();
+        String foodNumStr = foodNumSb.toString();
+        //菜品入库参数
+        foodStr = foodStr.substring(0, foodStr.length() - 2);
+        //菜品数量入库参数
+        foodNumStr = foodNumStr.substring(0, foodNumStr.length() - 2);
+        //购物车中的菜品
         String retNeedToPayFoodStr = JSON.toJSONString(needToPayFood);
         resp.put("pay_food_all", retNeedToPayFoodStr);
 
+        //支付总计
         float sumFood = 0;
         for (ShoppingCartFood food : needToPayFood) {
             sumFood += food.getTotal();
         }
         resp.put("food_sum_money", String.valueOf(sumFood));
 
+        //VIP支付总计
         float vipSumFood = 0;
         for (Float vipPrice : vipPriceList) {
             vipSumFood += vipPrice;
@@ -151,6 +228,12 @@ public class OrderServiceImpl implements OrderService {
             resp.put("total_food_money", String.valueOf(sumFood));
         }
 
+        int affectRows = orderDao.updateOrderInfoByOrdId(sumFood, OrderStatus.UM.getOrderStatus(),
+                foodStr, foodNumStr, orderId);
+        if (affectRows <= 0) {
+            logger.warn("更新订单出错:orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
         return resp;
     }
 }

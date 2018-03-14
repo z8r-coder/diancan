@@ -2,19 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ineedwhite.diancan.dao.dao.UserDao">
     <insert id="insertUser">
-        INSERT INTO dc_user(user_id, user_name, user_phone, accumulate_points, balance, member_level, user_is_del,user_password)
-        VALUES (#{User.user_id},#{User.user_name}, #{User.user_phone}, #{User.accumulate_points},#{User.balance}, #{User.member_level}, #{User.user_is_del}, #{User.user_password})
+        INSERT INTO dc_user(user_id, user_name, user_phone, accumulate_points, balance, member_level, user_is_del,user_password, user_coupon)
+        VALUES (#{User.user_id},#{User.user_name}, #{User.user_phone}, #{User.accumulate_points},#{User.balance}, #{User.member_level}, #{User.user_is_del}, #{User.user_password}, #{User.user_coupon})
     </insert>
     
     <select id="selectUserByPhone" resultType="com.ineedwhite.diancan.dao.domain.UserDo">
         SELECT user_id, user_password, user_phone, user_name,
-        accumulate_points, balance, member_level
+        accumulate_points, balance, member_level, user_coupon
         FROM dc_user WHERE user_is_del = 0 AND user_phone = #{user_phone}
     </select>
 
     <select id="selectUserByUsrId" resultType="com.ineedwhite.diancan.dao.domain.UserDo">
         SELECT user_id, user_password, user_phone, user_name,
-        accumulate_points, balance, member_level
+        accumulate_points, balance, member_level, user_coupon
         FROM dc_user WHERE user_is_del = 0 AND user_id = #{user_id}
+    </select>
+
+    <select id="selectCouponByUsrId" resultType="java.lang.String">
+        SELECT user_coupon FROM dc_user WHERE user_is_del = 0 AND user_id = #{user_id};
     </select>
 </mapper>

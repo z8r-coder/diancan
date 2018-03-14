@@ -54,4 +54,10 @@
         SELECT usr.user_coupon, usr.member_level FROM dc_order ord, dc_user usr
         WHERE ord.user_id = usr.user_id AND usr.user_is_del = 0;
     </select>
+
+    <update id="updateOrderInfoByOrdId">
+        UPDATE dc_order SET order_food_num = #{order_food_num}, order_status = #{order_status},
+        order_food = #{order_food}, order_total_amount = #{order_total_amount}
+        WHERE order_id = #{order_id} AND order_status = 'UK';
+    </update>
 </mapper>

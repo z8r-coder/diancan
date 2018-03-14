@@ -16,6 +16,7 @@ public class UserDo {
     private String member_level;
     private Integer user_is_del;
     private String user_password;
+    private String user_coupon;
 
     public String getUser_id() {
         return user_id;
@@ -79,5 +80,13 @@ public class UserDo {
 
     public void setUser_password(String user_password) {
         this.user_password = user_password;
+    }
+
+    public String getUser_coupon() {
+        return user_coupon;
+    }
+
+    public void setUser_coupon(String user_coupon) {
+        this.user_coupon = user_coupon;
     }
 }

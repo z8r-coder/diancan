@@ -17,7 +17,7 @@ public class OrderDo {
     private String order_date;
     private String order_board_date;
     private String order_board_time_interval;
-    private Integer order_total_amount;
+    private float order_total_amount;
     private String order_status;
     private String user_id;
     private String coupon_id;
@@ -72,11 +72,11 @@ public class OrderDo {
         this.order_board_time_interval = order_board_time_interval;
     }
 
-    public Integer getOrder_total_amount() {
+    public float getOrder_total_amount() {
         return order_total_amount;
     }
 
-    public void setOrder_total_amount(Integer order_total_amount) {
+    public void setOrder_total_amount(float order_total_amount) {
         this.order_total_amount = order_total_amount;
     }
 

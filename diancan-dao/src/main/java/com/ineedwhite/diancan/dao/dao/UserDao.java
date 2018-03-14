@@ -25,4 +25,11 @@ public interface UserDao {
      * @return
      */
     UserDo selectUserByUsrId(@Param("user_id")String user_id);
+
+    /**
+     * 通过用户ID查找优惠券
+     * @param user_id
+     * @return
+     */
+    String selectCouponByUsrId(@Param("user_id")String user_id);
 }
