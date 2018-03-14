@@ -229,3 +229,16 @@ zk:192.168.1.199:2181
     vip_food_money         vip优惠价
         
     total_food_money       结账
+    
+### 10.获取优惠券列表
+##### URL: http://192.168.1.196:9090//outerApi/getCouponList
+##### 入参：
+     字段名                      描述          是否可空
+     
+     order_id                   订单号           否
+        
+     user_id                    用户号           否   
+##### 出参:
+     字段名                 描述   
+                
+    coupon_List            优惠券列表

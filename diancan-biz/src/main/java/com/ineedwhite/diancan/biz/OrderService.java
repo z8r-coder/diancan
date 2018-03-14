@@ -20,5 +20,21 @@ public interface OrderService {
      * @throws Exception
      */
     Map<String, String> shoppingCart(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 获取优惠券列表
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> getCouponList(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 使用优惠券
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> useCoupon(Map<String, String> paraMap) throws Exception;
 }
 

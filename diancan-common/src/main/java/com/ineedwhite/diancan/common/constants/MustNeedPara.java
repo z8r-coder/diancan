@@ -21,4 +21,6 @@ public class MustNeedPara {
     public static final String[] ADD_FOOD = new String[]{"order_id", "food_id", "food_num"};
 
     public static final String[] SHOPPING_CART = new String[] {"order_id"};
+
+    public static final String[] USE_CART = new String[]{"user_id", "order_id"};
 }
