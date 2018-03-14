@@ -3,10 +3,12 @@ package com.ineedwhite.diancan.biz.impl;
 import com.alibaba.fastjson.JSON;
 import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.FoodService;
+import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.ParserUtil;
+import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,12 +30,19 @@ public class FoodServiceImpl implements FoodService {
     @Resource
     private DianCanConfigService dianCanConfig;
 
-    public Map<String, String> getFoodByType(Map<String, String> paraMap) {
+    public Map<String, String> getFoodByType(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
+        String orderId = paraMap.get("order_id");
         String foodType_id = paraMap.get("food_type_id");
         int foodPage = Integer.parseInt(paraMap.get("food_page"));
+
+        if (!OrderUtils.getCacheOrder(orderId)) {
+            logger.error("订单已过期,orderId:" + orderId);
+            BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
+            return resp;
+        }
 
         Map<Integer, FoodDo> foods = dianCanConfig.getAllFood();
 
@@ -66,17 +75,30 @@ public class FoodServiceImpl implements FoodService {
 
         int start = (foodPage - 1) << 2;
         List<List<FoodDo>> needFoods = new ArrayList<List<FoodDo>>();
+        List<String> foodNums = new ArrayList<String>();
+
         for (int i = start; i < (pageNum == foodPage?foodSum:start + 4);i++) {
             FoodDo food = foodList.get(i);
             List<FoodDo> list = new ArrayList<FoodDo>();
             list.add(food);
             needFoods.add(list);
+
+            //获取菜品数量
+            String foodId = food.getFood_id().toString();
+            String foodNum = OrderUtils.getFoodNumCache(orderId, foodId);
+            if (StringUtils.isEmpty(foodNum)) {
+                foodNum = "0";
+            }
+            foodNums.add(foodNum);
         }
 
         String resFood = JSON.toJSONString(needFoods);
+        String resFoodNums = JSON.toJSONString(foodNums);
+
         resFood = ParserUtil.JsonHandler(resFood);
         resp.put("food_all", resFood);
         resp.put("food_page_num", String.valueOf(pageNum));
+        resp.put("food_num", resFoodNums);
         return resp;
     }
 }

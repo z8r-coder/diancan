@@ -14,7 +14,7 @@ public class MustNeedPara {
 
     public static final String[] RESERVE_BOARD_PARAM = new String[]{"order_board_date", "order_board_time_interval", "board_id", "user_id"};
 
-    public static final String[] GET_FOOD_PARAM = new String[]{"food_type_id", "food_page"};
+    public static final String[] GET_FOOD_PARAM = new String[]{"order_id", "food_type_id", "food_page"};
 
     public static final String[] GET_USR_INFO = new String[]{"user_id"};
 

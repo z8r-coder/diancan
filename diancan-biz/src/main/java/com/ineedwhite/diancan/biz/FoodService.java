@@ -13,5 +13,5 @@ public interface FoodService {
      * @param paraMap
      * @return
      */
-    Map<String, String> getFoodByType(Map<String, String> paraMap);
+    Map<String, String> getFoodByType(Map<String, String> paraMap) throws Exception;
 }
