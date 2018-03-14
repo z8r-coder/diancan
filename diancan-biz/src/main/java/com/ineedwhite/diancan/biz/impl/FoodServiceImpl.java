@@ -40,7 +40,7 @@ public class FoodServiceImpl implements FoodService {
 
         if (!OrderUtils.getCacheOrder(orderId)) {
             logger.error("订单不存在或者,已过期,orderId:" + orderId);
-            BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
             return resp;
         }
 

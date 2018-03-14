@@ -13,7 +13,7 @@ public class CouponDo {
     private Integer coupon_id;
     private Integer consumption_amount;
     private Integer discount;
-    private Date expiry_time;
+    private String expiry_time;
 
     public Integer getCoupon_id() {
         return coupon_id;
@@ -39,11 +39,11 @@ public class CouponDo {
         this.discount = discount;
     }
 
-    public Date getExpiry_time() {
+    public String getExpiry_time() {
         return expiry_time;
     }
 
-    public void setExpiry_time(Date expiry_time) {
+    public void setExpiry_time(String expiry_time) {
         this.expiry_time = expiry_time;
     }
 }

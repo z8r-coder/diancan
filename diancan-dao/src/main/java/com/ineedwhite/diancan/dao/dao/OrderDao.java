@@ -63,8 +63,15 @@ public interface OrderDao {
                            @Param("ordSts")String ordSts);
 
     /**
-     * 根据订单号获取点单
+     * 根据订单号获取订单
      * @param orderId
      */
     OrderDo selectOrderById(@Param("OrderId") String orderId);
+
+    /**
+     * 通过订单号获取用户号
+     * @param orderId
+     * @return
+     */
+    String selectByOrdId(@Param("OrderId") String orderId);
 }
