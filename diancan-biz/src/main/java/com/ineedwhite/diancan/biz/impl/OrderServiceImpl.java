@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
         String orderId = paraMap.get("order_id");
         String foodId = paraMap.get("food_id");
         String foodNum = paraMap.get("food_num");

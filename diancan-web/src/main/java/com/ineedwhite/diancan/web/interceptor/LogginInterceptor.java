@@ -38,7 +38,12 @@ public class LogginInterceptor implements HandlerInterceptor {
         loginLogDo.setLl_ip(usrIp);
         loginLogDo.setLl_login_date(loginDate);
         loginLogDo.setLl_req_url(reqUrl);
-        loginLogDao.insertLoginLog(loginLogDo);
+        try {
+            loginLogDao.insertLoginLog(loginLogDo);
+        } catch (Exception ex) {
+            logger.error("interceptor occurs exception", ex);
+            return false;
+        }
         return true;
     }
 
