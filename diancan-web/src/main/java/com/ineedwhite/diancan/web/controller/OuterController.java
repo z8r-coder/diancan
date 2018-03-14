@@ -1,10 +1,7 @@
 package com.ineedwhite.diancan.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ineedwhite.diancan.biz.BoardService;
-import com.ineedwhite.diancan.biz.FoodService;
-import com.ineedwhite.diancan.biz.FoodTypeService;
-import com.ineedwhite.diancan.biz.UserService;
+import com.ineedwhite.diancan.biz.*;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.constants.MustNeedPara;
@@ -43,10 +40,36 @@ public class OuterController extends BaseController {
     @Autowired
     private FoodService food;
 
+    @Autowired
+    private OrderService orderService;
+
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public String version() {
         return "20180307";
+    }
+
+    @RequestMapping(value = "/addFood", method = RequestMethod.POST)
+    public void addFood(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.ADD_FOOD);
+            retMap = orderService.addFood(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
     }
 
     @RequestMapping(value = "/getUsrInfo", method = RequestMethod.POST)

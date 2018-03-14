@@ -150,6 +150,7 @@ public class BoardServiceImpl implements BoardService{
             logger.error("method:reserveBoard op order table occur exception:" + ex.getMessage(), ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
         } finally {
+            // TODO: 2018/3/14 何时加锁有待讨论
             RedLock.unLock(boardId);
         }
         return resp;

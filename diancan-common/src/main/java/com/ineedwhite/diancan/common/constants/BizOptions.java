@@ -21,6 +21,14 @@ public class BizOptions {
      */
     public final static String INTERROGATION = "?";
 
+    /**
+     * 分页，每页4道菜
+     */
     public final static int FOOD_PAGING = 4;
+
+    /**
+     * 购物车菜品上限
+     */
+    public final static int FOOD_LIMIT = 100;
 
 }

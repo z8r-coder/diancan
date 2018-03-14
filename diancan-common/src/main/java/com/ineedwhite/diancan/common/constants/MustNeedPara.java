@@ -17,4 +17,6 @@ public class MustNeedPara {
     public static final String[] GET_FOOD_PARAM = new String[]{"food_type_id", "food_page"};
 
     public static final String[] GET_USR_INFO = new String[]{"user_id"};
+
+    public static final String[] ADD_FOOD = new String[]{"order_id", "food_id", "food_num"};
 }

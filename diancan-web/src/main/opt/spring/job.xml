@@ -12,9 +12,9 @@
                         ">
     <bean id="registry-center-ref" class="com.ineedwhite.diancan.biz.task.RegistryCenterFactory"/>
 
-    <bean id="expiredOrderCloseJob" class="com.ineedwhite.diancan.biz.task.OrderCloseJob"/>
-    <job:simple id="ExpiredOrderCloseJob" class="com.ineedwhite.diancan.biz.task.OrderCloseJob"
+    <bean id="orderCloseJob" class="com.ineedwhite.diancan.biz.task.OrderCloseJob"/>
+    <job:simple id="OrderCloseJob" class="com.ineedwhite.diancan.biz.task.OrderCloseJob"
                 cron="0 0/1 * * * ?" description="订单补偿任务-过期作废的订单状态设置为过期状态，每10分钟执行一次"
                 registry-center-ref="registry-center-ref" sharding-total-count="1"
-                monitor-execution="false" failover="false" disabled="false" overwrite="true"/>
+                monitor-execution="true" failover="true" disabled="false" overwrite="true"/>
 </beans>

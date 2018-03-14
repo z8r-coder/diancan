@@ -5,10 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.*;
 
 import java.util.*;
 
@@ -20,6 +17,7 @@ public class RedisUtil {
     private static final Logger log = Logger.getLogger(RedisUtil.class);
     private static String REDIS_KEY = "DC_RX_";
     private static JedisPool jedisPool = null;
+    private static Transaction transaction = null;
 
     /**
      * 初始化Redis连接池
@@ -588,6 +586,22 @@ public class RedisUtil {
         }
     }
 
+    public static Long getListLength(String key) throws Exception {
+        if (StringUtils.isEmpty(key)) {
+            return Long.valueOf(0);
+        }
+        Jedis jedis = createJedis();
+        try {
+            String redisKey = makeKey(key);
+            return jedis.llen(redisKey);
+        } catch (Exception ex) {
+            log.warn("occurs exception", ex);
+            throw ex;
+        } finally {
+            close(jedis);
+        }
+    }
+
     public static void addIntoHashMap(String key, Map<String, String> valueMap) throws Exception {
         if (StringUtils.isEmpty(key) || CollectionUtils.isEmpty(valueMap))
             return;
@@ -913,6 +927,24 @@ public class RedisUtil {
         } finally {
             close(jedis);
         }
+    }
+
+    public static void beginTransaction() {
+        Jedis jedis = createJedis();
+        Transaction transaction = jedis.multi();
+    }
+    public static void commitTransaction() {
+        if (transaction == null) {
+            return;
+        }
+        transaction.exec();
+    }
+
+    public static void discard() {
+        if (transaction == null) {
+            return;
+        }
+        transaction.discard();
     }
 
     public interface PipelinedProxy {
