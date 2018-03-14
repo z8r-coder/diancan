@@ -12,5 +12,13 @@ public interface OrderService {
      * @return
      */
     Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 购物车页面刷新
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> shoppingCart(Map<String, String> paraMap) throws Exception;
 }
 

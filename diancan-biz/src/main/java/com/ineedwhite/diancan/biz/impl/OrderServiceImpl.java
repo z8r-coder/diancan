@@ -2,16 +2,21 @@ package com.ineedwhite.diancan.biz.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.ineedwhite.diancan.biz.DianCanConfigService;
+import com.ineedwhite.diancan.biz.FoodService;
 import com.ineedwhite.diancan.biz.OrderService;
+import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.biz.model.ShoppingCartFood;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.LevelMappingEnum;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
+import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
+import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private DianCanConfigService dianCanConfigService;
+
+    @Resource
+    private OrderDao orderDao;
 
     public Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
@@ -91,6 +99,14 @@ public class OrderServiceImpl implements OrderService {
         List<String> foodIds = OrderUtils.getFoodIdList(orderId);
         Map<Integer, FoodDo> foodDoMap = dianCanConfigService.getAllFood();
         List<ShoppingCartFood> needToPayFood = new ArrayList<ShoppingCartFood>();
+        List<Float> vipPriceList = new ArrayList<Float>();
+
+        UserDo userDo = orderDao.selectUserInfoByOrdId(orderId);
+        if (userDo == null) {
+            logger.error("该下单用户已被注销或不存在orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+            return resp;
+        }
 
         for (String foodId : foodIds) {
             String foodNum = OrderUtils.getFoodNumCache(orderId, foodId);
@@ -107,6 +123,9 @@ public class OrderServiceImpl implements OrderService {
             float total = cartFood.getNum() * cartFood.getPrice();
             cartFood.setTotal(total);
             needToPayFood.add(cartFood);
+
+            //vip price list
+            vipPriceList.add(foodDo.getFood_vip_price());
         }
 
         String retNeedToPayFoodStr = JSON.toJSONString(needToPayFood);
@@ -116,7 +135,22 @@ public class OrderServiceImpl implements OrderService {
         for (ShoppingCartFood food : needToPayFood) {
             sumFood += food.getTotal();
         }
-        resp.put("total_food_money", String.valueOf(sumFood));
+        resp.put("food_sum_money", String.valueOf(sumFood));
+
+        float vipSumFood = 0;
+        for (Float vipPrice : vipPriceList) {
+            vipSumFood += vipPrice;
+        }
+        if (StringUtils.equals(userDo.getMember_level(), LevelMappingEnum.VIP.getVflag())) {
+            //是VIP
+            resp.put("vip_food_money", String.valueOf(vipSumFood));
+            resp.put("total_food_money", String.valueOf(vipSumFood));
+        } else {
+            //非VIP
+            resp.put("vip_food_money", String.valueOf(sumFood));
+            resp.put("total_food_money", String.valueOf(sumFood));
+        }
+
         return resp;
     }
 }

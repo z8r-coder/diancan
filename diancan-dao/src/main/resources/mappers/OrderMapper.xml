@@ -42,11 +42,16 @@
     <update id="updateOrderStsById" parameterType="java.lang.String">
         UPDATE dc_order SET order_status = #{ordSts}
         where 1=1
-        <if test="jrnNoList.size()>0">
+        <if test="OrderIdList.size()>0">
             and order_id in
             <foreach item="item" collection="OrderIdList" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
     </update>
+    
+    <select id="selectUserInfoByOrdId" resultType="com.ineedwhite.diancan.dao.domain.UserDo">
+        SELECT usr.user_coupon, usr.member_level FROM dc_order ord, dc_user usr
+        WHERE ord.user_id = usr.user_id AND usr.user_is_del = 0;
+    </select>
 </mapper>

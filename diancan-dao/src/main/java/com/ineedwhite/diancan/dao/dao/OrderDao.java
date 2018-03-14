@@ -1,6 +1,7 @@
 package com.ineedwhite.diancan.dao.dao;
 
 import com.ineedwhite.diancan.dao.domain.OrderDo;
+import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -69,9 +70,9 @@ public interface OrderDao {
     OrderDo selectOrderById(@Param("OrderId") String orderId);
 
     /**
-     * 通过订单号获取用户号
+     * 通过订单号获取优惠卡券号
      * @param orderId
      * @return
      */
-    String selectByOrdId(@Param("OrderId") String orderId);
+    UserDo selectUserInfoByOrdId(@Param("OrderId") String orderId);
 }

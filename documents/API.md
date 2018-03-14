@@ -209,5 +209,23 @@ zk:192.168.1.199:2181
      food_num                   菜品数量         否
 
 ##### 出参:
+     字段名                 描述
+
+
+### 9.展示购物车
+##### URL: http://192.168.1.196:9090//outerApi/shoppingCart
+##### 入参：
+     字段名                      描述          是否可空
+     
+     order_id                   点单号           否
+
+##### 出参:
      字段名                 描述   
                 
+    pay_food_all           购物车中的所有菜品信息
+        
+    food_sum_money         总计
+        
+    vip_food_money         vip优惠价
+        
+    total_food_money       结账
