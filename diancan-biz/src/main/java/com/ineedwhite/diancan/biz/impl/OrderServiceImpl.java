@@ -27,9 +27,6 @@ public class OrderServiceImpl implements OrderService {
 
     private Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
-    @Resource
-    private OrderDao orderDao;
-
     public Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         String orderId = paraMap.get("order_id");
@@ -37,6 +34,12 @@ public class OrderServiceImpl implements OrderService {
         String foodNum = paraMap.get("food_num");
 
         try {
+            if (foodNum.length() > 2) {
+                logger.error("菜品数量过多，最多100道");
+                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
+                return resp;
+            }
+
             if (!OrderUtils.getCacheOrder(orderId)) {
                 logger.error("该订单已过期 orderId" + orderId);
                 BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
@@ -49,8 +52,11 @@ public class OrderServiceImpl implements OrderService {
                 return resp;
             }
             RedisUtil.beginTransaction();
-            OrderUtils.addFoodIdList(orderId, foodId);
-            OrderUtils.addFoodNumList(orderId, foodNum);
+            if (OrderUtils.getFoodNumCache(orderId, foodId) == null) {
+                //若该菜品不存在
+                OrderUtils.addFoodIdList(orderId, foodId);
+            }
+            OrderUtils.setFoodNumCache(orderId, foodId, foodNum);
         } catch (Exception e) {
             RedisUtil.discard();
             logger.error("OrderService add food occurs exception", e);

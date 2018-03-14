@@ -25,17 +25,17 @@ public class OrderUtils {
     /**
      * 订单菜品ID列表
      */
-    private static final String ORDER_FOOD_ID = "ORDER_FOOD_ID";
+    private static final String ORDER_FOOD_ID = "ORDER_FOOD_ID_";
 
     /**
      * 订单菜品数量列表
      */
-    private static final String ORDER_FOOD_NUM = "ORDER_FOOD_NUM";
+    private static final String ORDER_FOOD_NUM = "ORDER_FOOD_NUM_";
 
     /**
      * 默认订单过期时间
      */
-    private static final int DEFAULT_EXP_TIME = 60 * 60;
+    private static final int DEFAULT_EXP_TIME = 30 * 60;
 
     /**
      * 缓存订单号
@@ -66,6 +66,22 @@ public class OrderUtils {
     }
     public static void addCacheOrder(String orderId) throws Exception {
         addCacheOrder(orderId, DEFAULT_EXP_TIME);
+    }
+
+    public static String getFoodNumCache(String orderId, String foodId) throws Exception {
+        if (StringUtils.isEmpty(foodId) || StringUtils.isEmpty(orderId)) {
+            return null;
+        }
+        String fieldKey = makeHashFoodNumKey(orderId, foodId);
+        return RedisUtil.getStr(fieldKey);
+    }
+
+    public static void setFoodNumCache(String orderId, String foodId, String foodNum) throws Exception {
+        if (StringUtils.isEmpty(foodId)) {
+            return;
+        }
+        String fieldKey = makeHashFoodNumKey(orderId, foodId);
+        RedisUtil.setWithExpire(fieldKey, foodNum, DEFAULT_EXP_TIME);
     }
 
     public static Long getOrdFoodListLen(String orderId) throws Exception {
@@ -120,5 +136,9 @@ public class OrderUtils {
 
     private static String makeFoodNumKey(String orderId) {
         return ORDER_FOOD_NUM + orderId;
+    }
+
+    private static String makeHashFoodNumKey(String orderId, String foodId) {
+        return ORDER_FOOD_NUM + orderId + "_" + foodId;
     }
 }
