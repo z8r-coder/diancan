@@ -7,6 +7,8 @@ import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.RedisUtil;
+import com.ineedwhite.diancan.dao.dao.OrderDao;
+import com.ineedwhite.diancan.dao.domain.OrderDo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Transaction;
@@ -25,6 +27,9 @@ public class OrderServiceImpl implements OrderService {
 
     private Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
+    @Resource
+    private OrderDao orderDao;
+
     public Map<String, String> addFood(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         String orderId = paraMap.get("order_id");
@@ -32,6 +37,13 @@ public class OrderServiceImpl implements OrderService {
         String foodNum = paraMap.get("food_num");
 
         try {
+            OrderDo orderDo = orderDao.selectOrderById(orderId);
+            if (orderDo == null) {
+                logger.error("该订单不存在 orderId: " + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+                return resp;
+            }
+
             Long totalFoodNum = OrderUtils.getOrdFoodListLen(orderId);
             if (totalFoodNum > BizOptions.FOOD_LIMIT) {
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00012);

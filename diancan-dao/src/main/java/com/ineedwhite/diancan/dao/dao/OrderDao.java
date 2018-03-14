@@ -53,6 +53,18 @@ public interface OrderDao {
      */
     List<String> selectOrderByStatusWithoutClose();
 
+    /**
+     * 更新固定订单的订单状态
+     * @param orderIdList
+     * @param ordSts
+     * @return
+     */
     int updateOrderStsById(@Param("OrderIdList")List<String> orderIdList,
                            @Param("ordSts")String ordSts);
+
+    /**
+     * 根据订单号获取点单
+     * @param orderId
+     */
+    OrderDo selectOrderById(@Param("OrderId") String orderId);
 }
