@@ -39,7 +39,7 @@ public class FoodServiceImpl implements FoodService {
         int foodPage = Integer.parseInt(paraMap.get("food_page"));
 
         if (!OrderUtils.getCacheOrder(orderId)) {
-            logger.error("订单已过期,orderId:" + orderId);
+            logger.error("订单不存在或者,已过期,orderId:" + orderId);
             BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
             return resp;
         }
