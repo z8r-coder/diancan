@@ -2,6 +2,11 @@ package com.ineedwhite.diancan.biz.utils;
 
 import com.ineedwhite.diancan.common.utils.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author ruanxin
@@ -9,6 +14,9 @@ import org.apache.commons.lang3.StringUtils;
  * @desc 订单方法
  */
 public class OrderUtils {
+
+    private static final Logger logger = Logger.getLogger(OrderUtils.class);
+
     /**
      * 订单缓存 prefix
      */
@@ -73,6 +81,7 @@ public class OrderUtils {
             return;
         }
         String fieldKey = makeFoodIdKey(orderId);
+        logger.info("food id list key:" + fieldKey);
         RedisUtil.addIntoList(fieldKey, foodId);
     }
 
@@ -81,7 +90,24 @@ public class OrderUtils {
             return;
         }
         String fieldKey = makeFoodNumKey(orderId);
+        logger.info("food num list key:" + fieldKey);
         RedisUtil.addIntoList(fieldKey, foodNum);
+    }
+
+    public static List<String> getFoodNumList(String orderId) throws Exception {
+        if (StringUtils.isEmpty(orderId)) {
+            return Collections.emptyList();
+        }
+        String fieldKey = makeFoodNumKey(orderId);
+        return RedisUtil.getAllList(fieldKey);
+    }
+
+    public static List<String> getFoodIdList(String orderId) throws Exception {
+        if (StringUtils.isEmpty(orderId)) {
+            return Collections.emptyList();
+        }
+        String fieldKey = makeFoodIdKey(orderId);
+        return RedisUtil.getAllList(fieldKey);
     }
 
     private static String makeKey(String orderId) {

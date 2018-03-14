@@ -56,7 +56,7 @@ public class OuterController extends BaseController {
         try {
             Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
             BizUtils.checkMustParam(paraMap, MustNeedPara.ADD_FOOD);
-            retMap = orderService.addFood(paraMap);
+            retMap = orderService.addFoodToShoppingCart(paraMap);
             returnStr = JSON.toJSONString(retMap);
         } catch (DcException ex) {
             logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);

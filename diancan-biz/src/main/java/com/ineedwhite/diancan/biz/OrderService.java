@@ -7,10 +7,10 @@ import java.util.Map;
  */
 public interface OrderService {
     /**
-     * 添加菜品
+     * 添加菜品至购物车
      * @param paraMap
      * @return
      */
-    Map<String, String> addFood(Map<String, String> paraMap) throws Exception;
+    Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception;
 }
 

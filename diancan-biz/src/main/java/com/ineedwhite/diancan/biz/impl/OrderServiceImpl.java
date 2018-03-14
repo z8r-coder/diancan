@@ -30,17 +30,16 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private OrderDao orderDao;
 
-    public Map<String, String> addFood(Map<String, String> paraMap) throws Exception {
+    public Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         String orderId = paraMap.get("order_id");
         String foodId = paraMap.get("food_id");
         String foodNum = paraMap.get("food_num");
 
         try {
-            OrderDo orderDo = orderDao.selectOrderById(orderId);
-            if (orderDo == null) {
-                logger.error("该订单不存在 orderId: " + orderId);
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+            if (!OrderUtils.getCacheOrder(orderId)) {
+                logger.error("该订单已过期 orderId" + orderId);
+                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
                 return resp;
             }
 

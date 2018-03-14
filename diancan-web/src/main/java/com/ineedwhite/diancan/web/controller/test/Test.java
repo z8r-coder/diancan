@@ -1,7 +1,9 @@
 package com.ineedwhite.diancan.web.controller.test;
 
 import com.ineedwhite.diancan.biz.*;
+import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
+import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.FoodDao;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.TestDao;
@@ -45,6 +47,9 @@ public class Test {
 
     @Autowired
     private DianCanConfigService dianCanConfig;
+
+    @Autowired
+    private OrderService orderService;
 
     @org.junit.Test
     public void testMysql() {
@@ -139,6 +144,23 @@ public class Test {
         paraMap.put("user_id", "a5a2583d6d6a4c96ba8de0827abc1d87");
         Map<String, String> map = user.userInfo(paraMap);
         System.out.println(map);
+    }
+
+    @org.junit.Test
+    public void addFoodToShoppingCart() {
+        try {
+            Map<String, String> paraMap = new HashMap<String, String>();
+            paraMap.put("order_id", "ecd4d560e134415eba5f35f926ca99b7");
+            paraMap.put("food_id", "2");
+            paraMap.put("food_num", "2");
+            orderService.addFoodToShoppingCart(paraMap);
+            System.out.println(OrderUtils.getCacheOrder("ecd4d560e134415eba5f35f926ca99b7"));
+            List<String> listFoodId = OrderUtils.getFoodIdList("ecd4d560e134415eba5f35f926ca99b7");
+            List<String> listFoodNum = OrderUtils.getFoodNumList("ecd4d560e134415eba5f35f926ca99b7");
+            System.out.println(listFoodId.get(0) + ":" + listFoodNum.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
