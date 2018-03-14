@@ -188,6 +188,7 @@ public class OrderServiceImpl implements OrderService {
             cartFood.setFoodName(foodDo.getFood_name());
             cartFood.setNum(Integer.parseInt(foodNum));
             cartFood.setPrice(foodDo.getFood_price());
+            cartFood.setFoodId(foodId);
 
             float total = cartFood.getNum() * cartFood.getPrice();
             cartFood.setTotal(total);

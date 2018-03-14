@@ -7,6 +7,7 @@ package com.ineedwhite.diancan.biz.model;
  */
 public class ShoppingCartFood {
 
+    private String foodId;
     private String foodName;
     private float price;
     private int num;
@@ -42,5 +43,13 @@ public class ShoppingCartFood {
 
     public void setTotal(float total) {
         this.total = total;
+    }
+
+    public String getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(String foodId) {
+        this.foodId = foodId;
     }
 }
