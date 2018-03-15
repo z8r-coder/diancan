@@ -48,6 +48,24 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private UserDao userDao;
 
+    public Map<String, String> checkOut(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String orderId = paraMap.get("order_id");
+        return resp;
+    }
+
+    public Map<String, String> shoppingCartAddMinus(Map<String, String> paraMap) {
+        Map<String,String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String foodId = paraMap.get("foodId");
+        String foodNum = paraMap.get("foodNum");
+        String orderId = paraMap.get("orderId");
+        return resp;
+    }
+
     public Map<String, String> useCoupon(Map<String, String> paraMap) {
         Map<String,String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);

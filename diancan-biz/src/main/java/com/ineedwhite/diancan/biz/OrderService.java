@@ -36,5 +36,13 @@ public interface OrderService {
      * @throws Exception
      */
     Map<String, String> useCoupon(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 购物车界面的对菜品的增减
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> shoppingCartAddMinus(Map<String, String> paraMap) throws Exception;
 }
 
