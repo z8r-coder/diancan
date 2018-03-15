@@ -14,7 +14,7 @@ public interface OrderService {
     Map<String, String> addFoodToShoppingCart(Map<String, String> paraMap) throws Exception;
 
     /**
-     * 购物车页面刷新
+     * 展示购物车页面
      * @param paraMap
      * @return
      * @throws Exception

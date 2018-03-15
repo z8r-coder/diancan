@@ -103,8 +103,10 @@ public class OrderServiceImpl implements OrderService {
             newFoodIdStr = newFoodIdStr.substring(0, newFoodIdStr.length() - 1);
             newFoodNumStr = newFoodNumStr.substring(0, newFoodNumStr.length() - 1);
 
+//            List
             for (String newFoodId : orderFoodList) {
-                dianCanConfigService.getFoodById(Integer.parseInt(newFoodId));
+                FoodDo foodDo = dianCanConfigService.getFoodById(Integer.parseInt(newFoodId));
+
             }
 
         } catch (Exception ex) {
@@ -129,7 +131,8 @@ public class OrderServiceImpl implements OrderService {
         String exTime = couponDo.getExpiry_time();
         exTime = exTime.replace("-", "").replace(" ","").replace(":","").replace(".","");
         exTime = exTime.substring(0, exTime.length() - 1);
-        if (!DateUtil.compareTime(exTime)) {
+        String nowTime = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
+        if (DateUtil.compareTime(nowTime,exTime, DateUtil.DEFAULT_PAY_FORMAT)) {
             //过期
             logger.warn("该卡券已过期,couponId:" + couponId);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00017);
@@ -140,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             OrderDo orderDo = orderDao.selectOrderById(orderId);
             float total = orderDo.getOrder_total_amount();
-            if (consu < total) {
+            if (consu > total) {
                 logger.warn("金额未达到指定金额,不能使用该优惠券, couponId:" + couponId);
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00018);
                 return resp;
@@ -339,10 +342,12 @@ public class OrderServiceImpl implements OrderService {
             //是VIP
             resp.put("vip_food_money", String.valueOf(vipSumFood));
             resp.put("total_food_money", String.valueOf(vipSumFood));
+            resp.put("is_vip_user", LevelMappingEnum.VIP.getVflag());
         } else {
             //非VIP
             resp.put("vip_food_money", String.valueOf(sumFood));
             resp.put("total_food_money", String.valueOf(sumFood));
+            resp.put("is_vip_user", LevelMappingEnum.NVIP.getVflag());
         }
 
         int affectRows = orderDao.updateOrderInfoByOrdId(sumFood, OrderStatus.UM.getOrderStatus(),
