@@ -127,8 +127,8 @@ public class OrderServiceImpl implements OrderService {
             String orderFood = orderDo.getOrder_food();
             String orderFoodNum = orderDo.getOrder_food_num();
 
-            List<String> orderFoodList = Arrays.asList(orderFood.split("\\|"));
-            List<String> orderFoodNumList = Arrays.asList(orderFoodNum.split("\\|"));
+            List<String> orderFoodList = new ArrayList<String>(Arrays.asList(orderFood.split("\\|")));
+            List<String> orderFoodNumList = new ArrayList<String>(Arrays.asList(orderFoodNum.split("\\|")));
 
             int indexFood = orderFoodList.indexOf(foodId);
             if (StringUtils.equals(foodNum, "0")) {
