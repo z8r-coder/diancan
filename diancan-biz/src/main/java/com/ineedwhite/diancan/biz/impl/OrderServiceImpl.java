@@ -48,11 +48,53 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private UserDao userDao;
 
-    public Map<String, String> checkOut(Map<String, String> paraMap) {
+    public Map<String, String> checkOut(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
         String orderId = paraMap.get("order_id");
+        String couponId = paraMap.get("coupon_id");
+
+        if (!OrderUtils.getCacheOrder(orderId)) {
+            //过期
+            logger.warn("该订单不存在或已过期 OrderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+            return resp;
+        }
+
+        try {
+            OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UD.getOrderStatus());
+            if (orderDo != null) {
+                //幂等
+                logger.warn("该");
+            }
+            orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
+            if (orderDo == null) {
+                //无效或不存在
+                logger.warn("该订单无效或不存在 OrderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
+                return resp;
+            }
+
+            UserDo userDo = orderDao.selectUserInfoByOrdId(orderId);
+            //总计
+            float totalAmt = orderDo.getOrder_total_amount();
+            float orderPaid;
+            if (couponId == null) {
+                //不使用优惠券
+                if(StringUtils.equals(userDo.getMember_level(), LevelMappingEnum.NVIP.getVflag())) {
+                    //不是VIP
+                    orderPaid = totalAmt;
+                } else {
+                    //是VIP
+
+                }
+            }
+        } catch (Exception ex) {
+            logger.error("shoppingCartAddMinus occurs exception", ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
+
         return resp;
     }
 
@@ -83,8 +125,11 @@ public class OrderServiceImpl implements OrderService {
         try {
             OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
             String orderFood = orderDo.getOrder_food();
+            String orderFoodNum = orderDo.getOrder_food_num();
+
             List<String> orderFoodList = Arrays.asList(orderFood.split("\\|"));
-            List<String> orderFoodNumList = Arrays.asList(orderFood.split("\\|"));
+            List<String> orderFoodNumList = Arrays.asList(orderFoodNum.split("\\|"));
+
             int indexFood = orderFoodList.indexOf(foodId);
             if (StringUtils.equals(foodNum, "0")) {
                 orderFoodList.remove(indexFood);
@@ -107,14 +152,18 @@ public class OrderServiceImpl implements OrderService {
 
             List<ShoppingCartFood> cartFoodList = new ArrayList<ShoppingCartFood>();
             for (String newFoodId : orderFoodList) {
-                String redfoodNum = OrderUtils.getFoodNumCache(orderId, foodId);
+                String redfoodNum = OrderUtils.getFoodNumCache(orderId, newFoodId);
+
                 FoodDo foodDo = dianCanConfigService.getFoodById(Integer.parseInt(newFoodId));
                 ShoppingCartFood cartFood = new ShoppingCartFood();
 
                 float total_money = foodDo.getFood_price() * Integer.parseInt(redfoodNum);
                 float total_vip_money = foodDo.getFood_vip_price() * Integer.parseInt(redfoodNum);
+
                 cartFood.setTotal(total_money);
-                cartFood.setVipPrice(total_vip_money);
+                cartFood.setVipTotal(total_vip_money);
+
+                cartFoodList.add(cartFood);
             }
             //在购物车中修改商品后属性更改
             FoodDo foodDo = dianCanConfigService.getFoodById(Integer.parseInt(foodId));
@@ -157,14 +206,14 @@ public class OrderServiceImpl implements OrderService {
                 }
                 float totalFoodAmt = sumFood - couponDo.getDiscount();
                 resp.put("total_food_money", String.valueOf(totalFoodAmt));
+            }
 
-                int affectRows = orderDao.updateOrdFoodAndFoodNumByOrdId(orderId, newFoodIdStr, newFoodNumStr);
+            int affectRows = orderDao.updateOrdFoodAndFoodNumByOrdId(orderId, newFoodIdStr, newFoodNumStr);
 
-                if (affectRows <= 0) {
-                    logger.warn("更新订单出错:orderId:" + orderId);
-                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
-                    return resp;
-                }
+            if (affectRows <= 0) {
+                logger.warn("更新订单出错:orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+                return resp;
             }
         } catch (Exception ex) {
             logger.error("shoppingCartAddMinus occurs exception", ex);

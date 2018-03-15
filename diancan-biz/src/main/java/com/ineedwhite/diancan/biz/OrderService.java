@@ -44,5 +44,13 @@ public interface OrderService {
      * @throws Exception
      */
     Map<String, String> shoppingCartAddMinus(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 结账
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> checkOut(Map<String, String> paraMap) throws Exception;
 }
 

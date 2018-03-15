@@ -51,7 +51,8 @@
     </update>
     
     <select id="selectUserInfoByOrdId" resultType="com.ineedwhite.diancan.dao.domain.UserDo">
-        SELECT usr.user_id usr.user_coupon, usr.member_level FROM dc_order ord, dc_user usr
+        SELECT usr.user_id, usr.user_coupon, usr.member_level, usr.balance, usr.accumulate_points
+        FROM dc_order ord, dc_user usr
         WHERE ord.order_id = #{OrderId} AND ord.user_id = usr.user_id AND usr.user_is_del = 0;
     </select>
 
