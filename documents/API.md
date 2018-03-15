@@ -271,13 +271,13 @@ zk:192.168.1.199:2181
      
      coupon_id                 使用的卡券号       是（若为空不用卡券支付）   
 ##### 出参:
-     字段名                        描述   
-                
-    mod_food_single_sum         被修改菜品的小计
-    
-    food_sum_money              总计
-    
-    vip_food_money              VIP优惠价
-    
-    total_food_money            结账
+         字段名                        描述   
+                    
+        mod_food_single_sum         被修改菜品的小计
+            
+        food_sum_money              总计
+        
+        vip_food_money              VIP优惠价
+        
+        total_food_money            结账
     
