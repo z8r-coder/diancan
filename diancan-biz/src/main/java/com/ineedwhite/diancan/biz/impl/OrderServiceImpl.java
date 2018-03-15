@@ -56,13 +56,28 @@ public class OrderServiceImpl implements OrderService {
         return resp;
     }
 
-    public Map<String, String> shoppingCartAddMinus(Map<String, String> paraMap) {
+    public Map<String, String> shoppingCartAddMinus(Map<String, String> paraMap) throws Exception {
         Map<String,String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
         String foodId = paraMap.get("foodId");
         String foodNum = paraMap.get("foodNum");
         String orderId = paraMap.get("orderId");
+
+        if (foodNum.length() > 2) {
+            logger.error("菜品数量过多，最多100道");
+            BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
+            return resp;
+        }
+
+        //更新购物车中菜品的缓存
+        OrderUtils.setFoodNumCache(orderId, foodId, foodNum);
+        try {
+            OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
+
+        } catch (Exception ex) {
+
+        }
         return resp;
     }
 
