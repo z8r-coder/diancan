@@ -1,6 +1,7 @@
 package com.ineedwhite.diancan.dao.domain;
 
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**

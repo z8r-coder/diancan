@@ -35,7 +35,7 @@ public class OrderUtils {
     /**
      * 默认订单过期时间
      */
-    private static final int DEFAULT_EXP_TIME = 2 * 60 * 60;
+    private static final int DEFAULT_EXP_TIME = 24 * 60 * 60;
 
     /**
      * 缓存订单号

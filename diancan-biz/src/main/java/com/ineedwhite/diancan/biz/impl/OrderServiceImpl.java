@@ -66,7 +66,13 @@ public class OrderServiceImpl implements OrderService {
 
         if (foodNum.length() > 2) {
             logger.error("菜品数量过多，最多100道");
-            BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+            return resp;
+        }
+        if (!OrderUtils.getCacheOrder(orderId)) {
+            //过期
+            logger.error("该订单已经过期,orderId:" + orderId);
+            BizUtils.setRspMap(resp,ErrorCodeEnum.DC00013);
             return resp;
         }
 
@@ -74,9 +80,36 @@ public class OrderServiceImpl implements OrderService {
         OrderUtils.setFoodNumCache(orderId, foodId, foodNum);
         try {
             OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
+            String orderFood = orderDo.getOrder_food();
+            List<String> orderFoodList = Arrays.asList(orderFood.split("\\|"));
+            List<String> orderFoodNumList = Arrays.asList(orderFood.split("\\|"));
+            int indexFood = orderFoodList.indexOf(foodId);
+            if (StringUtils.equals(foodNum, "0")) {
+                orderFoodList.remove(indexFood);
+                orderFoodNumList.remove(indexFood);
+            } else {
+                orderFoodNumList.set(indexFood, foodNum);
+            }
+            StringBuilder newFoodSb = new StringBuilder();
+            StringBuilder newFoodNumSb = new StringBuilder();
+            for (int i = 0; i < orderFoodList.size();i++) {
+                newFoodSb.append(orderFoodList.get(i) + "|");
+                newFoodNumSb.append(orderFoodNumList.get(i) + "|");
+            }
+            String newFoodIdStr = newFoodSb.toString();
+            String newFoodNumStr = newFoodNumSb.toString();
+
+            //新的菜品ID和菜品数量入库字段
+            newFoodIdStr = newFoodIdStr.substring(0, newFoodIdStr.length() - 1);
+            newFoodNumStr = newFoodNumStr.substring(0, newFoodNumStr.length() - 1);
+
+            for (String newFoodId : orderFoodList) {
+                dianCanConfigService.getFoodById(Integer.parseInt(newFoodId));
+            }
 
         } catch (Exception ex) {
-
+            logger.error("use coupon occurs exception", ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
         }
         return resp;
     }
@@ -94,6 +127,8 @@ public class OrderServiceImpl implements OrderService {
             return resp;
         }
         String exTime = couponDo.getExpiry_time();
+        exTime = exTime.replace("-", "").replace(" ","").replace(":","").replace(".","");
+        exTime = exTime.substring(0, exTime.length() - 1);
         if (!DateUtil.compareTime(exTime)) {
             //过期
             logger.warn("该卡券已过期,couponId:" + couponId);
@@ -229,6 +264,12 @@ public class OrderServiceImpl implements OrderService {
 
         //菜品队列
         List<String> foodIds = OrderUtils.getFoodIdList(orderId);
+        if (foodIds == null || foodIds.size() == 0) {
+            logger.error("菜品未空, orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00019);
+            return resp;
+        }
+
         //菜品字符串
         StringBuilder foodSb = new StringBuilder();
         //菜品数量字符串
