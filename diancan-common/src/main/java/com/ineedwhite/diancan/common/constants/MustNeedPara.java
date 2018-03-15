@@ -22,5 +22,7 @@ public class MustNeedPara {
 
     public static final String[] SHOPPING_CART = new String[] {"order_id"};
 
-    public static final String[] USE_CART = new String[]{"user_id", "order_id"};
+    public static final String[] GET_COUPON_LIST = new String[]{"user_id", "order_id"};
+
+    public static final String[] USE_COUPON = new String[] {"coupon_id", "order_id"};
 }

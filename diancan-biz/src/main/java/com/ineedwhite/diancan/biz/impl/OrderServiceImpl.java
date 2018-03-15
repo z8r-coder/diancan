@@ -13,6 +13,7 @@ import com.ineedwhite.diancan.common.LevelMappingEnum;
 import com.ineedwhite.diancan.common.OrderStatus;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
+import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.common.utils.RedisUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.UserDao;
@@ -51,8 +52,39 @@ public class OrderServiceImpl implements OrderService {
         Map<String,String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
+        String couponId = paraMap.get("coupon_id");
+        String orderId = paraMap.get("order_id");
+        CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
+        if (couponDo == null) {
+            logger.warn("该卡券不存在,couponId:" + couponId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00016);
+            return resp;
+        }
+        String exTime = couponDo.getExpiry_time();
+        if (!DateUtil.compareTime(exTime)) {
+            //过期
+            logger.warn("该卡券已过期,couponId:" + couponId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00017);
+            return resp;
+        }
+        float consu = couponDo.getConsumption_amount();
+        float discount = couponDo.getDiscount();
+        try {
+            OrderDo orderDo = orderDao.selectOrderById(orderId);
+            float total = orderDo.getOrder_total_amount();
+            if (consu < total) {
+                logger.warn("金额未达到指定金额,不能使用该优惠券, couponId:" + couponId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00018);
+                return resp;
+            }
 
-        return null;
+            float couponAmt = total - discount;
+            resp.put("coupon_Amt", String.valueOf(couponAmt));
+        } catch (Exception e) {
+            logger.error("use coupon occurs exception", e);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
+        return resp;
     }
 
     public Map<String, String> getCouponList(Map<String, String> paraMap) {

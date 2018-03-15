@@ -89,4 +89,13 @@ public interface OrderDao {
                                @Param("order_food")String ordFood,
                                @Param("order_food_num")String ordFoodNum,
                                @Param("order_id")String ordId);
+
+    /**
+     * 通过订单ID和状态查找订单
+     * @param orderId
+     * @param orderStatus
+     * @return
+     */
+    OrderDo selectOrdByOrdIdAndSts(@Param("order_id")String orderId,
+                                   @Param("order_status")String orderStatus);
 }
