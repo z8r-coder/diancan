@@ -12,7 +12,7 @@ public class UserDo {
     private String user_name;
     private String user_phone;
     private Integer accumulate_points;
-    private Integer balance;
+    private float balance;
     private String member_level;
     private Integer user_is_del;
     private String user_password;
@@ -50,11 +50,11 @@ public class UserDo {
         this.accumulate_points = accumulate_points;
     }
 
-    public Integer getBalance() {
+    public float getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(float balance) {
         this.balance = balance;
     }
 

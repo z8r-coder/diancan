@@ -66,7 +66,9 @@ public class OrderServiceImpl implements OrderService {
             OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UD.getOrderStatus());
             if (orderDo != null) {
                 //幂等
-                logger.warn("该");
+                logger.warn("该订单已经支付成功! orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+                return resp;
             }
             orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
             if (orderDo == null) {
@@ -87,8 +89,50 @@ public class OrderServiceImpl implements OrderService {
                     orderPaid = totalAmt;
                 } else {
                     //是VIP
-
+                    String foodIdStr = orderDo.getOrder_food();
+                    String foodNumStr = orderDo.getOrder_food_num();
+                    List<String> foodIdList = Arrays.asList(foodIdStr.split("\\|"));
+                    List<String> foodNumList = Arrays.asList(foodNumStr.split("\\|"));
+                    float sumVipFood = 0;
+                    for (int i = 0; i < foodIdList.size();i++) {
+                        int foodId = Integer.parseInt(foodIdList.get(i));
+                        int foodNum = Integer.parseInt(foodNumList.get(i));
+                        FoodDo foodDo = dianCanConfigService.getFoodById(foodId);
+                        sumVipFood = sumVipFood + (foodNum * foodDo.getFood_vip_price());
+                    }
+                    orderPaid = sumVipFood;
                 }
+            } else {
+                //使用优惠券
+                CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
+                if (couponDo == null) {
+                    logger.warn("该卡券不存在,couponId:" + couponId);
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00016);
+                    return resp;
+                }
+                String exTime = couponDo.getExpiry_time();
+                exTime = exTime.replace("-", "").replace(" ","").replace(":","").replace(".","");
+                exTime = exTime.substring(0, exTime.length() - 1);
+                String nowTime = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
+                if (DateUtil.compareTime(nowTime,exTime, DateUtil.DEFAULT_PAY_FORMAT)) {
+                    //过期
+                    logger.warn("该卡券已过期,couponId:" + couponId);
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00017);
+                    return resp;
+                }
+
+                float consu = couponDo.getConsumption_amount();
+                float discard = couponDo.getDiscount();
+                if (consu > totalAmt) {
+                    logger.warn("金额未达到指定金额,不能使用该优惠券, couponId:" + couponId);
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00018);
+                    return resp;
+                }
+                orderPaid = totalAmt - discard;
+            }
+            float balance = userDo.getBalance();
+            if (balance < orderPaid) {
+
             }
         } catch (Exception ex) {
             logger.error("shoppingCartAddMinus occurs exception", ex);
@@ -199,13 +243,16 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 //使用优惠券
                 CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
+                float totalFoodAmt = sumFood - couponDo.getDiscount();
+                resp.put("total_food_money", String.valueOf(totalFoodAmt));
+
                 if (couponDo.getConsumption_amount() > sumFood) {
                     logger.warn("金额未达到指定金额,不能使用该优惠券, couponId:" + couponId);
                     BizUtils.setRspMap(resp, ErrorCodeEnum.DC00018);
+                    totalFoodAmt = totalFoodAmt + couponDo.getDiscount();
+                    resp.put("total_food_money", String.valueOf(totalFoodAmt));
                     return resp;
                 }
-                float totalFoodAmt = sumFood - couponDo.getDiscount();
-                resp.put("total_food_money", String.valueOf(totalFoodAmt));
             }
 
             int affectRows = orderDao.updateOrdFoodAndFoodNumByOrdId(orderId, newFoodIdStr, newFoodNumStr);

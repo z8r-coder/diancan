@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
             resp.put("user_name", userDo.getUser_name());
             resp.put("user_phone", userDo.getUser_phone());
             resp.put("accumulate_points", userDo.getAccumulate_points().toString());
-            resp.put("balance", userDo.getBalance().toString());
+            resp.put("balance", String.valueOf(userDo.getBalance()));
             resp.put("member_level", userDo.getMember_level());
         } catch (Exception ex) {
             logger.error("method:login op user table occur exception:" + ex);
