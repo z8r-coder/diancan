@@ -98,4 +98,15 @@ public interface OrderDao {
      */
     OrderDo selectOrdByOrdIdAndSts(@Param("order_id")String orderId,
                                    @Param("order_status")String orderStatus);
+
+    /**
+     * 通过订单号更改订单中菜品和菜品数量字段
+     * @param orderId
+     * @param food
+     * @param foodNum
+     * @return
+     */
+    int updateOrdFoodAndFoodNumByOrdId(@Param("order_id")String orderId,
+                                       @Param("food")String food,
+                                       @Param("foodNum")String foodNum);
 }

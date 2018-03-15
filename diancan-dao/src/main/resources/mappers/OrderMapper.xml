@@ -51,7 +51,7 @@
     </update>
     
     <select id="selectUserInfoByOrdId" resultType="com.ineedwhite.diancan.dao.domain.UserDo">
-        SELECT usr.user_coupon, usr.member_level FROM dc_order ord, dc_user usr
+        SELECT usr.user_id usr.user_coupon, usr.member_level FROM dc_order ord, dc_user usr
         WHERE ord.order_id = #{OrderId} AND ord.user_id = usr.user_id AND usr.user_is_del = 0;
     </select>
 
@@ -66,4 +66,8 @@
         order_food_num FROM dc_order
         WHERE order_id = #{order_id} AND order_status = #{order_status}
     </select>
+    <update id="updateOrdFoodAndFoodNumByOrdId">
+        UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}
+        WHERE order_id = #{order_id} AND order_status = 'UM';
+    </update>
 </mapper>
