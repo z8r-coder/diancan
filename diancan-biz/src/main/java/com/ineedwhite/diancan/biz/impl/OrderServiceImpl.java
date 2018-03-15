@@ -5,6 +5,7 @@ import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.FoodService;
 import com.ineedwhite.diancan.biz.OrderService;
 import com.ineedwhite.diancan.biz.UserService;
+import com.ineedwhite.diancan.biz.model.ShoppingCartCoupon;
 import com.ineedwhite.diancan.biz.model.ShoppingCartFood;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
@@ -47,6 +48,10 @@ public class OrderServiceImpl implements OrderService {
     private UserDao userDao;
 
     public Map<String, String> useCoupon(Map<String, String> paraMap) {
+        Map<String,String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+
         return null;
     }
 
@@ -78,14 +83,16 @@ public class OrderServiceImpl implements OrderService {
                 return resp;
             }
             Map<Integer, CouponDo> couponMap = dianCanConfigService.getAllCouponDo();
-            List<String> canUseCouponNameList = new ArrayList<String>();
+            List<ShoppingCartCoupon> canUseCouponNameList = new ArrayList<ShoppingCartCoupon>();
             float totalMoney = orderDo.getOrder_total_amount();
 
             for (String couponId : couponList) {
                 CouponDo cp = couponMap.get(Integer.parseInt(couponId));
                 if (totalMoney > cp.getConsumption_amount()) {
                     //可用
-                    canUseCouponNameList.add(cp.getRemark());
+                    ShoppingCartCoupon cartCoupon = new ShoppingCartCoupon();
+//                    cartCoupon
+//                    canUseCouponNameList.add(cp.getRemark());
                 }
             }
             if (canUseCouponNameList.size() == 0) {
@@ -183,15 +190,19 @@ public class OrderServiceImpl implements OrderService {
             //构建菜品数目字符串
             foodNumSb.append(foodNum + "|");
 
-            FoodDo foodDo = foodDoMap.get(foodId);
+            FoodDo foodDo = foodDoMap.get(Integer.parseInt(foodId));
             ShoppingCartFood cartFood = new ShoppingCartFood();
             cartFood.setFoodName(foodDo.getFood_name());
             cartFood.setNum(Integer.parseInt(foodNum));
             cartFood.setPrice(foodDo.getFood_price());
+            cartFood.setVipPrice(foodDo.getFood_vip_price());
             cartFood.setFoodId(foodId);
 
             float total = cartFood.getNum() * cartFood.getPrice();
             cartFood.setTotal(total);
+            float vipTotal = cartFood.getNum() * cartFood.getVipPrice();
+            cartFood.setVipTotal(vipTotal);
+
             needToPayFood.add(cartFood);
 
             //vip price list
@@ -200,25 +211,23 @@ public class OrderServiceImpl implements OrderService {
         String foodStr = foodSb.toString();
         String foodNumStr = foodNumSb.toString();
         //菜品入库参数
-        foodStr = foodStr.substring(0, foodStr.length() - 2);
+        foodStr = foodStr.substring(0, foodStr.length() - 1);
         //菜品数量入库参数
-        foodNumStr = foodNumStr.substring(0, foodNumStr.length() - 2);
+        foodNumStr = foodNumStr.substring(0, foodNumStr.length() - 1);
         //购物车中的菜品
         String retNeedToPayFoodStr = JSON.toJSONString(needToPayFood);
         resp.put("pay_food_all", retNeedToPayFoodStr);
 
         //支付总计
         float sumFood = 0;
+        //VIP支付总计
+        float vipSumFood = 0;
         for (ShoppingCartFood food : needToPayFood) {
             sumFood += food.getTotal();
+            vipSumFood += food.getVipTotal();
         }
         resp.put("food_sum_money", String.valueOf(sumFood));
 
-        //VIP支付总计
-        float vipSumFood = 0;
-        for (Float vipPrice : vipPriceList) {
-            vipSumFood += vipPrice;
-        }
         if (StringUtils.equals(userDo.getMember_level(), LevelMappingEnum.VIP.getVflag())) {
             //是VIP
             resp.put("vip_food_money", String.valueOf(vipSumFood));

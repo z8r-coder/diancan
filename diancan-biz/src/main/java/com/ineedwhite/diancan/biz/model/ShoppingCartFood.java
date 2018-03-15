@@ -10,8 +10,10 @@ public class ShoppingCartFood {
     private String foodId;
     private String foodName;
     private float price;
+    private float vipPrice;
     private int num;
     private float total;
+    private float vipTotal;
 
     public String getFoodName() {
         return foodName;
@@ -51,5 +53,21 @@ public class ShoppingCartFood {
 
     public void setFoodId(String foodId) {
         this.foodId = foodId;
+    }
+
+    public float getVipTotal() {
+        return vipTotal;
+    }
+
+    public void setVipTotal(float vipTotal) {
+        this.vipTotal = vipTotal;
+    }
+
+    public float getVipPrice() {
+        return vipPrice;
+    }
+
+    public void setVipPrice(float vipPrice) {
+        this.vipPrice = vipPrice;
     }
 }
