@@ -91,8 +91,9 @@ public class OrderServiceImpl implements OrderService {
                 if (totalMoney > cp.getConsumption_amount()) {
                     //可用
                     ShoppingCartCoupon cartCoupon = new ShoppingCartCoupon();
-//                    cartCoupon
-//                    canUseCouponNameList.add(cp.getRemark());
+                    cartCoupon.setCouponId(couponId);
+                    cartCoupon.setRemark(cp.getRemark());
+                    canUseCouponNameList.add(cartCoupon);
                 }
             }
             if (canUseCouponNameList.size() == 0) {
