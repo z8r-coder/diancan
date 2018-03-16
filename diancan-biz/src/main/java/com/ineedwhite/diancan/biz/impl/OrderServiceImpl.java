@@ -209,7 +209,9 @@ public class OrderServiceImpl implements OrderService {
             transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
                     isVip,userCoupon,couponId,String.valueOf(orderPaid), orderId);
 
+            //支付成功后删除购物车缓存
             OrderUtils.deleteCacheFoodList(orderId);
+            
             resp.put("accumulate_points", String.valueOf(getAccumuPoint));
             resp.put("order_paid", String.valueOf(orderPaid));
         } catch (Exception ex) {
