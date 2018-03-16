@@ -53,6 +53,32 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private TransactionHelper transactionHelper;
 
+    public Map<String, String> historyOrder(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String usrId = paraMap.get("usr_id");
+        String currYearBegin = DateUtil.getCurrYearBegin();
+        String nextYearBegin = DateUtil.getNextYearBegin();
+        try {
+            List<OrderDo> orderDoList = orderDao.selectOrdTimeAndAmtByUsrIdAndOrdStsAndBeginTimeAndEndTime(OrderStatus.UD.getOrderStatus(),
+                    usrId,currYearBegin,nextYearBegin);
+            int comsuNum = orderDoList.size();
+            float sumAmt = 0;
+            for (OrderDo orderDo : orderDoList) {
+                sumAmt += orderDo.getOrder_paid();
+            }
+            String orderAll = JSON.toJSONString(orderDoList);
+            resp.put("comsu_num", String.valueOf(comsuNum));
+            resp.put("sum_amt", String.valueOf(sumAmt));
+            resp.put("order_all", orderAll);
+        } catch (Exception ex) {
+            logger.error("shoppingCartAddMinus occurs exception", ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
+        return resp;
+
+    }
     public Map<String, String> checkOut(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);

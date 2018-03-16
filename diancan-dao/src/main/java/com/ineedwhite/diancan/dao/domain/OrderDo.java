@@ -23,6 +23,7 @@ public class OrderDo {
     private String coupon_id;
     private String order_food;
     private String order_food_num;
+    private float order_paid;
 
     public String getOrder_id() {
         return order_id;
@@ -118,5 +119,13 @@ public class OrderDo {
 
     public void setOrder_food_num(String order_food_num) {
         this.order_food_num = order_food_num;
+    }
+
+    public float getOrder_paid() {
+        return order_paid;
+    }
+
+    public void setOrder_paid(float order_paid) {
+        this.order_paid = order_paid;
     }
 }

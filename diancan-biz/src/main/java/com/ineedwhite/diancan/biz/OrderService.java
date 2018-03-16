@@ -52,5 +52,13 @@ public interface OrderService {
      * @throws Exception
      */
     Map<String, String> checkOut(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 历史订单
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> historyOrder(Map<String, String> paraMap) throws Exception;
 }
 

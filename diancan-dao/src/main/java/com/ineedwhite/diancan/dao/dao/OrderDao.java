@@ -110,8 +110,21 @@ public interface OrderDao {
                                        @Param("food")String food,
                                        @Param("foodNum")String foodNum);
 
+    /**
+     * 通过订单ID更新订单状态，卡券ID，实付金额
+     * @param orderSts
+     * @param couponId
+     * @param order_paid
+     * @param order_id
+     * @return
+     */
     int updateOrdStsAndCpIdOrdPaidByOrdId(@Param("ord_sts")String orderSts,
                                           @Param("coupon_id")String couponId,
                                           @Param("order_paid")String order_paid,
                                           @Param("order_id")String order_id);
+
+    List<OrderDo> selectOrdTimeAndAmtByUsrIdAndOrdStsAndBeginTimeAndEndTime(@Param("ord_sts")String ordSts,
+                                                                            @Param("user_id")String user_id,
+                                                                            @Param("beginTime")String beginTime,
+                                                                            @Param("endTime")String endTime);
 }

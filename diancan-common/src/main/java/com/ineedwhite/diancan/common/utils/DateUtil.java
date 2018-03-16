@@ -457,6 +457,25 @@ public class DateUtil {
 
     }
 
+
+    /**
+     * 获取今年的1月1日
+     * @return
+     */
+    public static String getCurrYearBegin() {
+        String currTime = getCurrDateStr(DEFAULT_PAY_FORMAT);
+        String currYear = currTime.substring(0, 4);
+        currYear = currYear + "0101";
+        return currYear;
+    }
+    public static String getNextYearBegin() {
+        String currTime = getCurrDateStr(DEFAULT_PAY_FORMAT);
+        String currYear = currTime.substring(0, 4);
+        String nextYear = String.valueOf(Integer.parseInt(currYear) + 1);
+        nextYear = nextYear + "0101";
+        return nextYear;
+    }
+
     /**
      * 获取当前时间后几个小时的时间
      */
@@ -474,6 +493,7 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getCurrDateStr(DEFAULT_PAY_FORMAT));
+        System.out.println(getCurrYearBegin());
+        System.out.println(getNextYearBegin());
     }
 }
