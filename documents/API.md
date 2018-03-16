@@ -199,6 +199,8 @@ zk:192.168.1.199:2181
      
      user_coupon           用户优惠券
      
+     user_card_no          用户卡号
+     
 ### 8.向购物车添加菜品
 ##### URL: http://192.168.1.196:9090//outerApi/addFood
 ##### 入参：
