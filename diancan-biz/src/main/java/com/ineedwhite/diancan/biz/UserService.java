@@ -38,4 +38,11 @@ public interface UserService {
      * @return
      */
     public Map<String, String> getUserCoupon (Map<String, String> paraMap);
+
+    /**
+     * 更改用户信息
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> modifiedUserInfo(Map<String, String> paraMap);
 }

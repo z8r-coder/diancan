@@ -28,4 +28,10 @@
         member_level = #{member_level}, user_coupon = #{user_coupon}
         WHERE user_id = #{user_id};
     </update>
+
+    <update id="updateUsrGdrAndNmAndBirAndPhoneById">
+        UPDATE dc_user SET user_name = #{user_name}, user_birth = #{user_birth},
+        user_gender = #{user_gender}, user_phone = #{user_phone}
+        WHERE user_id = #{user_id}
+    </update>
 </mapper>

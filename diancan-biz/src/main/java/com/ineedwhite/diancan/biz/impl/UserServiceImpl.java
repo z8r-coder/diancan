@@ -32,6 +32,35 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+    public Map<String, String> modifiedUserInfo(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String user_id = paraMap.get("user_id");
+        String user_name = paraMap.get("user_name");
+        String user_gender = paraMap.get("user_gender");
+        String user_birth = paraMap.get("user_birth");
+        String user_phone = paraMap.get("user_phone");
+        try {
+            UserDo userDo = userDao.selectUserByUsrId(user_id);
+            if (userDo == null) {
+                logger.warn("该用户不存在或被注销 user_id:" + user_id);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+                return resp;
+            }
+
+            int affectRows = userDao.updateUsrGdrAndNmAndBirAndPhoneById(user_name,user_gender,user_birth,user_phone, user_id);
+            if (affectRows <= 0) {
+                logger.warn("更新订单出错:userId:" + user_id);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+            }
+        } catch (Exception ex) {
+            logger.error("method:register op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
+    }
+
     public Map<String, String> getUserDetailInfo(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);

@@ -47,4 +47,19 @@ public interface UserDao {
                                       @Param("balance")String balance,
                                       @Param("member_level")String member_level,
                                       @Param("user_coupon")String user_coupon);
+
+    /**
+     * 根据卡号更新基本信息
+     * @param userName
+     * @param userGender
+     * @param userBirth
+     * @param userPhone
+     * @param userId
+     * @return
+     */
+    int updateUsrGdrAndNmAndBirAndPhoneById(@Param("user_name")String userName,
+                                            @Param("user_gender")String userGender,
+                                            @Param("user_birth")String userBirth,
+                                            @Param("user_phone")String userPhone,
+                                            @Param("user_id")String userId);
 }
