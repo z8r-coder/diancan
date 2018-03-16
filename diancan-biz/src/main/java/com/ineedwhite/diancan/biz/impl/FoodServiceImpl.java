@@ -5,11 +5,14 @@ import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.FoodService;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.OrderStatus;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.ParserUtil;
 import com.ineedwhite.diancan.common.utils.RedisUtil;
+import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.domain.FoodDo;
+import com.ineedwhite.diancan.dao.domain.OrderDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,9 @@ public class FoodServiceImpl implements FoodService {
     @Resource
     private DianCanConfigService dianCanConfig;
 
+    @Resource
+    private OrderDao orderDao;
+
     public Map<String, String> getFoodByType(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
@@ -38,8 +44,19 @@ public class FoodServiceImpl implements FoodService {
         String foodType_id = paraMap.get("food_type_id");
         int foodPage = Integer.parseInt(paraMap.get("food_page"));
 
+        OrderDo orderDo = orderDao.selectOrderById(orderId);
+        if (orderDo == null){
+            logger.error("订单不存在,orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
+            return resp;
+        }
+        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
+            logger.warn("订单已经支付成功，请重新下单 orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
+            return resp;
+        }
         if (!OrderUtils.getCacheOrder(orderId)) {
-            logger.error("订单不存在或者,已过期,orderId:" + orderId);
+            logger.error("订单已过期,orderId:" + orderId);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
             return resp;
         }

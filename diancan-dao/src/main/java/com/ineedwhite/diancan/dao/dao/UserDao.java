@@ -62,4 +62,16 @@ public interface UserDao {
                                             @Param("user_birth")String userBirth,
                                             @Param("user_phone")String userPhone,
                                             @Param("user_id")String userId);
+
+    /**
+     * 根据用户号更新积分和用户余额
+     * @param user_balance
+     * @param user_id
+     * @param accumulate_points
+     * @return
+     */
+    int updateUsrBalanceById(@Param("user_balance")String user_balance,
+                             @Param("user_id")String user_id,
+                             @Param("accumulate_points")String accumulate_points,
+                             @Param("user_vip")String user_vip);
 }

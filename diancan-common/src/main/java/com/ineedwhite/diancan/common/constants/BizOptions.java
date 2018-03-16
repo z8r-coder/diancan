@@ -36,4 +36,9 @@ public class BizOptions {
      */
     public final static int BECOME_VIP = 1000;
 
+    /**
+     * 用户余额上限
+     */
+    public final static int RECHARGE_LIMIT = 1000000;
+
 }

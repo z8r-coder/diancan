@@ -34,4 +34,9 @@
         user_gender = #{user_gender}, user_phone = #{user_phone}
         WHERE user_id = #{user_id}
     </update>
+
+    <update id="updateUsrBalanceById">
+        UPDATE dc_user SET balance = #{user_balance}, member_level = #{user_vip}, accumulate_points = #{accumulate_points}
+        WHERE user_id = #{user_id}
+    </update>
 </mapper>
