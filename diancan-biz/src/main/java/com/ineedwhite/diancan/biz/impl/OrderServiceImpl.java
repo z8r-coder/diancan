@@ -159,7 +159,8 @@ public class OrderServiceImpl implements OrderService {
 
             String isVip = LevelMappingEnum.NVIP.getVflag();
 
-            if (newAccumuPoint >= BizOptions.BECOME_VIP) {
+            if (newAccumuPoint >= BizOptions.BECOME_VIP &&
+                    StringUtils.equals(LevelMappingEnum.NVIP.getVflag(), userDo.getMember_level())) {
                 //成为会员
                 resp.put("vip", LevelMappingEnum.VIP.getVflag());
                 isVip = LevelMappingEnum.VIP.getVflag();

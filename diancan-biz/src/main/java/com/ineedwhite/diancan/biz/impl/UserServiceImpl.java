@@ -10,9 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author ruanxin
@@ -27,6 +25,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+    public Map<String, String> getUserCoupon(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String user_id = paraMap.get("user_id");
+        try {
+            UserDo userDo = userDao.selectUserByUsrId(user_id);
+            String couponId = userDo.getUser_coupon();
+            List<String> couponList = new ArrayList<String>(Arrays.asList(couponId.split("\\|")));
+        } catch (Exception ex) {
+            logger.error("method:register op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
+    }
     public Map<String, String> register(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
 
