@@ -372,7 +372,7 @@ public class OrderServiceImpl implements OrderService {
             String coupon = userDao.selectCouponByUsrId(userId);
             if (StringUtils.isEmpty(coupon)) {
                 logger.warn("该用户没有可用优惠券! user_id:" + userId);
-                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00014);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00014);
                 return resp;
             }
             OrderDo orderDo = orderDao.selectOrderById(orderId);
@@ -380,13 +380,13 @@ public class OrderServiceImpl implements OrderService {
             if (!StringUtils.equals(ordSts, OrderStatus.UM.getOrderStatus())) {
                 //状态不一致
                 logger.error("the order status is wrong! orderId:" + orderId);
-                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00015);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
                 return resp;
             }
             List<String> couponList = Arrays.asList(coupon.split("\\|"));
             if (couponList == null || couponList.size() == 0) {
                 logger.warn("该用户没有可用优惠券! user_id:" + userId);
-                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00014);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00014);
                 return resp;
             }
             Map<Integer, CouponDo> couponMap = dianCanConfigService.getAllCouponDo();
@@ -405,7 +405,7 @@ public class OrderServiceImpl implements OrderService {
             }
             if (canUseCouponNameList.size() == 0) {
                 logger.warn("该用户没有可用优惠券! user_id:" + userId);
-                BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00014);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00014);
                 return resp;
             }
             String couponListStr = JSON.toJSONString(canUseCouponNameList);

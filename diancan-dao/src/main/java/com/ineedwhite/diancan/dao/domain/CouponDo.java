@@ -16,6 +16,7 @@ public class CouponDo {
     private Integer discount;
     private String expiry_time;
     private String remark;
+    private String start_time;
 
     public Integer getCoupon_id() {
         return coupon_id;
@@ -55,5 +56,13 @@ public class CouponDo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getStart_time() {
+        return start_time;
+    }
+
+    public void setStart_time(String start_time) {
+        this.start_time = start_time;
     }
 }

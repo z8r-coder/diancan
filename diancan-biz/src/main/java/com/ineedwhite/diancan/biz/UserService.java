@@ -25,4 +25,11 @@ public interface UserService {
      * @return
      */
     public Map<String, String> userInfo(Map<String, String> paraMap);
+
+    /**
+     * 获取用户的优惠券列表
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> getUserCoupon (Map<String, String> paraMap);
 }

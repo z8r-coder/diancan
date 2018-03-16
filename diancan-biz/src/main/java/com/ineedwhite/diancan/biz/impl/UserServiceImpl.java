@@ -1,9 +1,13 @@
 package com.ineedwhite.diancan.biz.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.UserService;
+import com.ineedwhite.diancan.biz.model.UserCoupon;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.dao.dao.UserDao;
+import com.ineedwhite.diancan.dao.domain.CouponDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -23,6 +27,9 @@ public class UserServiceImpl implements UserService {
     private Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     @Autowired
+    private DianCanConfigService dianCanConfigService;
+
+    @Autowired
     private UserDao userDao;
 
     public Map<String, String> getUserCoupon(Map<String, String> paraMap) {
@@ -32,9 +39,25 @@ public class UserServiceImpl implements UserService {
         String user_id = paraMap.get("user_id");
         try {
             UserDo userDo = userDao.selectUserByUsrId(user_id);
-            String couponId = userDo.getUser_coupon();
-            List<String> couponList = new ArrayList<String>(Arrays.asList(couponId.split("\\|")));
+            String couponIdStr = userDo.getUser_coupon();
+            List<String> couponList = Arrays.asList(couponIdStr.split("\\|"));
+            int coupon_num = couponList.size();
 
+            List<UserCoupon> userCouponList = new ArrayList<UserCoupon>();
+            for (String couponId : couponList) {
+                CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
+                UserCoupon userCoupon = new UserCoupon();
+                userCoupon.setConsu_amt(String.valueOf(couponDo.getConsumption_amount()));
+                userCoupon.setCouponId(couponId);
+                userCoupon.setDiscount(String.valueOf(couponDo.getDiscount()));
+                userCoupon.setStart_time(couponDo.getStart_time());
+                userCoupon.setExpire_time(couponDo.getExpiry_time());
+
+                userCouponList.add(userCoupon);
+            }
+            String couponListStr = JSON.toJSONString(couponList);
+            resp.put("coupon_num", String.valueOf(coupon_num));
+            resp.put("coupon_list", couponListStr);
         } catch (Exception ex) {
             logger.error("method:register op user table occur exception:" + ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);

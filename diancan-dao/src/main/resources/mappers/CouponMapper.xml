@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ineedwhite.diancan.dao.dao.CouponDao">
     <select id="findAllCoupon" resultType="com.ineedwhite.diancan.dao.domain.CouponDo">
-        SELECT coupon_id, consumption_amount, discount, expiry_time,remark
-        FROM dc_coupon;
+        SELECT coupon_id, consumption_amount, discount, expiry_time,remark,start_time, coupon_isDel
+        FROM dc_coupon WHERE coupon_isDel = 0;
     </select>
 </mapper>
