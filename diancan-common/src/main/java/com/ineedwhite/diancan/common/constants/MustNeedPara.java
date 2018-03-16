@@ -38,5 +38,5 @@ public class MustNeedPara {
 
     public static final String[] RECHARGE = new String[]{"user_id", "recharge_amt"};
 
-    public static final String[] HISTORY_ORDER = new String[]{"usr_id"};
+    public static final String[] HISTORY_ORDER = new String[]{"user_id"};
 }
