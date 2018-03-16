@@ -197,7 +197,7 @@ zk:192.168.1.199:2181
         
      user_id               用户id
      
-     user_coupon           用户优惠券
+     coupon_num           优惠券数量
      
      user_card_no          用户卡号
      

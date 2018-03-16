@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
             UserDo userDo = userDao.selectUserByUsrId(user_id);
             String couponId = userDo.getUser_coupon();
             List<String> couponList = new ArrayList<String>(Arrays.asList(couponId.split("\\|")));
+
         } catch (Exception ex) {
             logger.error("method:register op user table occur exception:" + ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
@@ -118,8 +119,17 @@ public class UserServiceImpl implements UserService {
         try {
             UserDo userDo = userDao.selectUserByUsrId(usrId);
             resp = BizUtils.bean2Map(userDo);
+            String couponId = userDo.getUser_coupon();
+
+            int couponNum = 0;
+            if (couponId != null) {
+                List<String> couponIdList = new ArrayList<String>(Arrays.asList("\\|"));
+                couponNum = couponIdList.size();
+            }
+            resp.put("coupon_num", String.valueOf(couponNum));
             resp.remove("user_is_del");
             resp.remove("user_password");
+            resp.remove("user_coupon");
             BizUtils.setRspMap(resp,ErrorCodeEnum.DC00000);
         } catch (Exception ex) {
             logger.error("method:usrInfo op user table occur exception:" + ex);
