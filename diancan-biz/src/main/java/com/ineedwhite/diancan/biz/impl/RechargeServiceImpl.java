@@ -81,6 +81,16 @@ public class RechargeServiceImpl implements RechargeService{
             }
             transactionHelper.updateRechargeAndUser(String.valueOf(newBalance), user_id,
                     String.valueOf(newAccPoints),isVip, rechargeDo);
+            if (StringUtils.equals(userDo.getMember_level(), LevelMappingEnum.NVIP.getVflag()) &&
+                    newAccPoints >= BizOptions.BECOME_VIP) {
+                //本来不是VIP，成为VIP
+                resp.put("vip", "1");
+            } else {
+                resp.put("vip", "0");
+            }
+            resp.put("user_balance", String.valueOf(newBalance));
+            resp.put("get_accumulate_points", String.valueOf(getAccPoints));
+
         } catch (Exception ex) {
             logger.error("method:register op user table occur exception:" + ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
