@@ -179,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
                     isVip,userCoupon,couponId,String.valueOf(orderPaid), orderId);
 
             resp.put("accumulate_points", String.valueOf(getAccumuPoint));
-
+            resp.put("order_paid", String.valueOf(orderPaid));
         } catch (Exception ex) {
             logger.error("shoppingCartAddMinus occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);

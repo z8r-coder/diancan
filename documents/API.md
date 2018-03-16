@@ -283,25 +283,20 @@ zk:192.168.1.199:2181
         
         total_food_money            结账
         
-### 12.在购物车中修改菜品数量
-##### URL: http://192.168.1.196:9090//outerApi/shoppingCartAddMinus
+### 13.结账
+##### URL: http://192.168.1.196:9090//outerApi/checkOut
 ##### 入参：
      字段名                      描述          是否可空
-     
-     food_id                   被修改菜品的ID     否
-        
-     food_num                  被修改菜品的数量    否
      
      order_id                  订单号            否
      
      coupon_id                 使用的卡券号       是（若为空不用卡券支付）   
 ##### 出参:
-         字段名                        描述   
+     字段名                        描述   
                     
-        mod_food_single_sum         被修改菜品的小计
-            
-        food_sum_money              总计
-        
-        vip_food_money              VIP优惠价
-        
-        total_food_money            结账
+     vip                         是否能成为VIP
+                                    (0:不能 1:能)
+                          
+     accumulate_points           此次消费获取的积分
+                
+     order_paid                  此次实际支付金额
