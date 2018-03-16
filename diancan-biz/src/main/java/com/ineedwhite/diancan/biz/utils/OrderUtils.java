@@ -37,6 +37,24 @@ public class OrderUtils {
      */
     private static final int DEFAULT_EXP_TIME = 24 * 60 * 60;
 
+    public static void deleteCacheFoodList(String orderId) throws Exception {
+        if (StringUtils.isEmpty(orderId)) {
+            return;
+        }
+        String fieldKey = makeFoodIdKey(orderId);
+        logger.info("delete food list key:" + fieldKey);
+        RedisUtil.delete(fieldKey);
+    }
+
+    public static void addFoodIdList(String orderId, String foodId) throws Exception {
+        if (StringUtils.isEmpty(orderId)) {
+            return;
+        }
+        String fieldKey = makeFoodIdKey(orderId);
+        logger.info("food id list key:" + fieldKey);
+        RedisUtil.addIntoList(fieldKey, foodId);
+    }
+
     /**
      * 缓存订单号
      * @param orderId
@@ -91,15 +109,6 @@ public class OrderUtils {
         }
         String fieldKey = makeFoodIdKey(orderId);
         return RedisUtil.getListLength(fieldKey);
-    }
-
-    public static void addFoodIdList(String orderId, String foodId) throws Exception {
-        if (StringUtils.isEmpty(orderId)) {
-            return;
-        }
-        String fieldKey = makeFoodIdKey(orderId);
-        logger.info("food id list key:" + fieldKey);
-        RedisUtil.addIntoList(fieldKey, foodId);
     }
 
     public static void addFoodNumList(String orderId, String foodNum) throws Exception{
