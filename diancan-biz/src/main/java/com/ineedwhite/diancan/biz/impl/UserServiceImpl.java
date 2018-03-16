@@ -42,6 +42,8 @@ public class UserServiceImpl implements UserService {
             String usrId = UUID.randomUUID().toString().replace("-", "");
             UserDo userDo = new UserDo();
 
+            String cardNo = BizUtils.getUsrCardNo(phone);
+
             userDo.setUser_id(usrId);
             userDo.setUser_name(paraMap.get("user_name"));
             userDo.setUser_phone(paraMap.get("user_phone"));
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
             userDo.setBalance(0);
             userDo.setMember_level("0");
             userDo.setUser_is_del(0);
+            userDo.setUser_card_no(cardNo);
 
             resp.put("user_id", usrId);
 
@@ -103,6 +106,7 @@ public class UserServiceImpl implements UserService {
             UserDo userDo = userDao.selectUserByUsrId(usrId);
             resp = BizUtils.bean2Map(userDo);
             resp.remove("user_is_del");
+            resp.remove("user_password");
             BizUtils.setRspMap(resp,ErrorCodeEnum.DC00000);
         } catch (Exception ex) {
             logger.error("method:usrInfo op user table occur exception:" + ex);

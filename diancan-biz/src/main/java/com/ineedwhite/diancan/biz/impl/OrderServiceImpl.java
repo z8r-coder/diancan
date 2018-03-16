@@ -87,6 +87,10 @@ public class OrderServiceImpl implements OrderService {
             //总计
             float totalAmt = orderDo.getOrder_total_amount();
             float orderPaid;
+
+            //优惠券
+            String userCoupon = userDo.getUser_coupon();
+            List<String> couponList = new ArrayList<String>(Arrays.asList(userCoupon.split("\\|")));
             if (couponId == null) {
                 //不使用优惠券
                 if(StringUtils.equals(userDo.getMember_level(), LevelMappingEnum.NVIP.getVflag())) {
@@ -109,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             } else {
                 //使用优惠券
+                int indexCoupon = couponList.indexOf(couponId);
                 CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
                 if (couponDo == null) {
                     logger.warn("该卡券不存在,couponId:" + couponId);
@@ -121,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
                 String nowTime = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
                 if (DateUtil.compareTime(nowTime,exTime, DateUtil.DEFAULT_PAY_FORMAT)) {
                     //过期
+                    couponList.remove(indexCoupon);
                     logger.warn("该卡券已过期,couponId:" + couponId);
                     BizUtils.setRspMap(resp, ErrorCodeEnum.DC00017);
                     return resp;
@@ -134,10 +140,13 @@ public class OrderServiceImpl implements OrderService {
                     return resp;
                 }
                 orderPaid = totalAmt - discard;
+                //use the coupon
+                couponList.remove(indexCoupon);
             }
+
             float balance = userDo.getBalance();
             if (balance < orderPaid) {
-                logger.warn("账户余额补足，请充值: userId:" + userDo.getUser_id());
+                logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
                 return resp;
             }
@@ -148,11 +157,29 @@ public class OrderServiceImpl implements OrderService {
             int newAccumuPoint = userDo.getAccumulate_points() + getAccumuPoint;
             resp.put("vip", LevelMappingEnum.NVIP.getVflag());
 
+            String isVip = LevelMappingEnum.NVIP.getVflag();
+
             if (newAccumuPoint >= BizOptions.BECOME_VIP) {
                 //成为会员
                 resp.put("vip", LevelMappingEnum.VIP.getVflag());
+                isVip = LevelMappingEnum.VIP.getVflag();
             }
-//            userDao.updateUsrAcptAndBcAndmemLvlCp()
+            //拼凑优惠券列表
+            StringBuilder cpIdsb = new StringBuilder();
+            for (String cpId : couponList) {
+                cpIdsb.append(cpId + "|");
+            }
+            if (couponId != null && couponId.length() != 0) {
+                userCoupon = cpIdsb.toString();
+                userCoupon = userCoupon.substring(0, userCoupon.length() - 1);
+
+            }
+            //事务更新订单表和用户表
+            transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
+                    isVip,userCoupon,couponId,String.valueOf(orderPaid), orderId);
+
+            resp.put("accumulate_points", String.valueOf(getAccumuPoint));
+
         } catch (Exception ex) {
             logger.error("shoppingCartAddMinus occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);

@@ -109,4 +109,9 @@ public interface OrderDao {
     int updateOrdFoodAndFoodNumByOrdId(@Param("order_id")String orderId,
                                        @Param("food")String food,
                                        @Param("foodNum")String foodNum);
+
+    int updateOrdStsAndCpIdOrdPaidByOrdId(@Param("ord_sts")String orderSts,
+                                          @Param("coupon_id")String couponId,
+                                          @Param("order_paid")String order_paid,
+                                          @Param("order_id")String order_id);
 }

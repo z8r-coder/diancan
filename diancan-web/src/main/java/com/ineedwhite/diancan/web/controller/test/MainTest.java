@@ -19,7 +19,12 @@ import static com.oracle.jrockit.jfr.ContentType.Timestamp;
 public class MainTest {
 
     public static void main(String[] args) {
-        testMov();
+        testPhone();
+    }
+
+    public static void testPhone() {
+        String phone = "15884812382";
+        System.out.println(phone.substring(phone.length() - 6, phone.length()));
     }
 
     public static void testMov() {

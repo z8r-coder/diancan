@@ -19,7 +19,6 @@ public class RedLock {
     }
 
     public static boolean lock(String boardId, int expireSeconds) {
-//        log.info("信息-获取锁-mercId={} mercOrderId={}, expireSeconds={}", mercId, mercOrderId, expireSeconds);
         String lockKey = getLockKey(boardId);
         try {
             for (int i = 0; i < RETRY_COUNT; i++) {  // 3次重试

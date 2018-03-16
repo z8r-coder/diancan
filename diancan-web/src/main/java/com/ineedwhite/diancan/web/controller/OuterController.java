@@ -49,6 +49,28 @@ public class OuterController extends BaseController {
         return "20180307";
     }
 
+    @RequestMapping(value = "/checkOut", method = RequestMethod.POST)
+    public void checkOut(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.CHECK_OUT);
+            retMap = orderService.checkOut(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
+    }
     @RequestMapping(value = "/shoppingCartAddMinus", method = RequestMethod.POST)
     public void shoppingCartAddMinus(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;

@@ -17,6 +17,7 @@ public class UserDo {
     private Integer user_is_del;
     private String user_password;
     private String user_coupon;
+    private String user_card_no;
 
     public String getUser_id() {
         return user_id;
@@ -88,5 +89,13 @@ public class UserDo {
 
     public void setUser_coupon(String user_coupon) {
         this.user_coupon = user_coupon;
+    }
+
+    public String getUser_card_no() {
+        return user_card_no;
+    }
+
+    public void setUser_card_no(String user_card_no) {
+        this.user_card_no = user_card_no;
     }
 }

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ineedwhite.diancan.dao.dao.UserDao">
     <insert id="insertUser">
-        INSERT INTO dc_user(user_id, user_name, user_phone, accumulate_points, balance, member_level, user_is_del,user_password, user_coupon)
-        VALUES (#{User.user_id},#{User.user_name}, #{User.user_phone}, #{User.accumulate_points},#{User.balance}, #{User.member_level}, #{User.user_is_del}, #{User.user_password}, #{User.user_coupon})
+        INSERT INTO dc_user(user_id, user_name, user_phone, accumulate_points, balance, member_level, user_is_del,user_password, user_coupon, user_card_no)
+        VALUES (#{User.user_id},#{User.user_name}, #{User.user_phone}, #{User.accumulate_points},#{User.balance}, #{User.member_level}, #{User.user_is_del}, #{User.user_password}, #{User.user_coupon}, #{User.user_card_no})
     </insert>
     
     <select id="selectUserByPhone" resultType="com.ineedwhite.diancan.dao.domain.UserDo">

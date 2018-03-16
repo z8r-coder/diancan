@@ -27,4 +27,6 @@ public class MustNeedPara {
     public static final String[] USE_COUPON = new String[] {"coupon_id", "order_id"};
 
     public static final String[] SHOPPING_CARD_ADD_MINUS = new String[] {"food_id", "food_num", "order_id"};
+
+    public static final String[] CHECK_OUT = new String[]{"order_id", "coupon_id"};
 }

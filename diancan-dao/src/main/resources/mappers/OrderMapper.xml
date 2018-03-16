@@ -71,4 +71,9 @@
         UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}
         WHERE order_id = #{order_id} AND order_status = 'UM';
     </update>
+    <update id="updateOrdStsAndCpIdOrdPaidByOrdId">
+        UPDATE dc_order SET order_status = #{ord_sts}, coupon_id = #{coupon_id},
+        order_paid = #{order_paid}
+        WHERE order_id = #{order_id}
+    </update>
 </mapper>

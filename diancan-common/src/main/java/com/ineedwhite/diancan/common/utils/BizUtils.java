@@ -107,6 +107,18 @@ public class BizUtils {
     }
 
     /**
+     * 通过手机号获取卡号
+     * @param phone
+     * @return
+     */
+    public static String getUsrCardNo(String phone) {
+        if (phone == null || phone.length() != 11) {
+            throw new DcException(ErrorCodeEnum.DC00021);
+        }
+        return phone.substring(phone.length() - 6, phone.length());
+    }
+
+    /**
      * change map to bean
      * @param map
      * @param clazz
