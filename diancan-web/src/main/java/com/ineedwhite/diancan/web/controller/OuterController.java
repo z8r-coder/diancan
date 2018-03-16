@@ -79,7 +79,7 @@ public class OuterController extends BaseController {
         try {
             Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
             BizUtils.checkMustParam(paraMap, MustNeedPara.GET_USER_DETAIL_INFO);
-            retMap = user.getUserCoupon(paraMap);
+            retMap = user.getUserDetailInfo(paraMap);
             returnStr = JSON.toJSONString(retMap);
         } catch (DcException ex) {
             logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);

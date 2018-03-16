@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
             String user_name = userDo.getUser_name();
             String user_gender = userDo.getUser_gender();
             String user_birth = userDo.getUser_birth();
-            String phone = userDo.getUser_birth();
+            String phone = userDo.getUser_phone();
             resp.put("user_name", user_name);
             resp.put("user_birth", user_birth);
             resp.put("user_gender", user_gender);
