@@ -32,4 +32,19 @@ public interface UserDao {
      * @return
      */
     String selectCouponByUsrId(@Param("user_id")String user_id);
+
+    /**
+     * 更新用户表
+     * @param user_id
+     * @param accumulate_points
+     * @param balance
+     * @param member_level
+     * @param user_coupon
+     * @return
+     */
+    int updateUsrAcptAndBcAndmemLvlCp(@Param("user_id")String user_id,
+                                      @Param("accumulate_points")String accumulate_points,
+                                      @Param("balance")String balance,
+                                      @Param("member_level")String member_level,
+                                      @Param("user_coupon")String user_coupon);
 }

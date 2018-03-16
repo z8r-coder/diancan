@@ -31,4 +31,9 @@ public class BizOptions {
      */
     public final static int FOOD_LIMIT = 100;
 
+    /**
+     * 成为会员
+     */
+    public final static int BECOME_VIP = 1000;
+
 }

@@ -7,6 +7,7 @@ import com.ineedwhite.diancan.biz.OrderService;
 import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.biz.model.ShoppingCartCoupon;
 import com.ineedwhite.diancan.biz.model.ShoppingCartFood;
+import com.ineedwhite.diancan.biz.transaction.TransactionHelper;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.LevelMappingEnum;
@@ -24,6 +25,7 @@ import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Transaction;
 
 import javax.annotation.Resource;
@@ -47,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private TransactionHelper transactionHelper;
 
     public Map<String, String> checkOut(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
@@ -132,8 +137,22 @@ public class OrderServiceImpl implements OrderService {
             }
             float balance = userDo.getBalance();
             if (balance < orderPaid) {
-
+                logger.warn("账户余额补足，请充值: userId:" + userDo.getUser_id());
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
+                return resp;
             }
+            float newBalance = balance - orderPaid;
+
+            //获得积分
+            int getAccumuPoint = (int) (orderPaid / 10);
+            int newAccumuPoint = userDo.getAccumulate_points() + getAccumuPoint;
+            resp.put("vip", LevelMappingEnum.NVIP.getVflag());
+
+            if (newAccumuPoint >= BizOptions.BECOME_VIP) {
+                //成为会员
+                resp.put("vip", LevelMappingEnum.VIP.getVflag());
+            }
+//            userDao.updateUsrAcptAndBcAndmemLvlCp()
         } catch (Exception ex) {
             logger.error("shoppingCartAddMinus occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
