@@ -164,7 +164,11 @@ public class OrderServiceImpl implements OrderService {
                 //成为会员
                 resp.put("vip", LevelMappingEnum.VIP.getVflag());
                 isVip = LevelMappingEnum.VIP.getVflag();
+            } else if (StringUtils.equals(LevelMappingEnum.VIP.getVflag(), userDo.getMember_level())) {
+                //如果是VIP将该字段改回VIP
+                isVip = LevelMappingEnum.VIP.getVflag();
             }
+
             //拼凑优惠券列表
             StringBuilder cpIdsb = new StringBuilder();
             for (String cpId : couponList) {
@@ -459,6 +463,21 @@ public class OrderServiceImpl implements OrderService {
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
         String orderId = paraMap.get("order_id");
+        OrderDo orderDo = orderDao.selectOrderById(orderId);
+        if (orderDo == null) {
+            //该订单不存在
+            logger.warn("该订单不存在，请重新下单 orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
+            return resp;
+        }
+
+        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
+            //已支付成功
+            logger.warn("该订单已经支付成功，请重新下单：" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
+            return resp;
+        }
+
         if (!OrderUtils.getCacheOrder(orderId)) {
             logger.error("该订单不存在或已过期 orderId:" + orderId);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
