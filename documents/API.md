@@ -332,3 +332,21 @@ zk:192.168.1.199:2181
      user_gender                用户性别
      
      phone                      用户联系方式
+     
+### 16.修改用户详细信息
+##### URL: http://192.168.1.196:9090//outerApi/getUserDetailInfo
+##### 入参：
+     字段名                      描述          是否可空
+     
+     user_id                    用户号           否
+     
+     user_name                  用户姓名         否
+                              
+     user_birth                 用户生日         否
+         
+     user_gender                用户性别         否
+         
+     user_phone                 用户联系方式      否
+##### 出参:
+     字段名                        描述   
+                    

@@ -71,7 +71,7 @@ public class OuterController extends BaseController {
         }
         writeResultUtf8(response, returnStr);
     }
-    
+
     @RequestMapping(value = "/getUserDetailInfo", method = RequestMethod.POST)
     public void getUserDetailInfo(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;
