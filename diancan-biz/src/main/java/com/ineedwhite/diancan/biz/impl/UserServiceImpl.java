@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
             String couponId = userDo.getUser_coupon();
 
             int couponNum = 0;
-            if (couponId != null) {
+            if (!StringUtils.isEmpty(couponId)) {
                 List<String> couponIdList = new ArrayList<String>(Arrays.asList("\\|"));
                 couponNum = couponIdList.size();
             }

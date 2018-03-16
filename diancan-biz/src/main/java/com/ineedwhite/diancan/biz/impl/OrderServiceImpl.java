@@ -174,8 +174,8 @@ public class OrderServiceImpl implements OrderService {
             for (String cpId : couponList) {
                 cpIdsb.append(cpId + "|");
             }
-            if (couponId != null && couponId.length() != 0) {
-                userCoupon = cpIdsb.toString();
+            userCoupon = cpIdsb.toString();
+            if (couponList != null && couponList.size() != 0) {
                 userCoupon = userCoupon.substring(0, userCoupon.length() - 1);
 
             }
