@@ -315,3 +315,20 @@ zk:192.168.1.199:2181
      coupon_num                  用户卡券数量
                           
      coupon_list                用户卡券列表信息
+     
+### 15.获取用户详细信息
+##### URL: http://192.168.1.196:9090//outerApi/getUserDetailInfo
+##### 入参：
+     字段名                      描述          是否可空
+     
+     user_id                    用户号            否
+##### 出参:
+     字段名                        描述   
+                    
+     user_name                  用户姓名
+                          
+     user_birth                 用户生日
+     
+     user_gender                用户性别
+     
+     phone                      用户联系方式

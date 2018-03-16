@@ -49,6 +49,28 @@ public class OuterController extends BaseController {
         return "20180307";
     }
 
+    @RequestMapping(value = "/getUserDetailInfo", method = RequestMethod.POST)
+    public void getUserDetailInfo(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.GET_USER_DETAIL_INFO);
+            retMap = user.getUserCoupon(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
+    }
     @RequestMapping(value = "/getUserCoupon", method = RequestMethod.POST)
     public void getUserCoupon(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;

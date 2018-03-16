@@ -32,6 +32,33 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+    public Map<String, String> getUserDetailInfo(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String user_id = paraMap.get("user_id");
+        try {
+            UserDo userDo = userDao.selectUserByUsrId(user_id);
+            if (userDo == null) {
+                logger.warn("该用户不存在或被注销 user_id:" + user_id);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+                return resp;
+            }
+            String user_name = userDo.getUser_name();
+            String user_gender = userDo.getUser_gender();
+            String user_birth = userDo.getUser_birth();
+            String phone = userDo.getUser_birth();
+            resp.put("user_name", user_name);
+            resp.put("user_birth", user_birth);
+            resp.put("user_gender", user_gender);
+            resp.put("phone", phone);
+        } catch (Exception ex) {
+            logger.error("method:register op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
+    }
+
     public Map<String, String> getUserCoupon(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
@@ -39,6 +66,11 @@ public class UserServiceImpl implements UserService {
         String user_id = paraMap.get("user_id");
         try {
             UserDo userDo = userDao.selectUserByUsrId(user_id);
+            if (userDo == null) {
+                logger.warn("该用户不存在或被注销 user_id:" + user_id);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+                return resp;
+            }
             String couponIdStr = userDo.getUser_coupon();
             List<String> couponList = Arrays.asList(couponIdStr.split("\\|"));
             int coupon_num = couponList.size();
@@ -64,6 +96,7 @@ public class UserServiceImpl implements UserService {
         }
         return resp;
     }
+
     public Map<String, String> register(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
 
@@ -141,6 +174,11 @@ public class UserServiceImpl implements UserService {
         String usrId = paraMap.get("user_id");
         try {
             UserDo userDo = userDao.selectUserByUsrId(usrId);
+            if (userDo == null) {
+                logger.warn("该用户不存在或被注销 user_id:" + usrId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+                return resp;
+            }
             resp = BizUtils.bean2Map(userDo);
             String couponId = userDo.getUser_coupon();
 

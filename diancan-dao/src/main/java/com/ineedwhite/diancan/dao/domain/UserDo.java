@@ -18,6 +18,8 @@ public class UserDo {
     private String user_password;
     private String user_coupon;
     private String user_card_no;
+    private String user_gender;
+    private String user_birth;
 
     public String getUser_id() {
         return user_id;
@@ -97,5 +99,21 @@ public class UserDo {
 
     public void setUser_card_no(String user_card_no) {
         this.user_card_no = user_card_no;
+    }
+
+    public String getUser_gender() {
+        return user_gender;
+    }
+
+    public void setUser_gender(String user_gender) {
+        this.user_gender = user_gender;
+    }
+
+    public String getUser_birth() {
+        return user_birth;
+    }
+
+    public void setUser_birth(String user_birth) {
+        this.user_birth = user_birth;
     }
 }

@@ -7,6 +7,12 @@ import java.util.Map;
  */
 public interface UserService {
     /**
+     * 个人详细信息
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> getUserDetailInfo(Map<String, String> paraMap);
+    /**
      * 用户注册
      * @param paraMap
      */

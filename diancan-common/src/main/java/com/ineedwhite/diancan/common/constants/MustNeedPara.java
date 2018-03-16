@@ -31,4 +31,6 @@ public class MustNeedPara {
     public static final String[] CHECK_OUT = new String[]{"order_id"};
 
     public static final String[] GET_USER_COUPON = new String[]{"user_id"};
+
+    public static final String[] GET_USER_DETAIL_INFO = new String[]{"user_id"};
 }

@@ -14,7 +14,8 @@
 
     <select id="selectUserByUsrId" resultType="com.ineedwhite.diancan.dao.domain.UserDo">
         SELECT user_id, user_password, user_phone, user_name,
-        accumulate_points, balance, member_level, user_coupon, user_card_no
+        accumulate_points, balance, member_level, user_coupon, user_card_no,
+        user_gender,user_birth
         FROM dc_user WHERE user_is_del = 0 AND user_id = #{user_id}
     </select>
 
