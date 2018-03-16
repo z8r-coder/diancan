@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
-        String usrId = paraMap.get("usr_id");
+        String usrId = paraMap.get("user_id");
         String currYearBegin = DateUtil.getCurrYearBegin();
         String nextYearBegin = DateUtil.getNextYearBegin();
         try {

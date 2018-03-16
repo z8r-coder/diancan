@@ -388,3 +388,21 @@ zk:192.168.1.199:2181
     vip                         非VIP账户成为VIP时返回1，其余情况返回0
         
     get_accumulate_points       本次充值获得的积分
+    
+### 18.历史账单
+##### URL: http://192.168.1.196:9090//outerApi/historyOrder
+##### 入参：
+     字段名                      描述          是否可空
+     
+     user_id                    用户号           否
+    
+##### 出参:
+     字段名                        描述   
+                    
+    comsu_num                  一年内的消费次数
+        
+    sum_amt                    一年内的消费金额总和
+        
+    order_all                  一年内的消费账单信息
+    
+    
