@@ -13,6 +13,7 @@ import com.ineedwhite.diancan.dao.domain.RechargeDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.UUID;
  * @create 2018-03-16
  * @desc
  */
+@Service
 public class RechargeServiceImpl implements RechargeService{
 
     private Logger logger = Logger.getLogger(RechargeServiceImpl.class);

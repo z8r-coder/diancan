@@ -43,12 +43,37 @@ public class OuterController extends BaseController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private RechargeService rechargeService;
+
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public String version() {
         return "20180307";
     }
 
+    @RequestMapping(value = "/recharge", method = RequestMethod.POST)
+    public void recharge(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> retMap = null;
+        String returnStr;
+        try {
+            Map<String, String> paraMap = BizUtils.getMapFromRequestMap(request.getParameterMap());
+            BizUtils.checkMustParam(paraMap, MustNeedPara.RECHARGE);
+            retMap = rechargeService.recharge(paraMap);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (DcException ex) {
+            logger.error("occur exception " + ex.getErrorCode() + ":" + ex.getErrorMsg(), ex);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ex);
+            returnStr = JSON.toJSONString(retMap);
+        } catch (Throwable t) {
+            logger.error("occurs Throwable exception:", t);
+            retMap = new HashMap<String, String>();
+            BizUtils.setRspMap(retMap, ErrorCodeEnum.DC00003);
+            returnStr = JSON.toJSONString(retMap);
+        }
+        writeResultUtf8(response, returnStr);
+    }
     @RequestMapping(value = "/modifiedUserInfo", method = RequestMethod.POST)
     public void modifiedUserInfo(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> retMap = null;
