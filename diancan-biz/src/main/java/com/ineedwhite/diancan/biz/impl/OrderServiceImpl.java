@@ -54,6 +54,32 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private TransactionHelper transactionHelper;
 
+    public Map<String, String> orderInfo(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String orderId = paraMap.get("order_id");
+        try {
+            OrderDo orderDo = orderDao.selectOrderById(orderId);
+            if (orderDo == null) {
+                //该订单不存在
+                logger.warn("该订单不存在 orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
+            }
+            if (StringUtils.equals(OrderStatus.UD.getOrderStatus(), orderDo.getOrder_status())) {
+                //该订单未支付成功
+                logger.warn("该订单未支付成功 orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00026);
+                return resp;
+            }
+            resp.put("order_paid", String.valueOf(orderDo.getOrder_paid()));
+//            resp.put("order_")
+        } catch (Exception ex) {
+            logger.error("shoppingCartAddMinus occurs exception", ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
+        return resp;
+    }
     public Map<String, String> orderWithoutFinish(Map<String, String> paraMap){
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);

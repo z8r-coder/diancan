@@ -361,7 +361,7 @@ zk:192.168.1.199:2181
      phone                      用户联系方式
      
 ### 16.修改用户详细信息
-##### URL: http://192.168.1.196:9090//outerApi/getUserDetailInfo
+##### URL: http://192.168.1.196:9090//outerApi/modifiedUserInfo
 ##### 入参：
      字段名                      描述          是否可空
      
