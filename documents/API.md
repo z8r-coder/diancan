@@ -440,3 +440,29 @@ zk:192.168.1.199:2181
     若 状态UK,则redirect选菜页面,
     若 状态UM,则redirect购物车页面）
     
+### 21.订单信息
+##### URL: http://192.168.1.196:9090//outerApi/orderInfo
+##### 入参：
+     字段名                      描述          是否可空
+     
+     order_id                   订单号           否
+    
+##### 出参:
+     字段名                        描述   
+                    
+    order_id                    订单号
+        
+    order_paid                  实付金额
+        
+    order_total_money           总计
+        
+    order_discount              优惠
+        
+    order_people_num            用餐人数
+        
+    order_date                  用餐日期
+        
+    order_board_id              桌号
+        
+    food_info                   菜品信息
+    
