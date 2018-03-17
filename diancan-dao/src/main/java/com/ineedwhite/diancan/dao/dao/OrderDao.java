@@ -146,4 +146,11 @@ public interface OrderDao {
     int updateOrdStsByIdAndSts(@Param("ordId")String ordId,
                                @Param("oldOrdSts")String oldOrdSts,
                                @Param("newOrdSts")String newOrdSts);
+
+    /**
+     * 通过用户号和订单状态选择订单
+     * @param user_id
+     * @return
+     */
+    OrderDo selectOrdWithoutFinishByUsrId(@Param("user_id")String user_id);
 }

@@ -41,4 +41,6 @@ public class MustNeedPara {
     public static final String[] HISTORY_ORDER = new String[]{"user_id"};
 
     public static final String[] RECHARGE_PAGE_LOADING = new String[]{"user_id"};
+
+    public static final String[] ORDER_WITHOUT_FINISH = new String[]{"user_id"};
 }

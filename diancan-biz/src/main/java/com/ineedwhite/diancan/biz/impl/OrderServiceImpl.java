@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Transaction;
 
 import javax.annotation.Resource;
+import javax.crypto.MacSpi;
 import java.util.*;
 
 /**
@@ -52,6 +53,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private TransactionHelper transactionHelper;
+
+    public Map<String, String> orderWithoutFinish(Map<String, String> paraMap){
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String usrId = paraMap.get("user_id");
+        try{
+            OrderDo orderDo = orderDao.selectOrdWithoutFinishByUsrId(usrId);
+            if (orderDo == null) {
+                //该用户已经完成了所有的订单
+                return resp;
+            }
+
+            if (!OrderUtils.getCacheOrder(orderDo.getOrder_id())) {
+                //订单已经过期
+                return resp;
+            }
+            BizUtils.setRspMap(resp,ErrorCodeEnum.DC00025);
+            resp.put("order_id", orderDo.getOrder_id());
+            resp.put("order_status", orderDo.getOrder_status());
+        } catch (Exception ex) {
+            logger.error("shoppingCartAddMinus occurs exception", ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+        }
+        return resp;
+    }
 
     public Map<String, String> historyOrder(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();

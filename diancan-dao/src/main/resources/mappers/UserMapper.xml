@@ -44,9 +44,4 @@
         UPDATE dc_user SET user_coupon = #{user_coupon}
         WHERE user_phone = #{user_phone}
     </update>
-
-    <select id="selectOrdWithoutFinishByUsrId" resultType="java.lang.String">
-        SELECT order_id FROM dc_order
-        WHERE user_id = #{user_id} AND (order_status = 'UK' OR order_status = 'UM')
-    </select>
 </mapper>

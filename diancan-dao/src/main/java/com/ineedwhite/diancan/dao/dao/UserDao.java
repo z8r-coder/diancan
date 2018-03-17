@@ -83,11 +83,4 @@ public interface UserDao {
      */
     int updateUsrCouponById(@Param("user_phone")String user_phone,
                             @Param("user_coupon")String user_coupon);
-
-    /**
-     * 通过用户号和订单状态选择订单
-     * @param user_id
-     * @return
-     */
-    String selectOrdWithoutFinishByUsrId(@Param("user_id")String user_id);
 }

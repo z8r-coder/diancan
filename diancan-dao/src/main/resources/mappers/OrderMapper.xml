@@ -90,4 +90,9 @@
         UPDATE dc_order SET order_status = #{newOrdSts}
         WHERE ordId = #{ordId} AND oldOrdSts = #{oldOrdSts}
     </update>
+
+    <select id="selectOrdWithoutFinishByUsrId" resultType="com.ineedwhite.diancan.dao.domain.OrderDo">
+        SELECT order_id, order_status FROM dc_order
+        WHERE user_id = #{user_id} AND (order_status = 'UK' OR order_status = 'UM')
+    </select>
 </mapper>
