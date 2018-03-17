@@ -14,4 +14,11 @@ public interface RechargeService {
      * @return
      */
     public Map<String, String> recharge(Map<String, String> paraMap);
+
+    /**
+     * 充值业务页面加载
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> rechargePageLoading(Map<String, String> paraMap);
 }

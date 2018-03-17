@@ -97,4 +97,26 @@ public class RechargeServiceImpl implements RechargeService{
         }
         return resp;
     }
+
+    public Map<String, String> rechargePageLoading(Map<String, String> paraMap) {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String usrId = paraMap.get("user_id");
+        try {
+            UserDo userDo = userDao.selectUserByUsrId(usrId);
+            if (userDo == null) {
+                //have not register
+                logger.warn("该用户被注销或不存在 userId:" + usrId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
+                return resp;
+            }
+            float balance = userDo.getBalance();
+            resp.put("balance", String.valueOf(balance));
+        } catch (Exception ex) {
+            logger.error("method:register op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
+    }
 }
