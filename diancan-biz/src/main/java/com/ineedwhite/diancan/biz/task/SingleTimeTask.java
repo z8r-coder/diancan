@@ -1,8 +1,6 @@
 package com.ineedwhite.diancan.biz.task;
 
 import com.ineedwhite.diancan.biz.OrderCloseService;
-import com.ineedwhite.diancan.biz.SpringHolder;
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +41,7 @@ public class SingleTimeTask {
         try {
             logger.info("关单task开始！");
             orderCloseService.doTask();
-            logger.error("关单task结束");
+            logger.info("关单task结束");
         }catch (Exception ex) {
             logger.error("关单异常",ex);
             throw ex;

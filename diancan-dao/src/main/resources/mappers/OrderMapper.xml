@@ -29,7 +29,7 @@
 
     <select id="selectOrderByStatusWithoutClose" resultType="java.lang.String">
         SELECT order_id FROM dc_order
-        WHERE order_status = 'UK' AND order_status = 'UF';
+        WHERE order_status = 'UK' OR order_status = 'UM';
     </select>
 
     <select id="selectOrderById" resultType="com.ineedwhite.diancan.dao.domain.OrderDo">

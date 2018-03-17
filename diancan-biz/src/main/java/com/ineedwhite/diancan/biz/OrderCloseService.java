@@ -31,7 +31,7 @@ public class OrderCloseService {
         List<String> needCloseOrd = new ArrayList<String>();
         for (String orderId : orders) {
             if (!OrderUtils.getCacheOrder(orderId)) {
-                //不存在，该订单超时
+                //该订单超时
                 needCloseOrd.add(orderId);
             }
         }
@@ -39,9 +39,12 @@ public class OrderCloseService {
             return;
         }
         int affectRows = orderDao.updateOrderStsById(needCloseOrd, "UC");
-
         if (affectRows <= 0) {
             logger.warn("关单task 更新数据库失败!");
+        }
+        for (String orderId : orders) {
+            //删除购物车缓存队列
+            OrderUtils.deleteCacheFoodList(orderId);
         }
     }
 }
