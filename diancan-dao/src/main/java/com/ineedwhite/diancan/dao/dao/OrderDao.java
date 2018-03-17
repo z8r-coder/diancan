@@ -123,8 +123,27 @@ public interface OrderDao {
                                           @Param("order_paid")String order_paid,
                                           @Param("order_id")String order_id);
 
+    /**
+     * 通过时间段来查找订单
+     * @param ordSts
+     * @param user_id
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
     List<OrderDo> selectOrdTimeAndAmtByUsrIdAndOrdStsAndBeginTimeAndEndTime(@Param("ord_sts")String ordSts,
                                                                             @Param("user_id")String user_id,
                                                                             @Param("beginTime")String beginTime,
                                                                             @Param("endTime")String endTime);
+
+    /**
+     * 通过订单号和订单状态更新订单状态
+     * @param ordId
+     * @param oldOrdSts
+     * @param newOrdSts
+     * @return
+     */
+    int updateOrdStsByIdAndSts(@Param("ordId")String ordId,
+                               @Param("oldOrdSts")String oldOrdSts,
+                               @Param("newOrdSts")String newOrdSts);
 }

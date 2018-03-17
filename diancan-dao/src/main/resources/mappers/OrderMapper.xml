@@ -85,4 +85,9 @@
         FROM dc_order
         WHERE user_id = #{user_id} AND order_status = #{ord_sts} AND (order_date BETWEEN #{beginTime} AND #{endTime});
     </select>
+
+    <update id="updateOrdStsByIdAndSts">
+        UPDATE dc_order SET order_status = #{newOrdSts}
+        WHERE ordId = #{ordId} AND oldOrdSts = #{oldOrdSts}
+    </update>
 </mapper>

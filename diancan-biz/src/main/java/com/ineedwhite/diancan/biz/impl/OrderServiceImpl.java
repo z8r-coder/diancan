@@ -173,6 +173,9 @@ public class OrderServiceImpl implements OrderService {
             float balance = userDo.getBalance();
             if (balance < orderPaid) {
                 logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
+                //更新订单状态为失败
+                orderDao.updateOrdStsByIdAndSts(orderId, OrderStatus.UM.getOrderStatus(),
+                        OrderStatus.UF.getOrderStatus());
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
                 return resp;
             }
