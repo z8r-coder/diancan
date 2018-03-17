@@ -15,7 +15,7 @@ import java.util.List;
  * @create 2018-03-13
  * @desc 关单服务
  */
-@Service
+@Service("orderCloseService")
 public class OrderCloseService {
 
     private Logger logger = Logger.getLogger(OrderCloseService.class);
