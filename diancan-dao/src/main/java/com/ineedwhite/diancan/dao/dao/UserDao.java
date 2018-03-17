@@ -74,4 +74,13 @@ public interface UserDao {
                              @Param("user_id")String user_id,
                              @Param("accumulate_points")String accumulate_points,
                              @Param("user_vip")String user_vip);
+
+    /**
+     * 通过用户号更新优惠券列表
+     * @param user_phone
+     * @param user_coupon
+     * @return
+     */
+    int updateUsrCouponById(@Param("user_phone")String user_phone,
+                            @Param("user_coupon")String user_coupon);
 }

@@ -6,6 +6,7 @@ import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.biz.model.UserCoupon;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.utils.BizUtils;
+import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.CouponDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
@@ -183,6 +184,40 @@ public class UserServiceImpl implements UserService {
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00004);
                 return resp;
             }
+            //更新优惠券过期情况
+            String userCoupon = userDo.getUser_coupon();
+            if (!StringUtils.isEmpty(userCoupon)) {
+                //拥有优惠券
+                List<String> couPonList = new ArrayList<String>(Arrays.asList(userCoupon.split("\\|")));
+                //未过期的优惠券
+                List<String> canUseCoupon = new ArrayList<String>();
+                for (String couponId:couPonList) {
+                    CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
+                    String exTime = couponDo.getExpiry_time();
+                    exTime = exTime.replace("-", "").replace(" ","").replace(":","").replace(".","");
+                    exTime = exTime.substring(0, exTime.length() - 1);
+                    String nowTime = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
+                    if (!DateUtil.compareTime(nowTime,exTime, DateUtil.DEFAULT_PAY_FORMAT)) {
+                        //未过期
+                        canUseCoupon.add(couponId);
+                    }
+                }
+                StringBuilder cpSb = new StringBuilder();
+                for (String couponId : canUseCoupon) {
+                    cpSb.append(couponId + "|");
+                }
+                String canUseCpStr = cpSb.toString();
+                if (canUseCpStr.length() > 0) {
+                    canUseCpStr = canUseCpStr.substring(0, canUseCpStr.length() - 1);
+                }
+                int affectRows = userDao.updateUsrCouponById(user_phone, canUseCpStr);
+                if (affectRows <= 0) {
+                    logger.warn("更新用户表出错:user_id:" + userDo.getUser_id());
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+                    return resp;
+                }
+            }
+            
             //password right
             resp.put("user_id", userDo.getUser_id());
             resp.put("user_name", userDo.getUser_name());

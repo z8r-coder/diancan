@@ -39,4 +39,9 @@
         UPDATE dc_user SET balance = #{user_balance}, member_level = #{user_vip}, accumulate_points = #{accumulate_points}
         WHERE user_id = #{user_id}
     </update>
+
+    <update id="updateUsrCouponById">
+        UPDATE dc_user SET user_coupon = #{user_coupon}
+        WHERE user_phone = #{user_phone}
+    </update>
 </mapper>
