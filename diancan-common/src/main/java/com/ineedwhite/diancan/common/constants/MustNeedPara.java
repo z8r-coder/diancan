@@ -34,7 +34,7 @@ public class MustNeedPara {
 
     public static final String[] GET_USER_DETAIL_INFO = new String[]{"user_id"};
 
-    public static final String[] MOD_USER_INFO = new String[]{"user_id", "user_name", "user_gender", "user_birth", "user_phone"};
+    public static final String[] MOD_USER_INFO = new String[]{"user_id", "user_name", "user_phone"};
 
     public static final String[] RECHARGE = new String[]{"user_id", "recharge_amt"};
 
@@ -43,4 +43,6 @@ public class MustNeedPara {
     public static final String[] RECHARGE_PAGE_LOADING = new String[]{"user_id"};
 
     public static final String[] ORDER_WITHOUT_FINISH = new String[]{"user_id"};
+
+    public static final String[] ORDER_INFO = new String[]{"order_id"};
 }

@@ -5,6 +5,7 @@ import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.FoodService;
 import com.ineedwhite.diancan.biz.OrderService;
 import com.ineedwhite.diancan.biz.UserService;
+import com.ineedwhite.diancan.biz.model.OrderFoodInfo;
 import com.ineedwhite.diancan.biz.model.ShoppingCartCoupon;
 import com.ineedwhite.diancan.biz.model.ShoppingCartFood;
 import com.ineedwhite.diancan.biz.transaction.TransactionHelper;
@@ -12,6 +13,7 @@ import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.LevelMappingEnum;
 import com.ineedwhite.diancan.common.OrderStatus;
+import com.ineedwhite.diancan.common.TimeMapping;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
@@ -72,8 +74,34 @@ public class OrderServiceImpl implements OrderService {
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00026);
                 return resp;
             }
+            resp.put("order_id", String.valueOf(orderId));
             resp.put("order_paid", String.valueOf(orderDo.getOrder_paid()));
-//            resp.put("order_")
+            resp.put("order_total_money", String.valueOf(orderDo.getOrder_total_amount()));
+            resp.put("order_discount", String.valueOf(orderDo.getOrder_paid()));
+            resp.put("order_people_num", String.valueOf(orderDo.getOrder_people_number()));
+            //用餐时间
+            String beginTime = TimeMapping.timeMappingMap.get(orderDo.getOrder_board_time_interval()).getBegin();
+            String endTime = TimeMapping.timeMappingMap.get(orderDo.getOrder_board_time_interval()).getEnd();
+            resp.put("order_date", orderDo.getOrder_board_date() + "  "
+                    + beginTime + "-" + endTime);
+            resp.put("order_board_id", String.valueOf(orderDo.getBoard_id()));
+
+            List<String> foodIdList = Arrays.asList(orderDo.getOrder_food().split("\\|"));
+            List<String> foodNumList = Arrays.asList(orderDo.getOrder_food().split("\\|"));
+
+            List<String> orderFoodInfoList = new ArrayList<String>();
+            for (int i = 0; i < foodIdList.size();i++) {
+                String foodId = foodIdList.get(i);
+                String foodNum = foodNumList.get(i);
+                FoodDo foodDo = dianCanConfigService.getFoodById(Integer.parseInt(foodId));
+                float totalMoney = foodDo.getFood_price() * Integer.parseInt(foodNum);
+                OrderFoodInfo orderFoodInfo = new OrderFoodInfo();
+                orderFoodInfo.setFoodName(foodDo.getFood_name());
+                orderFoodInfo.setFoodNum(foodNum);
+                orderFoodInfo.setTotalMoney(String.valueOf(totalMoney));
+            }
+            String orderFoodInfoStr = JSON.toJSONString(orderFoodInfoList);
+            resp.put("food_info", orderFoodInfoStr);
         } catch (Exception ex) {
             logger.error("shoppingCartAddMinus occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);

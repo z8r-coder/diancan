@@ -68,5 +68,13 @@ public interface OrderService {
      * @throws Exception
      */
     Map<String, String> orderWithoutFinish(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 订单信息
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    Map<String, String> orderInfo(Map<String, String> paraMap) throws Exception;
 }
 

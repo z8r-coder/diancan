@@ -5,6 +5,7 @@ import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.biz.model.UserCoupon;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.GenderMapping;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.dao.dao.UserDao;
@@ -75,12 +76,22 @@ public class UserServiceImpl implements UserService {
                 return resp;
             }
             String user_name = userDo.getUser_name();
-            String user_gender = userDo.getUser_gender();
+            Integer user_gender_flag = userDo.getUser_gender();
+            if (user_gender_flag == null) {
+                resp.put("user_gender", null);
+            } else {
+                if (StringUtils.equals(GenderMapping.male.getGflag(), String.valueOf(user_gender_flag))) {
+                    //男
+                    resp.put("user_gender", "男");
+                } else {
+                    //女
+                    resp.put("user_gender", "女");
+                }
+            }
             String user_birth = userDo.getUser_birth();
             String phone = userDo.getUser_phone();
             resp.put("user_name", user_name);
             resp.put("user_birth", user_birth);
-            resp.put("user_gender", user_gender);
             resp.put("phone", phone);
         } catch (Exception ex) {
             logger.error("method:register op user table occur exception:" + ex);

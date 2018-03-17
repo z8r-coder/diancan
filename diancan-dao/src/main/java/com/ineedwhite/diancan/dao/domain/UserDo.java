@@ -18,7 +18,7 @@ public class UserDo {
     private String user_password;
     private String user_coupon;
     private String user_card_no;
-    private String user_gender;
+    private Integer user_gender;
     private String user_birth;
 
     public String getUser_id() {
@@ -101,11 +101,11 @@ public class UserDo {
         this.user_card_no = user_card_no;
     }
 
-    public String getUser_gender() {
+    public Integer getUser_gender() {
         return user_gender;
     }
 
-    public void setUser_gender(String user_gender) {
+    public void setUser_gender(Integer user_gender) {
         this.user_gender = user_gender;
     }
 
