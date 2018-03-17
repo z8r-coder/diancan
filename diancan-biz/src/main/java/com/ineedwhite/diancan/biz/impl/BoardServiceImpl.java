@@ -83,6 +83,7 @@ public class BoardServiceImpl implements BoardService{
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
         String boardId = paraMap.get("board_id");
+        String usrId = paraMap.get("user_id");
 
         if (!RedLock.lockDefaultTime(boardId)) {  // 命中悲观锁
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00008);
@@ -97,12 +98,19 @@ public class BoardServiceImpl implements BoardService{
             throw new DcException(ErrorCodeEnum.DC00005);
         }
         try {
+            OrderDo oldOrder = orderDao.selectOrdWithoutFinishByUsrId(usrId);
+            if (oldOrder != null && OrderUtils.getCacheOrder(oldOrder.getOrder_id())) {
+                //还存在未支付的订单
+                resp.put("order_status", oldOrder.getOrder_status());
+                resp.put("order_id", oldOrder.getOrder_id());
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00025);
+                return resp;
+            }
             String orderId = UUID.randomUUID().toString().replace("-", "");
             Integer orderPeopleNum = boardDo.getBoard_people_number();
             String orderDate = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
             String orderBoardDate = paraMap.get("order_board_date");
             String orderTimeInterval = paraMap.get("order_board_time_interval");
-            String usrId = paraMap.get("user_id");
 
             UserDo usr = userDao.selectUserByUsrId(usrId);
             if (usr == null) {
@@ -150,7 +158,6 @@ public class BoardServiceImpl implements BoardService{
             logger.error("method:reserveBoard op order table occur exception:" + ex.getMessage(), ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
         } finally {
-            // TODO: 2018/3/14 何时加锁有待讨论
             RedLock.unLock(boardId);
         }
         return resp;

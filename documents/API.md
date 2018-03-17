@@ -177,9 +177,12 @@ zk:192.168.1.199:2181
      字段名                 描述
                  
      order_id              订单号
-        
+                           (错误码为DC00025时为未支付的订单号)
      board_id              桌位号
-
+     
+     order_status          订单状态(错误码为DC00025时存在)
+                           (若 状态UK,则redirect选菜页面,
+                            若 状态UM,则redirect购物车页面)
 ### 6.根据菜系获取菜品
 ##### URL: http://192.168.1.196:9090//outerApi/getFoodByType
 ##### 入参：
