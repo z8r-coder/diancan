@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
                 userCouponList.add(userCoupon);
             }
-            String couponListStr = JSON.toJSONString(couponList);
+            String couponListStr = JSON.toJSONString(userCouponList);
             resp.put("coupon_num", String.valueOf(coupon_num));
             resp.put("coupon_list", couponListStr);
         } catch (Exception ex) {
