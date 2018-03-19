@@ -67,6 +67,7 @@ public class OrderServiceImpl implements OrderService {
                 //订单不存在
                 logger.warn("无支付成功的订单 userId:" + userId);
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
+                return resp;
             }
 
             resp.put("order_id", orderDo.getOrder_id());
