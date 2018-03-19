@@ -196,7 +196,14 @@ public class OrderServiceImpl implements OrderService {
 
             //优惠券
             String userCoupon = userDo.getUser_coupon();
-            List<String> couponList = new ArrayList<String>(Arrays.asList(userCoupon.split("\\|")));
+
+            List<String> couponList;
+            if (StringUtils.isEmpty(userCoupon)) {
+                couponList = new ArrayList<String>();
+            } else {
+                couponList = new ArrayList<String>(Arrays.asList(userCoupon.split("\\|")));
+            }
+
             if (couponId == null) {
                 //不使用优惠券
                 if(StringUtils.equals(userDo.getMember_level(), LevelMappingEnum.NVIP.getVflag())) {
@@ -298,7 +305,7 @@ public class OrderServiceImpl implements OrderService {
             resp.put("accumulate_points", String.valueOf(getAccumuPoint));
             resp.put("order_paid", String.valueOf(orderPaid));
         } catch (Exception ex) {
-            logger.error("shoppingCartAddMinus occurs exception", ex);
+            logger.error("checkout occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
         }
 
@@ -585,8 +592,14 @@ public class OrderServiceImpl implements OrderService {
 
         if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
             //已支付成功
-            logger.warn("该订单已经支付成功，请重新下单：" + orderId);
+            logger.warn("该订单已经支付成功，请重新下单 orderId：" + orderId);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
+            return resp;
+        }
+        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UF.getOrderStatus())) {
+            //支付失败
+            logger.warn("该订单已无效，请重新下单 orderId：" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
             return resp;
         }
 
