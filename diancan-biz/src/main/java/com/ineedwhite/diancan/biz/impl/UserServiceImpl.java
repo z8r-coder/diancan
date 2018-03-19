@@ -259,7 +259,7 @@ public class UserServiceImpl implements UserService {
 
             int couponNum = 0;
             if (!StringUtils.isEmpty(couponId)) {
-                List<String> couponIdList = new ArrayList<String>(Arrays.asList("\\|"));
+                List<String> couponIdList = Arrays.asList(couponId.split("\\|"));
                 couponNum = couponIdList.size();
             }
             resp.put("coupon_num", String.valueOf(couponNum));
