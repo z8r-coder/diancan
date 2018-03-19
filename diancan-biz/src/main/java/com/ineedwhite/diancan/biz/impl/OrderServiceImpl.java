@@ -261,8 +261,8 @@ public class OrderServiceImpl implements OrderService {
             if (balance < orderPaid) {
                 logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
                 //更新订单状态为失败
-                orderDao.updateOrdStsByIdAndSts(orderId, OrderStatus.UM.getOrderStatus(),
-                        OrderStatus.UF.getOrderStatus());
+//                orderDao.updateOrdStsByIdAndSts(orderId, OrderStatus.UM.getOrderStatus(),
+//                        OrderStatus.UF.getOrderStatus());
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
                 return resp;
             }
@@ -596,12 +596,12 @@ public class OrderServiceImpl implements OrderService {
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
             return resp;
         }
-        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UF.getOrderStatus())) {
-            //支付失败
-            logger.warn("该订单已无效，请重新下单 orderId：" + orderId);
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
-            return resp;
-        }
+//        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UF.getOrderStatus())) {
+//            //支付失败
+//            logger.warn("该订单已无效，请重新下单 orderId：" + orderId);
+//            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
+//            return resp;
+//        }
 
         if (!OrderUtils.getCacheOrder(orderId)) {
             logger.error("该订单不存在或已过期 orderId:" + orderId);
