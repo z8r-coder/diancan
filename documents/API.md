@@ -445,7 +445,7 @@ zk:192.168.1.199:2181
 ##### 入参：
      字段名                      描述          是否可空
      
-     order_id                   订单号           否
+     user_id                   订单号           否
     
 ##### 出参:
      字段名                        描述   
@@ -465,4 +465,21 @@ zk:192.168.1.199:2181
     order_board_id              桌号
         
     food_info                   菜品信息
+    
+### 22.订单信息
+##### URL: http://192.168.1.196:9090//outerApi/orderInfo
+##### 入参：
+     字段名                      描述          是否可空
+         
+##### 出参:
+     字段名                        描述   
+                    
+    contact_phone                联系电话
+        
+    contact_email                联系邮箱
+        
+    contact_address              联系地址
+        
+    contact_workTime             工作时间
+        
     

@@ -82,9 +82,9 @@ public class OrderServiceImpl implements OrderService {
             resp.put("order_board_id", String.valueOf(orderDo.getBoard_id()));
 
             List<String> foodIdList = Arrays.asList(orderDo.getOrder_food().split("\\|"));
-            List<String> foodNumList = Arrays.asList(orderDo.getOrder_food().split("\\|"));
+            List<String> foodNumList = Arrays.asList(orderDo.getOrder_food_num().split("\\|"));
 
-            List<String> orderFoodInfoList = new ArrayList<String>();
+            List<OrderFoodInfo> orderFoodInfoList = new ArrayList<OrderFoodInfo>();
             for (int i = 0; i < foodIdList.size();i++) {
                 String foodId = foodIdList.get(i);
                 String foodNum = foodNumList.get(i);
@@ -94,6 +94,9 @@ public class OrderServiceImpl implements OrderService {
                 orderFoodInfo.setFoodName(foodDo.getFood_name());
                 orderFoodInfo.setFoodNum(foodNum);
                 orderFoodInfo.setTotalMoney(String.valueOf(totalMoney));
+                orderFoodInfo.setUnitPrice(String.valueOf(foodDo.getFood_price()));
+
+                orderFoodInfoList.add(orderFoodInfo);
             }
             String orderFoodInfoStr = JSON.toJSONString(orderFoodInfoList);
             resp.put("food_info", orderFoodInfoStr);

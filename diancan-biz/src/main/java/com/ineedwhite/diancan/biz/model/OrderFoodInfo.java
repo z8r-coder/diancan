@@ -9,6 +9,7 @@ public class OrderFoodInfo {
     private String foodName;
     private String foodNum;
     private String totalMoney;
+    private String unitPrice;
 
     public String getFoodName() {
         return foodName;
@@ -32,5 +33,13 @@ public class OrderFoodInfo {
 
     public void setTotalMoney(String totalMoney) {
         this.totalMoney = totalMoney;
+    }
+
+    public String getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(String unitPrice) {
+        this.unitPrice = unitPrice;
     }
 }
