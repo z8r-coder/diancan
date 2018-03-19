@@ -95,4 +95,12 @@
         SELECT order_id, order_status FROM dc_order
         WHERE user_id = #{user_id} AND (order_status = 'UK' OR order_status = 'UM')
     </select>
+
+    <select id="selectOrdByUsrIdAndUDSts" resultType="com.ineedwhite.diancan.dao.domain.OrderDo">
+        SELECT order_id, board_id, order_people_number, order_date, order_board_date,
+        order_board_time_interval,order_total_amount, order_status,user_id,coupon_id, order_food,
+        order_food_num FROM dc_order
+        WHERE order_date = (
+        SELECT MAX(order_date) FROM dc_order WHERE user_id = #{user_id} AND order_status = 'UD')
+    </select>
 </mapper>

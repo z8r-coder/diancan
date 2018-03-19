@@ -60,21 +60,16 @@ public class OrderServiceImpl implements OrderService {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
-        String orderId = paraMap.get("order_id");
+        String userId = paraMap.get("user_id");
         try {
-            OrderDo orderDo = orderDao.selectOrderById(orderId);
+            OrderDo orderDo = orderDao.selectOrdByUsrIdAndUDSts(userId);
             if (orderDo == null) {
-                //该订单不存在
-                logger.warn("该订单不存在 orderId:" + orderId);
+                //订单不存在
+                logger.warn("无支付成功的订单 userId:" + userId);
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
             }
-            if (StringUtils.equals(OrderStatus.UD.getOrderStatus(), orderDo.getOrder_status())) {
-                //该订单未支付成功
-                logger.warn("该订单未支付成功 orderId:" + orderId);
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00026);
-                return resp;
-            }
-            resp.put("order_id", String.valueOf(orderId));
+
+            resp.put("order_id", orderDo.getOrder_id());
             resp.put("order_paid", String.valueOf(orderDo.getOrder_paid()));
             resp.put("order_total_money", String.valueOf(orderDo.getOrder_total_amount()));
             resp.put("order_discount", String.valueOf(orderDo.getOrder_paid()));

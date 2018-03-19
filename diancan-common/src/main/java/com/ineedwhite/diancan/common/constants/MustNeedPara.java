@@ -44,5 +44,5 @@ public class MustNeedPara {
 
     public static final String[] ORDER_WITHOUT_FINISH = new String[]{"user_id"};
 
-    public static final String[] ORDER_INFO = new String[]{"order_id"};
+    public static final String[] ORDER_INFO = new String[]{"user_id"};
 }

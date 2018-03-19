@@ -153,4 +153,11 @@ public interface OrderDao {
      * @return
      */
     OrderDo selectOrdWithoutFinishByUsrId(@Param("user_id")String user_id);
+
+    /**
+     * 通过用户号查询最近的一条订单
+     * @param user_id
+     * @return
+     */
+    OrderDo selectOrdByUsrIdAndUDSts(@Param("user_id")String user_id);
 }
