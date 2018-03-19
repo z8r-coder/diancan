@@ -43,6 +43,9 @@ public class UserServiceImpl implements UserService {
         String user_gender = paraMap.get("user_gender");
         String user_birth = paraMap.get("user_birth");
         String user_phone = paraMap.get("user_phone");
+        if (StringUtils.isEmpty(user_birth)) {
+            user_birth = null;
+        }
         try {
             UserDo userDo = userDao.selectUserByUsrId(user_id);
             if (userDo == null) {
@@ -154,6 +157,7 @@ public class UserServiceImpl implements UserService {
             UserDo userDo = new UserDo();
 
             String cardNo = BizUtils.getUsrCardNo(phone);
+            String userRegisterTime = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
 
             userDo.setUser_id(usrId);
             userDo.setUser_name(paraMap.get("user_name"));
@@ -164,6 +168,7 @@ public class UserServiceImpl implements UserService {
             userDo.setMember_level("0");
             userDo.setUser_is_del(0);
             userDo.setUser_card_no(cardNo);
+            userDo.setUser_register_time(userRegisterTime);
 
             resp.put("user_id", usrId);
 

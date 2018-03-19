@@ -20,6 +20,7 @@ public class UserDo {
     private String user_card_no;
     private Integer user_gender;
     private String user_birth;
+    private String user_register_time;
 
     public String getUser_id() {
         return user_id;
@@ -115,5 +116,13 @@ public class UserDo {
 
     public void setUser_birth(String user_birth) {
         this.user_birth = user_birth;
+    }
+
+    public String getUser_register_time() {
+        return user_register_time;
+    }
+
+    public void setUser_register_time(String user_register_time) {
+        this.user_register_time = user_register_time;
     }
 }
