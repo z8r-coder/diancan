@@ -497,3 +497,15 @@ zk:192.168.1.199:2181
     order_time_intervel          订桌时间段
     
     board_id                     桌位号   
+    
+### 24.注销用户
+##### URL: http://192.168.1.196:9090//outerApi/cancellation
+##### 入参：
+     字段名                      描述          是否可空
+       
+     order_id                  订单号            否
+     
+     user_id                   用户号            否
+##### 出参:
+     字段名                        描述   
+
