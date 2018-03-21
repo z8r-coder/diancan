@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.ineedwhite.diancan.biz.DianCanConfigService;
 import com.ineedwhite.diancan.biz.UserService;
 import com.ineedwhite.diancan.biz.model.UserCoupon;
+import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.GenderMapping;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
+import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.CouponDo;
+import com.ineedwhite.diancan.dao.domain.OrderDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private OrderDao orderDao;
 
     public Map<String, String> modifiedUserInfo(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
@@ -64,6 +70,41 @@ public class UserServiceImpl implements UserService {
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
         }
         return resp;
+    }
+
+    public Map<String, String> cancellation(Map<String, String> paraMap) throws Exception {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String orderId = paraMap.get("order_id");
+        if (orderId == null) {
+            //未生成订单
+            return resp;
+        }
+        if (!OrderUtils.getCacheOrder(orderId)) {
+            //过期
+            return resp;
+        }
+        //未过期
+        OrderDo orderDo = orderDao.selectOrderById(orderId);
+        if (orderDo == null) {
+            //还未持久化
+            //获取菜品队列
+            List<String> orderFoodIdList = OrderUtils.getFoodIdList(orderId);
+            StringBuilder foodIdSb = new StringBuilder();
+            StringBuilder foodNumSb = new StringBuilder();
+            for (String foodId : orderFoodIdList) {
+                foodIdSb.append(foodId + "|");
+                String foodNum = OrderUtils.getFoodNumCache(orderId,foodId);
+                foodNumSb.append(foodNum + "|");
+            }
+            String foodIdStr = foodIdSb.toString();
+//            String foodNumSb
+            if (orderFoodIdList.size() > 0) {
+
+            }
+        }
+        return null;
     }
 
     public Map<String, String> getUserDetailInfo(Map<String, String> paraMap) {

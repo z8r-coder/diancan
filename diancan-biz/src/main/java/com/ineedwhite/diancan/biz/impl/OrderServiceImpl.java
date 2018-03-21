@@ -174,20 +174,20 @@ public class OrderServiceImpl implements OrderService {
         }
 
         try {
-            OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UD.getOrderStatus());
-            if (orderDo != null) {
-                //幂等
-                logger.warn("该订单已经支付成功! orderId:" + orderId);
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
-                return resp;
-            }
-            orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
+            OrderDo orderDo = orderDao.selectOrderById(orderId);
             if (orderDo == null) {
                 //无效或不存在
                 logger.warn("该订单无效或不存在 OrderId:" + orderId);
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
                 return resp;
             }
+            if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
+                //幂等
+                logger.warn("该订单已经支付成功! orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+                return resp;
+            }
+
 
             UserDo userDo = orderDao.selectUserInfoByOrdId(orderId);
             //总计
@@ -361,6 +361,13 @@ public class OrderServiceImpl implements OrderService {
             String newFoodNumStr = newFoodNumSb.toString();
 
             //新的菜品ID和菜品数量入库字段
+            if (newFoodIdStr.length() == 0) {
+                //菜品减少为0
+                logger.error("购物车中没有菜品");
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00019);
+                return resp;
+            }
+
             newFoodIdStr = newFoodIdStr.substring(0, newFoodIdStr.length() - 1);
             newFoodNumStr = newFoodNumStr.substring(0, newFoodNumStr.length() - 1);
 
@@ -515,7 +522,7 @@ public class OrderServiceImpl implements OrderService {
 
             for (String couponId : couponList) {
                 CouponDo cp = couponMap.get(Integer.parseInt(couponId));
-                if (totalMoney > cp.getConsumption_amount()) {
+                if (totalMoney >= cp.getConsumption_amount()) {
                     //可用
                     ShoppingCartCoupon cartCoupon = new ShoppingCartCoupon();
                     cartCoupon.setCouponId(couponId);

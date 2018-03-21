@@ -93,11 +93,13 @@ public interface OrderDao {
     /**
      * 通过订单ID和状态查找订单
      * @param orderId
-     * @param orderStatus
+     * @param orderStatusFirst
+     * @param oderStatusSecond
      * @return
      */
     OrderDo selectOrdByOrdIdAndSts(@Param("order_id")String orderId,
-                                   @Param("order_status")String orderStatus);
+                                   @Param("order_status_first")String orderStatusFirst,
+                                   @Param("order_status_second")String oderStatusSecond);
 
     /**
      * 通过订单号更改订单中菜品和菜品数量字段

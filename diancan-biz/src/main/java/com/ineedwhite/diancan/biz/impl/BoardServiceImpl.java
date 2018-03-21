@@ -63,14 +63,13 @@ public class BoardServiceImpl implements BoardService{
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
             return resp;
         }
-        String boardId = String.valueOf(orderDo.getBoard_id());
-        if (StringUtils.isEmpty(boardId)) {
+        if (orderDo.getBoard_id() == null) {
             //未有点桌操作
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00027);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00028);
             return resp;
         }
         //选过桌
-        Integer boardType = dianCanConfig.getBoardById(Integer.parseInt(boardId)).getBoard_type();
+        Integer boardType = dianCanConfig.getBoardById(orderDo.getBoard_id()).getBoard_type();
         String orderBoardDate = orderDo.getOrder_board_date();
         Integer orderPeopleNum = orderDo.getOrder_people_number();
         String orderTimeIntervel = orderDo.getOrder_board_time_interval();
@@ -78,7 +77,7 @@ public class BoardServiceImpl implements BoardService{
         resp.put("order_board_date", orderBoardDate);
         resp.put("order_people_num", String.valueOf(orderPeopleNum));
         resp.put("order_time_intervel", orderTimeIntervel);
-        resp.put("board_id", boardId);
+        resp.put("board_id", String.valueOf(orderDo.getBoard_id()));
         return resp;
     }
 

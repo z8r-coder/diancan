@@ -45,4 +45,11 @@ public interface UserService {
      * @return
      */
     public Map<String, String> modifiedUserInfo(Map<String, String> paraMap);
+
+    /**
+     * 注销用户
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> cancellation(Map<String, String> paraMap) throws Exception;
 }
