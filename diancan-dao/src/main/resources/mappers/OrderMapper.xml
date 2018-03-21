@@ -135,6 +135,6 @@
         order_board_time_interval,order_total_amount, order_status,user_id,coupon_id, order_food,
         order_food_num, order_paid FROM dc_order
         WHERE order_date = (
-        SELECT MAX(order_date) FROM dc_order WHERE user_id = #{user_id} AND (order_status = 'UM' OR order_status = 'UK'))
+        SELECT MAX(order_date) FROM dc_order WHERE user_id = #{user_id})
     </select>
 </mapper>
