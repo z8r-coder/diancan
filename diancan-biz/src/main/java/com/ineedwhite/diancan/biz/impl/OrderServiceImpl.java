@@ -337,7 +337,7 @@ public class OrderServiceImpl implements OrderService {
         OrderUtils.setFoodNumCache(orderId, foodId, foodNum);
         //更新库中的菜品字段
         try {
-            OrderDo orderDo = orderDao.selectOrdByOrdIdAndSts(orderId, OrderStatus.UM.getOrderStatus());
+            OrderDo orderDo = orderDao.selectOrdByOrdIdAndUKUMSts(orderId);
             String orderFood = orderDo.getOrder_food();
             String orderFoodNum = orderDo.getOrder_food_num();
 
@@ -705,7 +705,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDao.insertOrderInfo(orderDo);
             } else {
                 //如果订单存在，则更新
-                orderDao.updateOrdFoodByUsrIdAndUKUMSts(orderDo.getOrder_food(), orderDo.getOrder_food_num());
+                orderDao.updateOrdFoodByOrdIdAndUKUMSts(orderDo.getOrder_food(), orderDo.getOrder_food_num(), orderId);
             }
 
         } catch (Exception e) {

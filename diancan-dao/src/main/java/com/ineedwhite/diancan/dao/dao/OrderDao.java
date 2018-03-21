@@ -167,6 +167,14 @@ public interface OrderDao {
      * @param foodNum
      * @return
      */
-    int updateOrdFoodByUsrIdAndUKUMSts(@Param("food")String food,
-                                       @Param("foodNum")String foodNum);
+    int updateOrdFoodByOrdIdAndUKUMSts(@Param("food")String food,
+                                       @Param("foodNum")String foodNum,
+                                       @Param("order_id")String order_id);
+
+    /**
+     * 根据order_id查找状态为UK和UM的订单
+     * @param order_id
+     * @return
+     */
+    OrderDo selectOrdByOrdIdAndUKUMSts(@Param("order_id")String order_id);
 }
