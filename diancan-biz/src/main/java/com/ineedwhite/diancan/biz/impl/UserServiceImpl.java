@@ -7,6 +7,7 @@ import com.ineedwhite.diancan.biz.model.UserCoupon;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
 import com.ineedwhite.diancan.common.GenderMapping;
+import com.ineedwhite.diancan.common.OrderStatus;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
@@ -77,6 +78,7 @@ public class UserServiceImpl implements UserService {
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
         String orderId = paraMap.get("order_id");
+        String userId = paraMap.get("user_id");
         if (orderId == null) {
             //未生成订单
             return resp;
@@ -85,26 +87,54 @@ public class UserServiceImpl implements UserService {
             //过期
             return resp;
         }
-        //未过期
-        OrderDo orderDo = orderDao.selectOrderById(orderId);
-        if (orderDo == null) {
-            //还未持久化
-            //获取菜品队列
-            List<String> orderFoodIdList = OrderUtils.getFoodIdList(orderId);
-            StringBuilder foodIdSb = new StringBuilder();
-            StringBuilder foodNumSb = new StringBuilder();
-            for (String foodId : orderFoodIdList) {
-                foodIdSb.append(foodId + "|");
-                String foodNum = OrderUtils.getFoodNumCache(orderId,foodId);
-                foodNumSb.append(foodNum + "|");
-            }
-            String foodIdStr = foodIdSb.toString();
-//            String foodNumSb
-            if (orderFoodIdList.size() > 0) {
 
-            }
+        List<String> orderFoodIdList = OrderUtils.getFoodIdList(orderId);
+        StringBuilder foodIdSb = new StringBuilder();
+        StringBuilder foodNumSb = new StringBuilder();
+        for (String foodId : orderFoodIdList) {
+            foodIdSb.append(foodId + "|");
+            String foodNum = OrderUtils.getFoodNumCache(orderId, foodId);
+            foodNumSb.append(foodNum + "|");
         }
-        return null;
+        String foodIdStr = foodIdSb.toString();
+        String foodNumStr = foodNumSb.toString();
+        if (orderFoodIdList.size() > 0) {
+            foodIdStr.substring(0, foodIdStr.length() - 1);
+            foodNumStr.substring(0, foodNumStr.length() - 1);
+        }
+        OrderDo newOrder = new OrderDo();
+        newOrder.setOrder_id(orderId);
+        newOrder.setOrder_food_num(foodNumStr);
+        newOrder.setOrder_food(foodIdStr);
+        newOrder.setUser_id(userId);
+        newOrder.setOrder_date(DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT));
+
+        try {
+            //未过期
+            OrderDo orderDo = orderDao.selectOrderById(orderId);
+            if (orderDo == null) {
+                //还未持久化
+                //获取菜品队列
+                orderDao.insertOrderInfo(newOrder);
+            } else {
+                //已经持久化了
+                if (StringUtils.equals(OrderStatus.UD.getOrderStatus(), orderDo.getOrder_status())) {
+                    //已经成功支付，直接注销
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+                    return resp;
+                }
+                
+                int affectRows = orderDao.updateOrderFoodAndNumByOrdId(foodIdStr, foodNumStr, orderId);
+                if (affectRows <= 0) {
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+                    return resp;
+                }
+            }
+        } catch (Exception ex) {
+            logger.error("method:cancellation op user table occur exception:" + ex);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
+        }
+        return resp;
     }
 
     public Map<String, String> getUserDetailInfo(Map<String, String> paraMap) {

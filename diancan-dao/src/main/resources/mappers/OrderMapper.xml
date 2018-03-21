@@ -124,4 +124,9 @@
         UPDATE dc_order SET order_status = #{order_sts}
         WHERE order_id = #{order_id} AND order_status = 'UM';
     </update>
+    
+    <update id="updateOrderFoodAndNumByOrdId">
+        UPDATE dc_order SET order_food = #{food}, order_food_num = #{food_num}
+        WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK')
+    </update>
 </mapper>

@@ -203,4 +203,15 @@ public interface OrderDao {
      */
     int updateOrderStsByOrderId(@Param("order_id")String order_id,
                                 @Param("order_sts")String order_sts);
+
+    /**
+     * 更新订单号的菜品和菜品数量
+     * @param food
+     * @param foodNum
+     * @param orderId
+     * @return
+     */
+    int updateOrderFoodAndNumByOrdId(@Param("food")String food,
+                                     @Param("food_num")String foodNum,
+                                     @Param("order_id")String orderId);
 }
