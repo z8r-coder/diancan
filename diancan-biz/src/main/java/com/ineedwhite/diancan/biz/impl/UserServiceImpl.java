@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
                     BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
                     return resp;
                 }
-                
+
                 int affectRows = orderDao.updateOrderFoodAndNumByOrdId(foodIdStr, foodNumStr, orderId);
                 if (affectRows <= 0) {
                     BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);

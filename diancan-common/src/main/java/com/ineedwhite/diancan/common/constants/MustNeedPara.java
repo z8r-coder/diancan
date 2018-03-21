@@ -47,4 +47,6 @@ public class MustNeedPara {
     public static final String[] ORDER_INFO = new String[]{"user_id"};
 
     public static final String[] LOAD_BOARD_PAGE = new String[]{"order_id"};
+
+    public static final String[] CANCELLATION = new String[]{"order_id", "user_id"};
 }
