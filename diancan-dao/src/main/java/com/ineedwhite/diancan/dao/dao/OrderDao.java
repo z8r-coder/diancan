@@ -220,5 +220,5 @@ public interface OrderDao {
      * @param userId
      * @return
      */
-    List<OrderDo> selectTheRecentOrdByUserId(@Param("user_id")String userId);
+    OrderDo selectTheRecentOrdByUserId(@Param("user_id")String userId);
 }

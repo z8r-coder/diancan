@@ -116,7 +116,7 @@
         WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK')
     </select>
     <update id="updateOrdBoardAndStsByOrderIdAndOrdSts">
-        UPDATE dc_order SET order_date = #{order_date_board}, order_board_time_interval = #{order_board_time_interval},
+        UPDATE dc_order SET order_board_date = #{order_date_board}, order_board_time_interval = #{order_board_time_interval},
         order_people_number = #{order_people_number}
         WHERE order_id = #{order_id} AND order_status = 'UM'
     </update>

@@ -314,12 +314,11 @@ public class UserServiceImpl implements UserService {
             resp.put("balance", String.valueOf(userDo.getBalance()));
             resp.put("member_level", userDo.getMember_level());
 
-            List<OrderDo> orderDoList = orderDao.selectTheRecentOrdByUserId(userDo.getUser_id());
-            if (orderDoList == null || orderDoList.size() == 0) {
+            OrderDo orderDo = orderDao.selectTheRecentOrdByUserId(userDo.getUser_id());
+            if (orderDo == null) {
                 //无感登陆
                 return resp;
             }
-            OrderDo orderDo = orderDoList.get(0);
             if (StringUtils.equals(OrderStatus.UK.getOrderStatus(), orderDo.getOrder_status()) ||
                     StringUtils.equals(OrderStatus.UM.getOrderStatus(), orderDo.getOrder_status())) {
                 //这两个状态被认为支付未完成，需跳转页面重新支付，并且传回orderId

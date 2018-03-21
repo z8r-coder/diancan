@@ -715,7 +715,8 @@ public class OrderServiceImpl implements OrderService {
         orderDo.setOrder_id(orderId);
         orderDo.setUser_id(userId);
         orderDo.setOrder_status(OrderStatus.UK.getOrderStatus());
-        orderDo.setOrder_date(DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT));
+        String currOrderDate = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
+        orderDo.setOrder_date(currOrderDate);
         orderDo.setOrder_food(foodStr);
         orderDo.setOrder_food_num(foodNumStr);
         orderDo.setOrder_total_amount(sumFood);
