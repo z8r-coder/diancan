@@ -560,6 +560,8 @@ public class OrderServiceImpl implements OrderService {
                 //未传orderId，该订单还未生成,此处生成订单不持久化
                 orderId = UUID.randomUUID().toString().replace("-", "");
                 resp.put("order_id", orderId);
+                //缓存订单
+                OrderUtils.addCacheOrder(orderId);
             }
 
             Long totalFoodNum = OrderUtils.getOrdFoodListLen(orderId);
@@ -568,8 +570,6 @@ public class OrderServiceImpl implements OrderService {
                 return resp;
             }
             RedisUtil.beginTransaction();
-            //缓存订单
-            OrderUtils.addCacheOrder(orderId);
             if (OrderUtils.getFoodNumCache(orderId, foodId) == null) {
                 //若该菜品不存在
                 OrderUtils.addFoodIdList(orderId, foodId);
