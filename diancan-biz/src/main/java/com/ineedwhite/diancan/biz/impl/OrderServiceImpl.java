@@ -226,7 +226,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             } else {
                 //使用优惠券
-                int indexCoupon = couponList.indexOf(couponId);
+//                int indexCoupon = couponList.indexOf(couponId);
                 CouponDo couponDo = dianCanConfigService.getCouponById(Integer.parseInt(couponId));
                 if (couponDo == null) {
                     logger.warn("该卡券不存在,couponId:" + couponId);
@@ -239,7 +239,7 @@ public class OrderServiceImpl implements OrderService {
                 String nowTime = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
                 if (DateUtil.compareTime(nowTime,exTime, DateUtil.DEFAULT_PAY_FORMAT)) {
                     //过期
-                    couponList.remove(indexCoupon);
+                    couponList.remove(couponId);
                     logger.warn("该卡券已过期,couponId:" + couponId);
                     BizUtils.setRspMap(resp, ErrorCodeEnum.DC00017);
                     return resp;
@@ -253,57 +253,57 @@ public class OrderServiceImpl implements OrderService {
                     return resp;
                 }
                 orderPaid = totalAmt - discard;
-                //use the coupon
-                couponList.remove(indexCoupon);
+                //use the coupon 在订桌的时候再除去
+//                couponList.remove(indexCoupon);
             }
 
-            float balance = userDo.getBalance();
-            if (balance < orderPaid) {
-                logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
-                //更新订单状态为失败
-//                orderDao.updateOrdStsByIdAndSts(orderId, OrderStatus.UM.getOrderStatus(),
-//                        OrderStatus.UF.getOrderStatus());
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
-                return resp;
-            }
-            float newBalance = balance - orderPaid;
+//            float balance = userDo.getBalance();
+//            if (balance < orderPaid) {
+//                logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
+//                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
+//                return resp;
+//            }
+//            float newBalance = balance - orderPaid;
 
             //获得积分
-            int getAccumuPoint = (int) (orderPaid / 10);
-            int newAccumuPoint = userDo.getAccumulate_points() + getAccumuPoint;
-            resp.put("vip", LevelMappingEnum.NVIP.getVflag());
-
-            String isVip = LevelMappingEnum.NVIP.getVflag();
-
-            if (newAccumuPoint >= BizOptions.BECOME_VIP &&
-                    StringUtils.equals(LevelMappingEnum.NVIP.getVflag(), userDo.getMember_level())) {
-                //成为会员
-                resp.put("vip", LevelMappingEnum.VIP.getVflag());
-                isVip = LevelMappingEnum.VIP.getVflag();
-            } else if (StringUtils.equals(LevelMappingEnum.VIP.getVflag(), userDo.getMember_level())) {
-                //如果是VIP将该字段改回VIP
-                isVip = LevelMappingEnum.VIP.getVflag();
-            }
+//            int getAccumuPoint = (int) (orderPaid / 10);
+//            int newAccumuPoint = userDo.getAccumulate_points() + getAccumuPoint;
+//            resp.put("vip", LevelMappingEnum.NVIP.getVflag());
+//
+//            String isVip = LevelMappingEnum.NVIP.getVflag();
+//
+//            if (newAccumuPoint >= BizOptions.BECOME_VIP &&
+//                    StringUtils.equals(LevelMappingEnum.NVIP.getVflag(), userDo.getMember_level())) {
+//                //成为会员
+//                resp.put("vip", LevelMappingEnum.VIP.getVflag());
+//                isVip = LevelMappingEnum.VIP.getVflag();
+//            } else if (StringUtils.equals(LevelMappingEnum.VIP.getVflag(), userDo.getMember_level())) {
+//                //如果是VIP将该字段改回VIP
+//                isVip = LevelMappingEnum.VIP.getVflag();
+//            }
 
             //拼凑优惠券列表
-            StringBuilder cpIdsb = new StringBuilder();
-            for (String cpId : couponList) {
-                cpIdsb.append(cpId + "|");
-            }
-            userCoupon = cpIdsb.toString();
-            if (couponList != null && couponList.size() != 0) {
-                userCoupon = userCoupon.substring(0, userCoupon.length() - 1);
+//            StringBuilder cpIdsb = new StringBuilder();
+//            for (String cpId : couponList) {
+//                cpIdsb.append(cpId + "|");
+//            }
+//            userCoupon = cpIdsb.toString();
+//            if (couponList != null && couponList.size() != 0) {
+//                userCoupon = userCoupon.substring(0, userCoupon.length() - 1);
+//
+//            }
+//            transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
+//                    isVip,userCoupon,couponId,String.valueOf(orderPaid), orderId);
 
-            }
-            //事务更新订单表和用户表
-            transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
-                    isVip,userCoupon,couponId,String.valueOf(orderPaid), orderId);
+            //更新订单表，将状态改成UM，要使用的优惠券ID,需要支付的金额
+            orderDao.updateOrdStsAndCpIdOrdPaidByOrdId(OrderStatus.UM.getOrderStatus(),
+                    couponId, String.valueOf(orderPaid), orderId);
 
             //支付成功后删除购物车缓存
-            OrderUtils.deleteCacheFoodList(orderId);
+//            OrderUtils.deleteCacheFoodList(orderId);
 
-            resp.put("accumulate_points", String.valueOf(getAccumuPoint));
-            resp.put("order_paid", String.valueOf(orderPaid));
+//            resp.put("accumulate_points", String.valueOf(getAccumuPoint));
+//            resp.put("order_paid", String.valueOf(orderPaid));
         } catch (Exception ex) {
             logger.error("checkout occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
@@ -613,7 +613,18 @@ public class OrderServiceImpl implements OrderService {
         //菜品队列
         List<String> foodIds = OrderUtils.getFoodIdList(orderId);
         if (foodIds == null || foodIds.size() == 0) {
-            logger.error("菜品未空, orderId:" + orderId);
+            logger.error("菜品为空, orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00019);
+            return resp;
+        }
+        boolean isFoodEmpty = true;
+        for (String foodId : foodIds) {
+            if (!StringUtils.equals(OrderUtils.getFoodNumCache(orderId, foodId), "0")) {
+                isFoodEmpty = false;
+            }
+        }
+        if (isFoodEmpty) {
+            logger.error("菜品为空, orderId:" + orderId);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00019);
             return resp;
         }

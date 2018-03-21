@@ -18,5 +18,5 @@ public interface BoardService {
      * @param paraMap
      * @return
      */
-    public Map<String, String> reserveBoard(Map<String, String> paraMap);
+    public Map<String, String> reserveBoard(Map<String, String> paraMap) throws Exception;
 }

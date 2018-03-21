@@ -179,4 +179,18 @@ public interface OrderDao {
      * @return
      */
     OrderDo selectOrdByOrdIdAndUKUMSts(@Param("order_id")String order_id);
+
+    /**
+     * 根据订单ID更新订单中的订桌信息
+     * @param order_id
+     * @param orderPeopleNum
+     * @param orderDateBoard
+     * @param orderBoardTimeIntervel
+     * @return
+     */
+    int updateOrdBoardAndStsByOrderIdAndOrdSts(@Param("order_id")String order_id,
+                                               @Param("order_people_number")String orderPeopleNum,
+                                               @Param("order_date_board")String orderDateBoard,
+                                               @Param("order_status")String orderStatus,
+                                               @Param("order_board_time_interval")String orderBoardTimeIntervel);
 }

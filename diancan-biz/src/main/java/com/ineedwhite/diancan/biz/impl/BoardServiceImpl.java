@@ -3,9 +3,12 @@ package com.ineedwhite.diancan.biz.impl;
 import com.alibaba.fastjson.JSON;
 import com.ineedwhite.diancan.biz.BoardService;
 import com.ineedwhite.diancan.biz.DianCanConfigService;
+import com.ineedwhite.diancan.biz.transaction.TransactionHelper;
 import com.ineedwhite.diancan.biz.utils.OrderUtils;
 import com.ineedwhite.diancan.common.ErrorCodeEnum;
+import com.ineedwhite.diancan.common.LevelMappingEnum;
 import com.ineedwhite.diancan.common.OrderStatus;
+import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.utils.BizUtils;
 import com.ineedwhite.diancan.common.utils.DateUtil;
@@ -15,6 +18,7 @@ import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +43,9 @@ public class BoardServiceImpl implements BoardService{
 
     @Resource
     private DianCanConfigService dianCanConfig;
+
+    @Resource
+    private TransactionHelper transactionHelper;
 
     public Map<String, String> getAvailableBoard(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
@@ -78,19 +85,36 @@ public class BoardServiceImpl implements BoardService{
         return resp;
     }
 
-    public Map<String, String> reserveBoard(Map<String, String> paraMap) {
+    public Map<String, String> reserveBoard(Map<String, String> paraMap) throws Exception {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
         String boardId = paraMap.get("board_id");
+        String orderId = paraMap.get("order_id");
         String usrId = paraMap.get("user_id");
 
         if (!RedLock.lockDefaultTime(boardId)) {  // 命中悲观锁
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00008);
             return resp;
         }
-
-        OrderDo orderDo = new OrderDo();
+        OrderDo orderDo = orderDao.selectOrderById(orderId);
+        if (orderDo == null) {
+            logger.error("该订单不存在，请重新下单，orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
+            return resp;
+        }
+        if (!OrderUtils.getCacheOrder(orderId)) {
+            //过期
+            logger.error("该订单已过期, orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+            return resp;
+        }
+        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UM.getOrderStatus())) {
+            //订单状态不对
+            logger.error("该订单状态错误, orderId:" + orderId + " orderSts:" + orderDo.getOrder_status());
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00027);
+            return resp;
+        }
 
         BoardDo boardDo = dianCanConfig.getBoardById(Integer.parseInt(boardId));
         if (boardDo == null) {
@@ -98,35 +122,16 @@ public class BoardServiceImpl implements BoardService{
             throw new DcException(ErrorCodeEnum.DC00005);
         }
         try {
-            OrderDo oldOrder = orderDao.selectOrdWithoutFinishByUsrId(usrId);
-            if (oldOrder != null && OrderUtils.getCacheOrder(oldOrder.getOrder_id())) {
-                //还存在未支付的订单
-                resp.put("order_status", oldOrder.getOrder_status());
-                resp.put("order_id", oldOrder.getOrder_id());
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00025);
-                return resp;
-            }
-            String orderId = UUID.randomUUID().toString().replace("-", "");
             Integer orderPeopleNum = boardDo.getBoard_people_number();
-            String orderDate = DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT);
             String orderBoardDate = paraMap.get("order_board_date");
             String orderTimeInterval = paraMap.get("order_board_time_interval");
 
-            UserDo usr = userDao.selectUserByUsrId(usrId);
-            if (usr == null) {
+            UserDo userDo = userDao.selectUserByUsrId(usrId);
+            if (userDo == null) {
                 logger.error("the user:" + usrId + " have not register!");
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
                 return resp;
             }
-
-            orderDo.setUser_id(usrId);
-            orderDo.setOrder_id(orderId);
-            orderDo.setBoard_id(Integer.parseInt(boardId));
-            orderDo.setOrder_date(orderDate);
-            orderDo.setOrder_people_number(orderPeopleNum);
-            orderDo.setOrder_board_date(orderBoardDate);
-            orderDo.setOrder_board_time_interval(orderTimeInterval);
-            orderDo.setOrder_status(OrderStatus.UK.getOrderStatus());
 
             resp.put("board_id", boardId);
 
@@ -149,11 +154,65 @@ public class BoardServiceImpl implements BoardService{
                     return resp;
                 }
             }
+            //结账时使用的couponId
+            String userCouponList = userDo.getUser_coupon();
+            List<String> couponList;
+            if (StringUtils.isEmpty(userCouponList)) {
+                couponList = new ArrayList<String>();
+            } else {
+                couponList = new ArrayList<String>(Arrays.asList(userCouponList.split("\\|")));
+            }
 
-            orderDao.insertOrderInfo(orderDo);
-            //cache orderId
-            OrderUtils.addCacheOrder(orderId);
-            resp.put("order_id", orderId);
+            String couponId = orderDo.getCoupon_id();
+            if (!StringUtils.isEmpty(couponId)) {
+                //不为空,移除使用的优惠券
+                couponList.remove(couponId);
+            }
+
+            float orderPaid = orderDo.getOrder_paid();
+            float balance = userDo.getBalance();
+            if (balance < orderPaid) {
+                logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
+                return resp;
+            }
+            float newBalance = balance - orderPaid;
+
+            //获得积分
+            int getAccumuPoint = (int) (orderPaid / 10);
+            int newAccumuPoint = userDo.getAccumulate_points() + getAccumuPoint;
+            resp.put("vip", LevelMappingEnum.NVIP.getVflag());
+
+            String isVip = LevelMappingEnum.NVIP.getVflag();
+
+            if (newAccumuPoint >= BizOptions.BECOME_VIP &&
+                    StringUtils.equals(LevelMappingEnum.NVIP.getVflag(), userDo.getMember_level())) {
+                //成为会员
+                resp.put("vip", LevelMappingEnum.VIP.getVflag());
+                isVip = LevelMappingEnum.VIP.getVflag();
+            } else if (StringUtils.equals(LevelMappingEnum.VIP.getVflag(), userDo.getMember_level())) {
+                //如果是VIP将该字段改回VIP
+                isVip = LevelMappingEnum.VIP.getVflag();
+            }
+            //拼凑优惠券列表
+            StringBuilder cpIdsb = new StringBuilder();
+            for (String cpId : couponList) {
+                cpIdsb.append(cpId + "|");
+            }
+            userCouponList = cpIdsb.toString();
+            if (couponList != null && couponList.size() != 0) {
+                userCouponList = userCouponList.substring(0, userCouponList.length() - 1);
+
+            }
+            //事务更新用户表和订单表
+            transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
+                    isVip,userCouponList, String.valueOf(orderPeopleNum), OrderStatus.UD.getOrderStatus(), orderBoardDate,
+                    orderTimeInterval, orderId);
+            //支付成功后删除购物车缓存
+            OrderUtils.deleteCacheFoodList(orderId);
+
+            resp.put("order_paid", String.valueOf(orderPaid));
+            resp.put("accumulate_points", String.valueOf(getAccumuPoint));
         } catch (Exception ex) {
             logger.error("method:reserveBoard op order table occur exception:" + ex.getMessage(), ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);

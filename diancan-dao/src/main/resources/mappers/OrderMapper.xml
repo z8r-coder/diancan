@@ -106,13 +106,18 @@
 
     <update id="updateOrdFoodByOrdIdAndUKUMSts">
         UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}, order_total_amount = #{food_total_amt}
-        WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK');
+        WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK')
     </update>
 
     <select id="selectOrdByOrdIdAndUKUMSts" resultType="com.ineedwhite.diancan.dao.domain.OrderDo">
         SELECT order_id, board_id, order_people_number, order_date, order_board_date,
         order_board_time_interval,order_total_amount, order_status,user_id,coupon_id, order_food,
         order_food_num, order_paid FROM dc_order
-        WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK');
+        WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK')
     </select>
+    <update id="updateOrdBoardAndStsByOrderIdAndOrdSts">
+        UPDATE dc_order SET order_date = #{order_date_board}, order_board_time_interval = #{order_board_time_interval},
+        order_people_number = #{order_people_number}, order_status = #{order_status}
+        WHERE order_id = #{order_id} AND order_status = 'UM'
+    </update>
 </mapper>
