@@ -425,7 +425,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
 
-            int affectRows = orderDao.updateOrdFoodAndFoodNumByOrdId(orderId, newFoodIdStr, newFoodNumStr);
+            int affectRows = orderDao.updateOrdFoodAndFoodNumByOrdId(orderId, newFoodIdStr, newFoodNumStr, String.valueOf(sumFood));
 
             if (affectRows <= 0) {
                 logger.warn("更新订单出错:orderId:" + orderId);
@@ -558,7 +558,7 @@ public class OrderServiceImpl implements OrderService {
             if (StringUtils.isEmpty(orderId)) {
                 //未传orderId，该订单还未生成,此处生成订单不持久化
                 orderId = UUID.randomUUID().toString().replace("-", "");
-                resp.put("orderId", orderId);
+                resp.put("order_id", orderId);
             }
 
             Long totalFoodNum = OrderUtils.getOrdFoodListLen(orderId);
@@ -567,6 +567,8 @@ public class OrderServiceImpl implements OrderService {
                 return resp;
             }
             RedisUtil.beginTransaction();
+            //缓存订单
+            OrderUtils.addCacheOrder(orderId);
             if (OrderUtils.getFoodNumCache(orderId, foodId) == null) {
                 //若该菜品不存在
                 OrderUtils.addFoodIdList(orderId, foodId);
@@ -699,13 +701,15 @@ public class OrderServiceImpl implements OrderService {
         orderDo.setOrder_date(DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT));
         orderDo.setOrder_food(foodStr);
         orderDo.setOrder_food_num(foodNumStr);
+        orderDo.setOrder_total_amount(sumFood);
+
         try {
             if (exOrd == null) {
                 //如果订单不存在，则插入
                 orderDao.insertOrderInfo(orderDo);
             } else {
                 //如果订单存在，则更新
-                orderDao.updateOrdFoodByOrdIdAndUKUMSts(orderDo.getOrder_food(), orderDo.getOrder_food_num(), orderId);
+                orderDao.updateOrdFoodByOrdIdAndUKUMSts(orderDo.getOrder_food(), orderDo.getOrder_food_num(), String.valueOf(sumFood), orderId);
             }
 
         } catch (Exception e) {

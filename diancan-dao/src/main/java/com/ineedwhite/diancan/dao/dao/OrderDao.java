@@ -108,7 +108,8 @@ public interface OrderDao {
      */
     int updateOrdFoodAndFoodNumByOrdId(@Param("order_id")String orderId,
                                        @Param("food")String food,
-                                       @Param("foodNum")String foodNum);
+                                       @Param("foodNum")String foodNum,
+                                       @Param("order_total_amt")String order_total_amt);
 
     /**
      * 通过订单ID更新订单状态，卡券ID，实付金额
@@ -169,6 +170,7 @@ public interface OrderDao {
      */
     int updateOrdFoodByOrdIdAndUKUMSts(@Param("food")String food,
                                        @Param("foodNum")String foodNum,
+                                       @Param("food_total_amt")String food_total_amt,
                                        @Param("order_id")String order_id);
 
     /**

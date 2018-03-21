@@ -70,8 +70,8 @@
     </select>
 
     <update id="updateOrdFoodAndFoodNumByOrdId">
-        UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}
-        WHERE order_id = #{order_id} AND order_status = 'UM';
+        UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}, order_total_amount = #{order_total_amt}
+        WHERE order_id = #{order_id} AND (order_status = 'UK' OR order_status = 'UM');
     </update>
 
     <update id="updateOrdStsAndCpIdOrdPaidByOrdId">
@@ -105,7 +105,7 @@
     </select>
 
     <update id="updateOrdFoodByOrdIdAndUKUMSts">
-        UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}
+        UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}, order_total_amount = #{food_total_amt}
         WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK');
     </update>
 

@@ -98,20 +98,18 @@ public class FoodServiceImpl implements FoodService {
             resp.put("food_page_num", String.valueOf(pageNum));
             resp.put("food_num", resFoodNums);
         } else {
-            //订单号不为空，无菜品
+            //订单号不为空，有菜品
             OrderDo orderDo = orderDao.selectOrderById(orderId);
-            if (orderDo == null){
-                logger.error("订单不存在,orderId:" + orderId);
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
-                return resp;
-            }
-            if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
-                logger.warn("订单已经支付成功，请重新下单 orderId:" + orderId);
-                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
-                return resp;
+            if (orderDo != null) {
+                if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
+                    logger.warn("订单已经支付成功，请重新下单 orderId:" + orderId);
+                    BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
+                    return resp;
+                }
             }
             if (!OrderUtils.getCacheOrder(orderId)) {
-                logger.error("订单已过期,orderId:" + orderId);
+                //过期或不存在
+                logger.error("订单已过期或不存在,orderId:" + orderId);
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
                 return resp;
             }
