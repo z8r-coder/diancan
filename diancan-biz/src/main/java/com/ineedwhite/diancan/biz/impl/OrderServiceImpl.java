@@ -296,9 +296,13 @@ public class OrderServiceImpl implements OrderService {
 //                    isVip,userCoupon,couponId,String.valueOf(orderPaid), orderId);
 
             //更新订单表，将状态改成UM，要使用的优惠券ID,需要支付的金额
-            orderDao.updateOrdStsAndCpIdOrdPaidByOrdId(OrderStatus.UM.getOrderStatus(),
+            int affectRows = orderDao.updateOrdStsAndCpIdOrdPaidByOrdId(OrderStatus.UM.getOrderStatus(),
                     couponId, String.valueOf(orderPaid), orderId);
-
+            if (affectRows <= 0) {
+                logger.warn("更新订单出错:orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+                return resp;
+            }
             //支付成功后删除购物车缓存
 //            OrderUtils.deleteCacheFoodList(orderId);
 

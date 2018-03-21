@@ -143,7 +143,7 @@ public class BoardServiceImpl implements BoardService{
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
             return resp;
         }
-        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UM.getOrderStatus())) {
+        if (!StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UM.getOrderStatus())) {
             //订单状态不对
             logger.error("该订单状态错误, orderId:" + orderId + " orderSts:" + orderDo.getOrder_status());
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00027);

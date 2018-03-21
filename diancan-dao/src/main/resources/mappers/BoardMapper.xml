@@ -3,6 +3,6 @@
 <mapper namespace="com.ineedwhite.diancan.dao.dao.BoardDao">
     <select id="findAllBoardInfo" resultType="com.ineedwhite.diancan.dao.domain.BoardDo">
         SELECT board_id, board_name, board_people_number, board_type
-        FROM dc_board;
+        FROM dc_board WHERE board_isDel = 0;
     </select>
 </mapper>

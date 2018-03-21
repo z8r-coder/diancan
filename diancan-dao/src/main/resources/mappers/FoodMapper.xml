@@ -3,6 +3,6 @@
 <mapper namespace="com.ineedwhite.diancan.dao.dao.FoodDao">
     <select id="findAllFood" resultType="com.ineedwhite.diancan.dao.domain.FoodDo">
         SELECT food_id, food_name, food_type_id, food_price, food_remark, food_grounding, food_monthlysales, food_vip_price
-        FROM dc_food;
+        FROM dc_food WHERE food_isDel = 0 AND  food_grounding = 0;
     </select>
 </mapper>
