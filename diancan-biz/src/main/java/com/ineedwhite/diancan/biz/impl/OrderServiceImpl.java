@@ -496,7 +496,8 @@ public class OrderServiceImpl implements OrderService {
             }
             OrderDo orderDo = orderDao.selectOrderById(orderId);
             String ordSts = orderDo.getOrder_status();
-            if (!StringUtils.equals(ordSts, OrderStatus.UM.getOrderStatus())) {
+            if (!StringUtils.equals(ordSts, OrderStatus.UK.getOrderStatus()) &&
+            !StringUtils.equals(ordSts, OrderStatus.UM.getOrderStatus())) {
                 //状态不一致
                 logger.error("the order status is wrong! orderId:" + orderId);
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
@@ -593,6 +594,7 @@ public class OrderServiceImpl implements OrderService {
         String userId = paraMap.get("user_id");
 
         OrderDo exOrd = orderDao.selectOrderById(orderId);
+        UserDo userDo = userDao.selectUserByUsrId(userId);
         if (exOrd != null) {
             //已持久化
             if (StringUtils.equals(exOrd.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
@@ -624,13 +626,6 @@ public class OrderServiceImpl implements OrderService {
         Map<Integer, FoodDo> foodDoMap = dianCanConfigService.getAllFood();
         List<ShoppingCartFood> needToPayFood = new ArrayList<ShoppingCartFood>();
         List<Float> vipPriceList = new ArrayList<Float>();
-
-        UserDo userDo = orderDao.selectUserInfoByOrdId(orderId);
-        if (userDo == null) {
-            logger.error("该下单用户已被注销或不存在orderId:" + orderId);
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00010);
-            return resp;
-        }
 
         for (String foodId : foodIds) {
             String foodNum = OrderUtils.getFoodNumCache(orderId, foodId);
