@@ -590,10 +590,20 @@ public class OrderServiceImpl implements OrderService {
         String orderId = paraMap.get("order_id");
         String userId = paraMap.get("user_id");
 
-        if (!OrderUtils.getCacheOrder(orderId)) {
-            logger.error("该订单不存在或已过期 orderId:" + orderId);
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
-            return resp;
+        OrderDo exOrd = orderDao.selectOrderById(orderId);
+        if (exOrd != null) {
+            //已持久化
+            if (StringUtils.equals(exOrd.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
+                logger.error("该订单已经支付成功，请重新选菜:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+                return resp;
+            }
+
+            if (!OrderUtils.getCacheOrder(orderId)) {
+                logger.error("该订单不存在或已过期 orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+                return resp;
+            }
         }
 
         //菜品队列
@@ -690,7 +700,14 @@ public class OrderServiceImpl implements OrderService {
         orderDo.setOrder_food(foodStr);
         orderDo.setOrder_food_num(foodNumStr);
         try {
-            orderDao.insertOrderInfo(orderDo);
+            if (exOrd == null) {
+                //如果订单不存在，则插入
+                orderDao.insertOrderInfo(orderDo);
+            } else {
+                //如果订单存在，则更新
+                orderDao.updateOrdFoodByUsrIdAndUKUMSts(orderDo.getOrder_food(), orderDo.getOrder_food_num());
+            }
+
         } catch (Exception e) {
             logger.error("OrderService add food occurs exception", e);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);

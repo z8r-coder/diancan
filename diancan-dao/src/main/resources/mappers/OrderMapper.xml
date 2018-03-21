@@ -103,4 +103,9 @@
         WHERE order_date = (
         SELECT MAX(order_date) FROM dc_order WHERE user_id = #{user_id} AND order_status = 'UD')
     </select>
+
+    <update id="updateOrdFoodByUsrIdAndUKUMSts">
+        UPDATE dc_order SET order_food = #{food}, order_food_num = #{foodNum}
+        WHERE order_id = #{order_id} AND (order_status = 'UM' OR order_status = 'UK');
+    </update>
 </mapper>

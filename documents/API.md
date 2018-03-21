@@ -127,6 +127,8 @@ zk:192.168.1.199:2181
         
     user_id               用户id
     
+    order_id              订单id
+    
 ### 3.获取未被订的桌位号
 ##### URL:http://192.168.1.196:9090//outerApi/getAvailableBoard
 

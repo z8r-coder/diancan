@@ -160,4 +160,13 @@ public interface OrderDao {
      * @return
      */
     OrderDo selectOrdByUsrIdAndUDSts(@Param("user_id")String user_id);
+
+    /**
+     * 通过订单号和状态(UM,UK)更新食物和食物数量
+     * @param food
+     * @param foodNum
+     * @return
+     */
+    int updateOrdFoodByUsrIdAndUKUMSts(@Param("food")String food,
+                                       @Param("foodNum")String foodNum);
 }
