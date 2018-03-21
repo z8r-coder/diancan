@@ -550,10 +550,15 @@ public class OrderServiceImpl implements OrderService {
                 return resp;
             }
 
-            if (!OrderUtils.getCacheOrder(orderId)) {
+            if (!StringUtils.isEmpty(orderId) && !OrderUtils.getCacheOrder(orderId)) {
                 logger.error("该订单已过期 orderId:" + orderId);
                 BizUtils.setRspMap(paraMap, ErrorCodeEnum.DC00013);
                 return resp;
+            }
+            if (StringUtils.isEmpty(orderId)) {
+                //未传orderId，该订单还未生成,此处生成订单不持久化
+                orderId = UUID.randomUUID().toString().replace("-", "");
+                resp.put("orderId", orderId);
             }
 
             Long totalFoodNum = OrderUtils.getOrdFoodListLen(orderId);
