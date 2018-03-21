@@ -214,4 +214,11 @@ public interface OrderDao {
     int updateOrderFoodAndNumByOrdId(@Param("food")String food,
                                      @Param("food_num")String foodNum,
                                      @Param("order_id")String orderId);
+
+    /**
+     * 查看某个用户最近的订单记录
+     * @param userId
+     * @return
+     */
+    OrderDo selectTheRecentOrdByUserId(@Param("user_id")String userId);
 }

@@ -108,6 +108,7 @@ public class UserServiceImpl implements UserService {
         newOrder.setOrder_food(foodIdStr);
         newOrder.setUser_id(userId);
         newOrder.setOrder_date(DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT));
+        newOrder.setOrder_status(OrderStatus.UK.getOrderStatus());
 
         try {
             //未过期
@@ -312,6 +313,14 @@ public class UserServiceImpl implements UserService {
             resp.put("accumulate_points", userDo.getAccumulate_points().toString());
             resp.put("balance", String.valueOf(userDo.getBalance()));
             resp.put("member_level", userDo.getMember_level());
+
+            OrderDo orderDo = orderDao.selectTheRecentOrdByUserId(userDo.getUser_id());
+            if (StringUtils.equals(OrderStatus.UK.getOrderStatus(), orderDo.getOrder_status()) ||
+                    StringUtils.equals(OrderStatus.UM.getOrderStatus(), orderDo.getOrder_status())) {
+                //这两个状态被认为支付未完成，需跳转页面重新支付，并且传回orderId
+                resp.put("order_id", orderDo.getOrder_id());
+                resp.put("order_status", orderDo.getOrder_status());
+            }
         } catch (Exception ex) {
             logger.error("method:login op user table occur exception:" + ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00002);
