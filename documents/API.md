@@ -479,4 +479,21 @@ zk:192.168.1.199:2181
         
     contact_workTime             工作时间
         
+### 23.加载桌位信息
+##### URL: http://192.168.1.196:9090//outerApi/loadBoardPage
+##### 入参：
+     字段名                      描述          是否可空
+       
+     order_id                  订单号            否
+##### 出参:
+     字段名                        描述   
+                    
+    board_type                   桌位类型
+        
+    order_board_date             订桌的日期
+        
+    order_people_num             订桌的人数
+        
+    order_time_intervel          订桌时间段
     
+    board_id                     桌位号   
