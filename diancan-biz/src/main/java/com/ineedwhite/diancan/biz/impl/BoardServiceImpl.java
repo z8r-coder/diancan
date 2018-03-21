@@ -11,7 +11,6 @@ import com.ineedwhite.diancan.common.OrderStatus;
 import com.ineedwhite.diancan.common.constants.BizOptions;
 import com.ineedwhite.diancan.common.constants.DcException;
 import com.ineedwhite.diancan.common.utils.BizUtils;
-import com.ineedwhite.diancan.common.utils.DateUtil;
 import com.ineedwhite.diancan.common.utils.RedLock;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.UserDao;
@@ -46,6 +45,42 @@ public class BoardServiceImpl implements BoardService{
 
     @Resource
     private TransactionHelper transactionHelper;
+
+    public Map<String, String> loadBoardPage(Map<String, String> paraMap) throws Exception {
+        Map<String, String> resp = new HashMap<String, String>();
+        BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
+
+        String orderId = paraMap.get("order_id");
+        OrderDo orderDo = orderDao.selectOrderById(orderId);
+        if (orderDo == null) {
+            logger.error("该订单不存在，请重新下单，orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
+            return resp;
+        }
+        if (!OrderUtils.getCacheOrder(orderId)) {
+            //过期
+            logger.error("该订单已过期, orderId:" + orderId);
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00013);
+            return resp;
+        }
+        String boardId = String.valueOf(orderDo.getBoard_id());
+        if (StringUtils.isEmpty(boardId)) {
+            //未有点桌操作
+            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00027);
+            return resp;
+        }
+        //选过桌
+        Integer boardType = dianCanConfig.getBoardById(Integer.parseInt(boardId)).getBoard_type();
+        String orderBoardDate = orderDo.getOrder_board_date();
+        Integer orderPeopleNum = orderDo.getOrder_people_number();
+        String orderTimeIntervel = orderDo.getOrder_board_time_interval();
+        resp.put("board_type", String.valueOf(boardType));
+        resp.put("order_board_date", orderBoardDate);
+        resp.put("order_people_num", String.valueOf(orderPeopleNum));
+        resp.put("order_time_intervel", orderTimeIntervel);
+        resp.put("board_id", boardId);
+        return resp;
+    }
 
     public Map<String, String> getAvailableBoard(Map<String, String> paraMap) {
         Map<String, String> resp = new HashMap<String, String>();
@@ -171,6 +206,16 @@ public class BoardServiceImpl implements BoardService{
 
             float orderPaid = orderDo.getOrder_paid();
             float balance = userDo.getBalance();
+
+            //在判断账户余额之前，把桌子数据更进数据库
+            int orderAffectRows = orderDao.updateOrdBoardAndStsByOrderIdAndOrdSts(orderId
+                    , String.valueOf(orderPeopleNum),orderBoardDate, orderTimeInterval);
+
+            if (orderAffectRows <= 0) {
+                logger.error("更新订单表失败，orderId:" + orderId);
+                BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
+                return resp;
+            }
             if (balance < orderPaid) {
                 logger.warn("账户余额不足，请充值: userId:" + userDo.getUser_id());
                 BizUtils.setRspMap(resp, ErrorCodeEnum.DC00020);
@@ -206,8 +251,7 @@ public class BoardServiceImpl implements BoardService{
             }
             //事务更新用户表和订单表
             transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
-                    isVip,userCouponList, String.valueOf(orderPeopleNum), OrderStatus.UD.getOrderStatus(), orderBoardDate,
-                    orderTimeInterval, orderId);
+                    isVip,userCouponList, orderId);
             //支付成功后删除购物车缓存
             OrderUtils.deleteCacheFoodList(orderId);
 

@@ -33,16 +33,13 @@ public class TransactionHelper {
 
     @Transactional
     public void updateOrdAndUser(UserDo userDo, String newAccumuPoint, String newBalance,
-                                 String isVip, String userCoupon, String ordPeopleNum,
-                                 String ordStatus,String orderBoardDate, String orderTimeInterval,
-                                 String orderId) {
+                                 String isVip, String userCoupon, String orderId) {
         int userAffectRows = userDao.updateUsrAcptAndBcAndmemLvlCp(userDo.getUser_id(), newAccumuPoint,newBalance,
                 isVip, userCoupon);
         if (userAffectRows <= 0) {
             throw new UnexpectedRollbackException("更新user表失败");
         }
-        int orderAffectRows = orderDao.updateOrdBoardAndStsByOrderIdAndOrdSts(orderId,ordPeopleNum,orderBoardDate,
-                ordStatus, orderTimeInterval);
+        int orderAffectRows = orderDao.updateOrderStsByOrderId(orderId, OrderStatus.UD.getOrderStatus());
         if (orderAffectRows <= 0) {
             throw new UnexpectedRollbackException("更新order表失败");
         }

@@ -19,4 +19,11 @@ public interface BoardService {
      * @return
      */
     public Map<String, String> reserveBoard(Map<String, String> paraMap) throws Exception;
+
+    /**
+     * 加载订桌页面
+     * @param paraMap
+     * @return
+     */
+    public Map<String, String> loadBoardPage(Map<String, String> paraMap) throws Exception;
 }
