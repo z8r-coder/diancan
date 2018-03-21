@@ -586,27 +586,9 @@ public class OrderServiceImpl implements OrderService {
         Map<String, String> resp = new HashMap<String, String>();
         BizUtils.setRspMap(resp, ErrorCodeEnum.DC00000);
 
+        //此时订单还未持久化
         String orderId = paraMap.get("order_id");
-        OrderDo orderDo = orderDao.selectOrderById(orderId);
-        if (orderDo == null) {
-            //该订单不存在
-            logger.warn("该订单不存在，请重新下单 orderId:" + orderId);
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00023);
-            return resp;
-        }
-
-        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UD.getOrderStatus())) {
-            //已支付成功
-            logger.warn("该订单已经支付成功，请重新下单 orderId：" + orderId);
-            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00022);
-            return resp;
-        }
-//        if (StringUtils.equals(orderDo.getOrder_status(), OrderStatus.UF.getOrderStatus())) {
-//            //支付失败
-//            logger.warn("该订单已无效，请重新下单 orderId：" + orderId);
-//            BizUtils.setRspMap(resp, ErrorCodeEnum.DC00015);
-//            return resp;
-//        }
+        String userId = paraMap.get("user_id");
 
         if (!OrderUtils.getCacheOrder(orderId)) {
             logger.error("该订单不存在或已过期 orderId:" + orderId);
@@ -699,10 +681,18 @@ public class OrderServiceImpl implements OrderService {
             resp.put("is_vip_user", LevelMappingEnum.NVIP.getVflag());
         }
 
-        int affectRows = orderDao.updateOrderInfoByOrdId(sumFood, OrderStatus.UM.getOrderStatus(),
-                foodStr, foodNumStr, orderId);
-        if (affectRows <= 0) {
-            logger.warn("更新订单出错:orderId:" + orderId);
+        //持久化订单
+        OrderDo orderDo = new OrderDo();
+        orderDo.setOrder_id(orderId);
+        orderDo.setUser_id(userId);
+        orderDo.setOrder_status(OrderStatus.UK.getOrderStatus());
+        orderDo.setOrder_date(DateUtil.getCurrDateStr(DateUtil.DEFAULT_PAY_FORMAT));
+        orderDo.setOrder_food(foodStr);
+        orderDo.setOrder_food_num(foodNumStr);
+        try {
+            orderDao.insertOrderInfo(orderDo);
+        } catch (Exception e) {
+            logger.error("OrderService add food occurs exception", e);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
         }
         return resp;
