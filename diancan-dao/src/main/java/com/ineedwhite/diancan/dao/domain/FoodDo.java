@@ -15,6 +15,7 @@ public class FoodDo {
     private Integer food_grounding;
     private Integer food_monthlysales;
     private float food_vip_price;
+    private String food_img;
 
     public Integer getFood_id() {
         return food_id;
@@ -78,5 +79,13 @@ public class FoodDo {
 
     public void setFood_vip_price(float food_vip_price) {
         this.food_vip_price = food_vip_price;
+    }
+
+    public String getFood_img() {
+        return food_img;
+    }
+
+    public void setFood_img(String food_img) {
+        this.food_img = food_img;
     }
 }
