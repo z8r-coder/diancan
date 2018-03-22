@@ -15,6 +15,7 @@ import com.ineedwhite.diancan.common.utils.RedLock;
 import com.ineedwhite.diancan.dao.dao.OrderDao;
 import com.ineedwhite.diancan.dao.dao.UserDao;
 import com.ineedwhite.diancan.dao.domain.BoardDo;
+import com.ineedwhite.diancan.dao.domain.FoodDo;
 import com.ineedwhite.diancan.dao.domain.OrderDo;
 import com.ineedwhite.diancan.dao.domain.UserDo;
 import org.apache.commons.lang3.StringUtils;
@@ -246,8 +247,17 @@ public class BoardServiceImpl implements BoardService{
             userCouponList = cpIdsb.toString();
             if (couponList != null && couponList.size() != 0) {
                 userCouponList = userCouponList.substring(0, userCouponList.length() - 1);
-
             }
+
+//            //算月销
+//            String foodId = orderDo.getOrder_food();
+//            String foodNum = orderDo.getOrder_food_num();
+//            List<String> foodIdList = Arrays.asList(foodId.split("\\|"));
+//            List<String> foodNumList = Arrays.asList(foodNum.split("\\|"));
+//            for (String fdId : foodIdList) {
+//                FoodDo foodDo = dianCanConfig.getFoodById(Integer.valueOf(fdId));
+//
+//            }
             //事务更新用户表和订单表
             transactionHelper.updateOrdAndUser(userDo,String.valueOf(newAccumuPoint),String.valueOf(newBalance),
                     isVip,userCouponList, orderId);

@@ -88,7 +88,7 @@ public class DianCanConfigServiceImpl implements DianCanConfigService{
             public void run() {
                refreshConfig();
             }
-        },5, 5, TimeUnit.MINUTES);
+        },2, 2, TimeUnit.MINUTES);
     }
 
     public boolean refreshConfig() {
