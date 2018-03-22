@@ -193,7 +193,8 @@ public interface OrderDao {
     int updateOrdBoardAndStsByOrderIdAndOrdSts(@Param("order_id")String order_id,
                                                @Param("order_people_number")String orderPeopleNum,
                                                @Param("order_date_board")String orderDateBoard,
-                                               @Param("order_board_time_interval")String orderBoardTimeIntervel);
+                                               @Param("order_board_time_interval")String orderBoardTimeIntervel,
+                                               @Param("order_board_id")String boardId);
 
     /**
      * 通过订单ID更新订单状态

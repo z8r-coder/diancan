@@ -208,7 +208,7 @@ public class BoardServiceImpl implements BoardService{
 
             //在判断账户余额之前，把桌子数据更进数据库
             int orderAffectRows = orderDao.updateOrdBoardAndStsByOrderIdAndOrdSts(orderId
-                    , String.valueOf(orderPeopleNum),orderBoardDate, orderTimeInterval);
+                    , String.valueOf(orderPeopleNum),orderBoardDate, orderTimeInterval, boardId);
 
             if (orderAffectRows <= 0) {
                 logger.error("更新订单表失败，orderId:" + orderId);
