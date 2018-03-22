@@ -49,6 +49,8 @@ public class DianCanConfigServiceImpl implements DianCanConfigService{
 
     private static List<FoodDo> foodDoList = new ArrayList<FoodDo>();
 
+    private static List<FoodDo> foodHistoryDo = new ArrayList<FoodDo>();
+
     /**
      * 桌位缓存信息
      */
@@ -68,6 +70,11 @@ public class DianCanConfigServiceImpl implements DianCanConfigService{
      * 菜品缓存信息
      */
     private static Map<Integer, FoodDo> foodDoCache = new ConcurrentHashMap<Integer, FoodDo>();
+
+    /**
+     * 所有菜品缓存信息
+     */
+    private static Map<Integer, FoodDo> foodHistoryDoCache = new ConcurrentHashMap<Integer, FoodDo>();
 
     private static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
@@ -120,6 +127,14 @@ public class DianCanConfigServiceImpl implements DianCanConfigService{
             }
             foodDoCache = newFoodMapCache;
 
+            //缓存历史所有菜品，包括被删除的菜品
+            foodHistoryDo = foodDao.findHistoryFood();
+            Map<Integer, FoodDo> newFoodHistoryMapCache = new ConcurrentHashMap<Integer, FoodDo>();
+            for (FoodDo foodDo : foodHistoryDo) {
+                newFoodHistoryMapCache.put(foodDo.getFood_id(), foodDo);
+            }
+            foodHistoryDoCache = newFoodHistoryMapCache;
+
         } catch (Exception ex) {
             logger.error("refreshGateConfig exception:" + ex.getMessage(), ex);
             return false;
@@ -157,5 +172,13 @@ public class DianCanConfigServiceImpl implements DianCanConfigService{
 
     public FoodDo getFoodById(Integer foodId) {
         return foodDoCache.get(foodId);
+    }
+
+    public Map<Integer, FoodDo> getAllHistoryFood() {
+        return foodHistoryDoCache;
+    }
+
+    public FoodDo getHistoryFoodById(Integer foodId) {
+        return foodHistoryDoCache.get(foodId);
     }
 }

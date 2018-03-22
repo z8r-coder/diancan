@@ -34,7 +34,7 @@ public class BizOptions {
     /**
      * 成为会员
      */
-    public final static int BECOME_VIP = 1000;
+    public final static int BECOME_VIP = 20;
 
     /**
      * 用户余额上限

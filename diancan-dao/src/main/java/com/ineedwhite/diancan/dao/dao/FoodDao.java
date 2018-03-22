@@ -15,4 +15,11 @@ public interface FoodDao {
      * @return
      */
     List<FoodDo> findAllFood();
+
+    /**
+     * 查找历史所有的菜品信息
+     * @return
+     */
+    List<FoodDo> findHistoryFood();
+
 }

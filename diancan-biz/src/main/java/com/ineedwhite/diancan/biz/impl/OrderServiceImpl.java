@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
             for (int i = 0; i < foodIdList.size();i++) {
                 String foodId = foodIdList.get(i);
                 String foodNum = foodNumList.get(i);
-                FoodDo foodDo = dianCanConfigService.getFoodById(Integer.parseInt(foodId));
+                FoodDo foodDo = dianCanConfigService.getHistoryFoodById(Integer.parseInt(foodId));
                 float totalMoney = foodDo.getFood_price() * Integer.parseInt(foodNum);
                 OrderFoodInfo orderFoodInfo = new OrderFoodInfo();
                 orderFoodInfo.setFoodName(foodDo.getFood_name());
@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
             String orderFoodInfoStr = JSON.toJSONString(orderFoodInfoList);
             resp.put("food_info", orderFoodInfoStr);
         } catch (Exception ex) {
-            logger.error("shoppingCartAddMinus occurs exception", ex);
+            logger.error("orderInfo occurs exception", ex);
             BizUtils.setRspMap(resp, ErrorCodeEnum.DC00003);
         }
         return resp;

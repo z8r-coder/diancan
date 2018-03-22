@@ -63,4 +63,17 @@ public interface DianCanConfigService {
      * @return
      */
     FoodDo getFoodById(Integer foodId);
+
+    /**
+     * 获取所有历史菜系缓存
+     * @return
+     */
+    Map<Integer, FoodDo> getAllHistoryFood();
+
+    /**
+     * 获取
+     * @param foodId
+     * @return
+     */
+    FoodDo getHistoryFoodById(Integer foodId);
 }
