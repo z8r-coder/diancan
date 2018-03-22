@@ -10,6 +10,7 @@ public class OrderFoodInfo {
     private String foodNum;
     private String totalMoney;
     private String unitPrice;
+    private String food_img;
 
     public String getFoodName() {
         return foodName;
@@ -41,5 +42,13 @@ public class OrderFoodInfo {
 
     public void setUnitPrice(String unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getFoodImg() {
+        return food_img;
+    }
+
+    public void setFoodImg(String foodImg) {
+        this.food_img = foodImg;
     }
 }

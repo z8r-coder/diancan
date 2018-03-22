@@ -94,8 +94,10 @@ public class OrderServiceImpl implements OrderService {
                 OrderFoodInfo orderFoodInfo = new OrderFoodInfo();
                 orderFoodInfo.setFoodName(foodDo.getFood_name());
                 orderFoodInfo.setFoodNum(foodNum);
+                orderFoodInfo.setFoodImg(foodDo.getFood_img());
                 orderFoodInfo.setTotalMoney(String.valueOf(totalMoney));
                 orderFoodInfo.setUnitPrice(String.valueOf(foodDo.getFood_price()));
+                orderFoodInfo.setFoodImg(foodDo.getFood_img());
 
                 orderFoodInfoList.add(orderFoodInfo);
             }
